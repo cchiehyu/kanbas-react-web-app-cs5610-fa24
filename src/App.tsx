@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import Labs from "./Labs";
 import Lab1 from './Labs/Lab1';
 
 export default function App() {
