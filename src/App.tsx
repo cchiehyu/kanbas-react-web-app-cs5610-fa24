@@ -93,10 +93,10 @@ export default function App() {
       Hello World!
     </button>
 
+    <h5>File upload</h5>
+    <input id="wd-upload" type="file"/>
+
 
     </div>
-
-    
-
   );
 }
