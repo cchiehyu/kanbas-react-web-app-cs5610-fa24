@@ -34,6 +34,75 @@ export default function Lab1() {
           This is the third paragraph. Using the <strong>&lt;p&gt;</strong> tag ensures that the browser adds proper vertical spacing between blocks of text.
         </p>
       </div>
+
+
+      {/* Ordered List Elements Section */}
+      <div id="wd-lists">
+        <h4>List Tags</h4>
+        <h5>Ordered List Tag</h5>
+        <p>How to make pancakes:</p>
+        <ol>
+          <li>Mix dry ingredients.</li>
+          <li>Add wet ingredients.</li>
+          <li>Stir to combine.</li>
+          <li>Heat a skillet or griddle.</li>
+          <li>Pour batter onto the skillet.</li>
+          <li>Cook until bubbly on top.</li>
+          <li>Flip and cook the other side.</li>
+          <li>Serve and enjoy!</li>
+        </ol>
+        <h5>Unordered List Tag</h5>
+        <p>My Favorite Songs && Artists(in no particular order)</p>
+        <ul>
+        <li><a href="https://www.youtube.com/results?search_query=To.X+Taeyong" target="_blank" rel="noopener noreferrer">To.X -- Taeyong</a></li>
+          <li><a href="https://www.youtube.com/results?search_query=A+Change+Of+Heart+The+1975" target="_blank" rel="noopener noreferrer">A Change Of Heart -- The 1975</a></li>
+          <li><a href="https://www.youtube.com/results?search_query=Yellow+Coldplay" target="_blank" rel="noopener noreferrer">Yellow -- Coldplay</a></li>
+          <li><a href="https://www.youtube.com/results?search_query=The+Scientist+Coldplay" target="_blank" rel="noopener noreferrer">The Scientist -- Coldplay</a></li>
+          <li><a href="https://www.youtube.com/results?search_query=Golden+Hour+JVKE" target="_blank" rel="noopener noreferrer">Golden Hour -- JVKE</a></li>
+        </ul>
+      </div>
+      
+      <div id="wd-tables">
+        <h4>Table Tag</h4>
+        <table border={1} width="100%">
+          <thead>
+            <tr>
+              <th>Quiz</th>
+              <th>Topic</th>
+              <th>Date</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Q1</td>
+              <td>HTML</td>
+              <td>2/3/21</td>
+              <td>85</td>
+            </tr>
+            <tr>
+              <td>Q2</td>
+              <td>CSS</td>
+              <td>2/10/21</td>
+              <td>90</td>
+            </tr>
+            <tr>
+              <td>Q3</td>
+              <td>JavaScript</td>
+              <td>2/17/21</td>
+              <td>95</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={3}>Average</td>
+              <td>90</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
     </div>
+
   );
 }
