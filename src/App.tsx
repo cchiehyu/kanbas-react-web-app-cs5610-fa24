@@ -96,7 +96,86 @@ export default function App() {
     <h5>File upload</h5>
     <input id="wd-upload" type="file"/>
 
+    <h5 id="wd-radio-buttons">Radio buttons</h5>
+    <label>Favorite music genre:</label><br />
 
+    <input type="radio" name="radio-genre" id="wd-radio-classical"/>
+    <label htmlFor="wd-radio-classical">Classical Music</label><br />
+
+    <input type="radio" name="radio-genre" id="wd-radio-kpop"/>
+    <label htmlFor="wd-radio-kpop">Kpop</label><br />
+
+    <input type="radio" name="radio-genre" id="wd-radio-band"/>
+    <label htmlFor="wd-radio-band">Band in Pop</label><br />
+
+    <input type="radio" name="radio-genre" id="wd-radio-rock"/>
+    <label htmlFor="wd-radio-rock">Rock</label>
+
+    <h5 id="wd-checkboxes">Checkboxes</h5>
+    <label>Favorite movie genre:</label><br/>
+
+    <input type="checkbox" name="check-genre" id="wd-chkbox-comedy"/>
+    <label htmlFor="wd-chkbox-comedy">Comedy</label><br/>
+
+    <input type="checkbox" name="check-genre" id="wd-chkbox-drama"/>
+    <label htmlFor="wd-chkbox-drama">Drama</label><br/>
+
+    <input type="checkbox" name="check-genre" id="wd-chkbox-scifi"/>
+    <label htmlFor="wd-chkbox-scifi">Science Fiction</label><br/>
+
+    <input type="checkbox" name="check-genre" id="wd-chkbox-fantasy"/>
+    <label htmlFor="wd-chkbox-fantasy">Fantasy</label>
+    
+    <h4 id="wd-dropdowns">Dropdowns</h4>
+    <h5>Select one</h5>
+    <label htmlFor="wd-select-one-genre"> Favorite music genre: </label><br/>
+    <select id="wd-select-one-genre">
+      <option value="CLASSI">Classical Music</option>
+      <option value="KPOP">Kpop</option>
+      <option selected value="ROCK">
+          Rock</option>
+      <option value="BAND">Band in Pop</option>
+    </select>
+
+    <h5>Select many</h5>
+    <label htmlFor="wd-select-many-genre"> Favorite movie genres: </label><br/>
+    <select id="wd-select-many-genre" multiple>
+      <option selected value="COMEDY">Comedy</option>
+      <option value="DRAMA">Drama</option>
+      <option selected value="SCIFI">
+          Science Fiction</option>
+      <option value="FANTASY">Fantasy</option>
+    </select>
+    
+    <h4>Other HTML field types</h4>
+
+  <label htmlFor="wd-text-fields-email"> Email: </label>
+  <input type="email"
+        placeholder="jdoe@somewhere.com"
+        id="wd-text-fields-email"/><br/>
+
+  <label htmlFor="wd-text-fields-salary-start"> Starting salary:
+  </label>
+  <input type="number"
+        id="wd-text-fields-salary-start"
+        placeholder="1000"
+        value="100000"/><br/>
+
+  <label htmlFor="wd-text-fields-rating"> Rating: </label>
+  <input type="range" id="wd-text-fields-rating"
+        placeholder="Doe"
+        max="5"
+        value="4"/><br/>
+
+  <label htmlFor="wd-text-fields-dob"> Date of birth: </label>
+  <input type="date"
+        id="wd-text-fields-dob"
+        value="2000-01-21"/><br/>
+
+    <h4>Anchor tag</h4>
+    Please
+    <a id="wd-lipsum" href="https://www.lipsum.com">click here</a>
+    to get dummy text<br/>
     </div>
   );
 }

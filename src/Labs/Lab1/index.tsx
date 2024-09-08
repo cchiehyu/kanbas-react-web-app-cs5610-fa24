@@ -52,7 +52,7 @@ export default function Lab1() {
           <li>Serve and enjoy!</li>
         </ol>
         <h5>Unordered List Tag</h5>
-        <p>My Favorite Songs && Artists(in no particular order)</p>
+        <p>My Favorite Songs && Artists(in no particular order) -- Linked to Youtube!</p>
         <ul>
         <li><a href="https://www.youtube.com/results?search_query=To.X+Taeyong" target="_blank" rel="noopener noreferrer">To.X -- Taeyong</a></li>
           <li><a href="https://www.youtube.com/results?search_query=A+Change+Of+Heart+The+1975" target="_blank" rel="noopener noreferrer">A Change Of Heart -- The 1975</a></li>
