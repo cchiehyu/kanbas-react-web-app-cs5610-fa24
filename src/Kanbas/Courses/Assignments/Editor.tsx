@@ -33,6 +33,7 @@ export default function AssignmentEditor() {
             <td>
               <select id="wd-assignment-group">
                 <option value="assignments">Assignments</option>
+                
                 {/* Add other assignment groups as needed */}
               </select>
             </td>
@@ -46,6 +47,7 @@ export default function AssignmentEditor() {
                 <option value="percentage">Percentage</option>
                 <option value="points">Points</option>
                 <option value="complete/incomplete">Complete/Incomplete</option>
+                
                 {/* Add other grade display options */}
               </select>
             </td>
