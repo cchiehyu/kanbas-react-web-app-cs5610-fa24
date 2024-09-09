@@ -49,11 +49,12 @@ export default function Modules({ courseCode }: ModulesProps) {
             </li>
           </ul>
         </li>
-
-        {/* Week 1, Lecture 2 */}
+        
         <p>
           
       </p>
+        {/* Week 1, Lecture 2 */}
+
         <li className="wd-module">
           <div className="wd-title">Week 1, Lecture 2 - Formatting User Interfaces with HTML</div>
           <ul className="wd-lessons">
