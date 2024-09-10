@@ -40,34 +40,27 @@ export default function App() {
           </li>
         </ul> */}
 
-        {/* Lab Components */}
-        <HashRouter>
-          <div id="labs">
+          {/* Lab Components */}
+          <HashRouter>
+          <div>
           <Routes>
             <Route path="/" element={<Navigate to="Labs" />} />
             <Route path="/Labs/*" element={<Labs />} />
             <Route path="/Kanbas/*" element={<Kanbas />} />
+            
+            
           </Routes>
           </div>
         </HashRouter>
         
         {/* Placeholder for other sections */}
-        <div id="kanbas">
-          <h3>Linkedin</h3>
-          <p>This is the Kanbas section.</p>
-        </div>
-
-        <div id="github">
-          <h3>GitHub</h3>
-          <p>This is the GitHub section.</p>
-        </div>
-
 
 
       <h4>Anchor tag</h4>
-      Please
-      <a id="wd-linkedin"  href="https://www.linkedin.com/in/joyce-chen-1686b3199/"> click here </a>
+      <a id="wd-linkedin"  href="https://www.linkedin.com/in/joyce-chen-1686b3199/"> Linkedin </a>
       to my Linkedin<br/>
+      <a id="wd-github"  href="https://github.com/cchiehyu/kanbas-react-web-app-cs5610-fa24"> Github </a>
+      to my Github<br/>
       </div>
   );
 }
