@@ -153,7 +153,7 @@ export default function Lab1() {
     <label htmlFor="wd-radio-classical">Classical Music</label><br />
 
     <input type="radio" name="radio-genre" id="wd-radio-kpop"/>
-    <label htmlFor="wd-radio-kpop">Kpop</label><br />
+    <label htmlFor="wd-radio-kpop">Kpop Music</label><br />
 
     <input type="radio" name="radio-genre" id="wd-radio-band"/>
     <label htmlFor="wd-radio-band">Band in Pop</label><br />
