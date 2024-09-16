@@ -56,7 +56,7 @@ export default function Lab2() {
             </p>
 
             {/* Colors Section */}
-            
+
             <div id="wd-css-colors">
               <h2>Colors</h2>
               <h3 className="wd-fg-color-blue">Foreground color</h3>
@@ -76,6 +76,13 @@ export default function Lab2() {
               </p>
             </div>
 
+              <div id="wd-css-borders">
+              <h2>Borders</h2>
+              <p className="wd-border-fat wd-border-red wd-border-solid">
+                Solid fat red border</p>
+              <p className="wd-border-thin wd-border-blue wd-border-dashed">
+                Dashed thin blue border</p>
+            </div>
           </div>
         </div>
       </div>
