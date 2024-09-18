@@ -1,3 +1,4 @@
+import React from 'react';
 export default function CourseStatus() {
   return (
     <div id="wd-course-status">
