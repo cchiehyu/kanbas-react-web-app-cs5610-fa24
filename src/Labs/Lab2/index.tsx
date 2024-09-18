@@ -134,22 +134,22 @@ export default function Lab2() {
             </div>
 
             <div id="wd-css-borders">
-            <h3>Rounded corners</h3>
-            <p className="wd-rounded-corners-top wd-border-thin 
+              <h3>Rounded corners</h3>
+              <p className="wd-rounded-corners-top wd-border-thin 
               wd-border-blue wd-border-solid wd-padding-fat">
-              Rounded corners on the top
-            </p>
-            <p className="wd-rounded-corners-bottom 
+                Rounded corners on the top
+              </p>
+              <p className="wd-rounded-corners-bottom 
               wd-border-thin wd-border-blue wd-border-solid 
               wd-padding-fat">
-              Rounded corners at the bottom
-            </p>
-            <p className="wd-rounded-corners-all-around 
+                Rounded corners at the bottom
+              </p>
+              <p className="wd-rounded-corners-all-around 
               wd-border-thin wd-border-blue wd-border-solid 
               wd-padding-fat">
-              Rounded corners all around
-            </p>
-            <p className="wd-rounded-corners-inline 
+                Rounded corners all around
+              </p>
+              <p className="wd-rounded-corners-inline 
               wd-border-thin wd-border-blue wd-border-solid 
               wd-padding-fat">
                 Different rounded corners
@@ -186,22 +186,22 @@ export default function Lab2() {
               </div>
             </div>
             <div id="wd-css-position-absolute">
-            <h2>Absolute position</h2>
-            <div className="wd-pos-relative">
-              <div className="wd-pos-absolute-10-10 
+              <h2>Absolute position</h2>
+              <div className="wd-pos-relative">
+                <div className="wd-pos-absolute-10-10 
                   wd-bg-color-yellow wd-dimension-portrait">
-                Portrait</div>
-              <div className="wd-pos-absolute-50-50 
+                  Portrait</div>
+                <div className="wd-pos-absolute-50-50 
                   wd-bg-color-blue wd-fg-color-white 
                   wd-dimension-landscape">
-                Landscape</div>
-              <div className="wd-pos-absolute-120-20 
+                  Landscape</div>
+                <div className="wd-pos-absolute-120-20 
                   wd-bg-color-red wd-dimension-square">
-                Square</div>
-            </div><br /><br /><br /><br /><br /><br /><br />
-          </div>
+                  Square</div>
+              </div><br /><br /><br /><br /><br /><br /><br />
+            </div>
 
-          <div id="wd-css-position-fixed">
+            <div id="wd-css-position-fixed">
               <h2>Fixed position</h2>
               Checkout the blue square that says "Fixed position" stuck all the way on the right and half way down the page. It doesn't scroll with the rest of the page. Its position is "Fixed".
               <div className="wd-pos-fixed 
@@ -209,8 +209,8 @@ export default function Lab2() {
                 wd-fg-color-white">
                 Fixed position
               </div>
-              </div>
-              <div id="wd-z-index">
+            </div>
+            <div id="wd-z-index">
               <h2>Z index</h2>
               <div className="wd-pos-relative">
                 <div className="wd-pos-absolute-10-10 
@@ -229,57 +229,78 @@ export default function Lab2() {
               </div><br /><br /><br /><br /><br /><br /><br />
             </div>
             <div id="wd-float-divs">
- <h2>Float</h2>
- <div>
-   <div className="wd-float-left wd-dimension-portrait wd-bg-color-yellow">
-     Yellow </div>
-   <div className="wd-float-left wd-dimension-portrait wd-bg-color-blue wd-fg-color-white">
-     Blue </div>
-   <div className="wd-float-left wd-dimension-portrait wd-bg-color-red">
-     Red </div>
-   <img className="wd-float-right"
-     src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"/>
-   <div className="wd-float-done"></div>
- </div>
+              <h2>Float</h2>
+              <div>
+                <div className="wd-float-left wd-dimension-portrait wd-bg-color-yellow">
+                  Yellow </div>
+                <div className="wd-float-left wd-dimension-portrait wd-bg-color-blue wd-fg-color-white">
+                  Blue </div>
+                <div className="wd-float-left wd-dimension-portrait wd-bg-color-red">
+                  Red </div>
+                <img className="wd-float-right"
+                  src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg" />
+                <div className="wd-float-done"></div>
+              </div>
+            </div>
+
+            <div id="wd-css-grid-layout">
+              <div id="wd-css-left-right-layout">
+                <h2>Grid layout</h2>
+                <div className="wd-grid-row">
+                  <div className="wd-grid-col-half-page wd-bg-color-yellow">
+                    <h3>Left half</h3>
+                  </div>
+                  <div className="wd-grid-col-half-page wd-bg-color-blue wd-fg-color-white">
+                    <h3>Right half</h3>
+                  </div>
+                </div>
+              </div>
+              <div id="wd-css-left-third-right-two-thirds" className="wd-grid-row">
+                <div className="wd-grid-col-third-page wd-bg-color-green
+        wd-fg-color-white">
+                  <h3>Left third</h3>
+                </div>
+                <div className="wd-grid-col-two-thirds-page wd-bg-color-red wd-fg-color-white">
+                  <h3>Right two thirds</h3>
+                </div>
+              </div>
+              <div id="wd-css-side-bars" className="wd-grid-row">
+                <div className="wd-grid-col-left-sidebar wd-bg-color-yellow">
+                  <h3>Side bar</h3>
+                  <p>This is the left sidebar</p>
+                </div>
+                <div className="wd-grid-col-main-content wd-bg-color-blue wd-fg-color-white">
+                  <h3>Main content</h3>
+                  <p>
+                    This is the main content. This is the main content. This is the
+                    main content.
+                  </p>
+                </div>
+                <div className="wd-grid-col-right-sidebar wd-bg-color-green wd-fg-color-white">
+                  <h3>Side bar</h3>
+                  <p>This is the right sidebar</p>
+                </div>
+              </div>
+            </div>
+            <div id="wd-css-flex">
+  <h2>Flex</h2>
+  <div className="wd-flex-row-container">
+    <div className="wd-bg-color-yellow">Column 1</div>
+    <div className="wd-bg-color-blue">Column 2</div>
+    <div className="wd-bg-color-red">Column 3</div>
+  </div>
 </div>
 
-<div id="wd-css-grid-layout">
-  <div id="wd-css-left-right-layout">
-    <h2>Grid layout</h2>
-    <div className="wd-grid-row">
-      <div className="wd-grid-col-half-page wd-bg-color-yellow">
-        <h3>Left half</h3>
-      </div>
-      <div className="wd-grid-col-half-page wd-bg-color-blue wd-fg-color-white">
-        <h3>Right half</h3>
-      </div>
-    </div>
-  </div>
-  <div id="wd-css-left-third-right-two-thirds" className="wd-grid-row">
-    <div className="wd-grid-col-third-page wd-bg-color-green
-        wd-fg-color-white">
-      <h3>Left third</h3>
-    </div>
-    <div className="wd-grid-col-two-thirds-page wd-bg-color-red wd-fg-color-white">
-      <h3>Right two thirds</h3>
-    </div>
-  </div>
-  <div id="wd-css-side-bars" className="wd-grid-row">
-    <div className="wd-grid-col-left-sidebar wd-bg-color-yellow">
-      <h3>Side bar</h3>
-      <p>This is the left sidebar</p>
-    </div>
-    <div className="wd-grid-col-main-content wd-bg-color-blue wd-fg-color-white">
-      <h3>Main content</h3>
-      <p>
-        This is the main content. This is the main content. This is the
-        main content.
-      </p>
-    </div>
-    <div className="wd-grid-col-right-sidebar wd-bg-color-green wd-fg-color-white">
-      <h3>Side bar</h3>
-      <p>This is the right sidebar</p>
-    </div>
+<div id="wd-css-flex">
+  <h2>Flex</h2>
+  <div className="wd-flex-row-container">
+    <div className="wd-bg-color-yellow">
+      Column 1</div>
+    <div className="wd-bg-color-blue">
+      Column 2</div>
+    <div className="wd-bg-color-red
+                    wd-flex-grow-1">
+      Column 3</div>
   </div>
 </div>
 
