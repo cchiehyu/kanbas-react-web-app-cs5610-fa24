@@ -234,17 +234,19 @@ p#wd-id-selector-2>.wd-selector-3>.wd-selector-4 {
     float: left;
  }
  
- .wd-flex-row-container {
-    display: flex;
-    flex-direction: row;
-  }
 
   .wd-flex-row-container {
     display: flex;
     flex-direction: row;
   }
-  .wd-flex-grow-1 {
-    flex-grow: 1;
-  }
+
   
+  .wd-flex-row-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .wd-width-75px {
+    width: 75px;
+  }
   

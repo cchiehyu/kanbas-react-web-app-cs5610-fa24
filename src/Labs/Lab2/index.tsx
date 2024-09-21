@@ -1,17 +1,18 @@
 import React from 'react';
 import "./index.css";
-import Padding from './Padding'; 
+import Padding from './Padding';
 import Colors from './Colors';
 import Borders from './Borders';
 import Margins from './Margins';
 import RoundedCorners from './Corners';
 import Dimensions from './Dimensions';
 import Positions from './Positions';
-import ZIndex from './ZIndex';   
+import ZIndex from './ZIndex';
 import Float from './Float';
 import GridLayout from './GridLayout';
 import Flex from './Flex';
 import ReactIconsSampler from './ReactIcons';
+import BootstrapGrid from './BootstrapGrids';
 
 export default function Lab2() {
   return (
@@ -80,30 +81,32 @@ export default function Lab2() {
             <Padding />
 
             {/* Margins Section */}
-            <Margins />  
+            <Margins />
 
             {/* Rounded Corners Section */}
-            <RoundedCorners /> 
+            <RoundedCorners />
 
             {/* Dimension Section */}
-            <Dimensions /> 
+            <Dimensions />
 
-              {/* Positions Section (both relative absolute and fixed) */}
-              <Positions />  
+            {/* Positions Section (both relative absolute and fixed) */}
+            <Positions />
 
-        {/* Z Index Section */}
-        <ZIndex /> 
+            {/* Z Index Section */}
+            <ZIndex />
 
-        {/* Float Section */}
-        <Float /> 
+            {/* Float Section */}
+            <Float />
 
-        {/* Grid Layout Section */}
-        <GridLayout />
+            {/* Grid Layout Section */}
+            <GridLayout />
 
             {/* Flex Section */}
             <Flex />
-            
+
             <ReactIconsSampler />
+
+            <BootstrapGrid />
           </div>
         </div>
       </div>
