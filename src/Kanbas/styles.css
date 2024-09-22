@@ -3,4 +3,24 @@
       padding-left: 140px !important;
     }
   }
+
+  .wd-dashboard-course .card {
+    width: 300px; /* Ensure consistent width */
+    min-height: 400px; /* Set a minimum height to make cards uniform */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .wd-dashboard-course .card img {
+    height: 160px;
+    object-fit: cover; /* Ensures images fill the space uniformly */
+  }
+  
+  .wd-dashboard-course .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Distributes the content evenly inside */
+  }
   
