@@ -24,7 +24,7 @@ export default function ModulesControls() {
         <ul className="dropdown-menu">
           {/* Publish all modules and items */}
           <li>
-            <a id="wd-publish-all-modules-and-items-btn" className="dropdown-item" >
+            <a id="wd-publish-all-modules-and-items-btn" className="dropdown-item" href="#/Kanbas/Courses/1234/Home">
               <GreenCheckmark />
               Publish all modules and items
             </a>
@@ -32,7 +32,7 @@ export default function ModulesControls() {
 
           {/* Publish modules only */}
           <li>
-            <a id="wd-publish-modules-only-btn" className="dropdown-item" >
+            <a id="wd-publish-modules-only-btn" className="dropdown-item" href="#/Kanbas/Courses/1234/Home">
               <GreenCheckmark />
               Publish modules only
             </a>
@@ -40,7 +40,7 @@ export default function ModulesControls() {
 
           {/* Unpublish all modules and items */}
           <li>
-            <a id="wd-unpublish-all-modules-and-items" className="dropdown-item">
+            <a id="wd-unpublish-all-modules-and-items" className="dropdown-item" href="#/Kanbas/Courses/1234/Home">
               <GreenCheckmark />
               Unpublish all modules and items
             </a>
@@ -48,7 +48,7 @@ export default function ModulesControls() {
 
           {/* Unpublish modules only */}
           <li>
-            <a id="wd-unpublish-modules-only" className="dropdown-item" >
+            <a id="wd-unpublish-modules-only" className="dropdown-item" href="#/Kanbas/Courses/1234/Home" >
               <GreenCheckmark />
               Unpublish modules only
             </a>
