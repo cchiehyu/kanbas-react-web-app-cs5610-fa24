@@ -7,20 +7,18 @@ import AssignmentEditor from "./Assignments/Editor";
 import { Navigate, Route, Routes, useParams } from "react-router";
 
 export default function Courses() {
-  // Extract course code from the URL
   const { cid: courseCode } = useParams<{ cid: string }>();
 
   return (
     <div id="wd-courses">
-      <h2>Course {courseCode}</h2> 
+      <h2 className="text-danger">Course {courseCode}</h2> 
       <hr />
-      <table>
-        <tbody>
-          <tr>
-            <td valign="top">
+
+      <div className="d-flex">
+      <div className="d-none d-md-block">
               <CoursesNavigation />
-            </td>
-            <td valign="top">
+              </div>
+              <div className="flex-fill">
               <Routes>
                 <Route path="/" element={<Navigate to="Home" />} />
                 <Route path="Home" element={<Home/>} />
@@ -29,10 +27,7 @@ export default function Courses() {
                 <Route path="Assignments/:aid" element={<AssignmentEditor />} />
                 <Route path="People" element={<h2>People</h2>} />
               </Routes>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </div></div>
     </div>
   );
 }

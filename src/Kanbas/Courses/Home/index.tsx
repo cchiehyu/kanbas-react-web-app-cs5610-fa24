@@ -3,19 +3,16 @@ import Modules from "../Modules";
 import CourseStatus from "./Status";
 export default function Home() {
   return (
-    <table id="wd-home" style={{ width: "100%" }}>
-      <tbody>
-        <tr>
-          <td valign="top" style={{ width: "70%" }}>
+<div className="d-flex" id="wd-home">
+<div className="flex-fill">
             {/* This will render the Modules component on the left */}
             <Modules courseCode={""} />
-          </td>
-          <td valign="top" style={{ width: "30%" }}>
+            </div>
+            <div className="d-none d-md-block">
             {/* This will render the CourseStatus component on the right */}
             <CourseStatus />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </div>
+</div>
+
   );
 }
