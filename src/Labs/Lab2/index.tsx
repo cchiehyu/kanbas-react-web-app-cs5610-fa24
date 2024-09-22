@@ -16,7 +16,6 @@ import BootstrapGrid from './BootstrapGrids';
 import ScreenSizeLabel from './ScreenSizeLabel';
 import BootstrapTables from './BootstrapTables';
 import BootstrapLists from './BootstrapLists';
-import BootstrapTable from './BootstrapTable';
 import BootstrapForms from './BootstrapForms';
 
 export default function Lab2() {
