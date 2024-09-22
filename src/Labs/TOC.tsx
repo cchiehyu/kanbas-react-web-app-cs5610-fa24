@@ -1,17 +1,78 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation
+
 export default function TOC() {
-    return (
-      <ul>
-        <li><Link to="/Labs">Labs</Link></li>
-        <li><Link to="/Labs/Lab1">Lab 1</Link></li>
-        <li><Link to="/Labs/Lab2">Lab 2</Link></li>
-        <li><Link to="/Labs/Lab3">Lab 3</Link></li>
-        <li><Link to="/Kanbas">Kanbas</Link></li>
-        <li><Link id="wd-linkedin" to="https://www.linkedin.com/in/joyce-chen-1686b3199/">Linkedin</Link></li>
-        <li><Link id="wd-github" to="https://github.com/cchiehyu/kanbas-react-web-app-cs5610-fa24">Github</Link></li>
-      </ul>
-      
-    );
-  }
-  
+  const { pathname } = useLocation(); // Get the current pathname
+
+  return (
+    <ul className="nav nav-pills">
+      {/* Labs Link */}
+      <li className="nav-item">
+        <Link to="/Labs" className="nav-link">
+          Labs
+        </Link>
+      </li>
+
+      {/* Lab 1 Link */}
+      <li className="nav-item">
+        <Link
+          to="/Labs/Lab1"
+          className={`nav-link ${pathname.includes("Lab1") ? "active" : ""}`}
+        >
+          Lab 1
+        </Link>
+      </li>
+
+      {/* Lab 2 Link */}
+      <li className="nav-item">
+        <Link
+          to="/Labs/Lab2"
+          className={`nav-link ${pathname.includes("Lab2") ? "active" : ""}`}
+        >
+          Lab 2
+        </Link>
+      </li>
+
+      {/* Lab 3 Link */}
+      <li className="nav-item">
+        <Link
+          to="/Labs/Lab3"
+          className={`nav-link ${pathname.includes("Lab3") ? "active" : ""}`}
+        >
+          Lab 3
+        </Link>
+      </li>
+
+      {/* Kanbas Link */}
+      <li className="nav-item">
+        <Link to="/Kanbas" className="nav-link">
+          Kanbas
+        </Link>
+      </li>
+
+      {/* LinkedIn Link */}
+      <li className="nav-item">
+        <a
+          href="https://www.linkedin.com/in/joyce-chen-1686b3199/"
+          className="nav-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          LinkedIn
+        </a>
+      </li>
+
+      {/* GitHub Link */}
+      <li className="nav-item">
+        <a
+          href="https://github.com/cchiehyu/kanbas-react-web-app-cs5610-fa24"
+          className="nav-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+      </li>
+    </ul>
+  );
+}
