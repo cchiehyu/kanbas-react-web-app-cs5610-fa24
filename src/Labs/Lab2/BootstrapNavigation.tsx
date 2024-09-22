@@ -7,22 +7,22 @@ export default function BootstrapNavigation() {
       <h2>Tabs</h2>
       <ul className="nav nav-tabs">
         <li className="nav-item">
-          <a className="nav-link active" href="javascript:void(0)">
+          <a className="nav-link active">
             Active
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="javascript:void(0)">
+          <a className="nav-link">
             Link
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="javascript:void(0)">
+          <a className="nav-link">
             Link
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link disabled" href="javascript:void(0)">
+          <a className="nav-link disabled">
             Disabled
           </a>
         </li>
