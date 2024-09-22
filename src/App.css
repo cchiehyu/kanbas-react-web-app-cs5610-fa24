@@ -1,7 +1,8 @@
 .App {
-  text-align: center;
-}
+  margin-left: 120px; 
+  padding: 100px; }
 
+/* Styling for the App logo */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -13,6 +14,7 @@
   }
 }
 
+/* Main App header styling */
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,10 +26,12 @@
   color: white;
 }
 
+/* Links in the App */
 .App-link {
   color: #61dafb;
 }
 
+/* Keyframes for the logo animation */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,4 +39,33 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* New styling for the Kanbas layout */
+
+/* The main container for the Kanbas component */
+#wd-kanbas {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar navigation */
+#wd-kanbas-navigation {
+  width: 120px; /* Set the fixed width for the sidebar */
+  background-color: black;
+  color: white;
+  position: fixed; /* Keeps it always on the left side */
+  top: 0;
+  bottom: 0;
+  min-height: 100vh; /* Ensure it spans the full height */
+  display: flex;
+  flex-direction: column;
+  justify-content: start; /* Align items to the top */
+}
+
+/* The content section next to the sidebar */
+#wd-kanbas .content {
+  flex-grow: 1; /* This allows the content to take up the remaining space */
+  margin-left: 120px; /* Same as the sidebar width to avoid overlap */
+  padding: 20px; /* Padding for better readability */
 }
