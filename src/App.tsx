@@ -25,6 +25,8 @@ export default function App() {
       Please
       <a id="wd-lipsum" href="https://www.lipsum.com"> click here </a>
       to get dummy text<br />
+      <a id="wd-github" href="https://github.com/cchiehyu/kanbas-react-web-app-cs5610-fa24"> click here </a>
+      to my github<br />
     </div>
   );
 }
