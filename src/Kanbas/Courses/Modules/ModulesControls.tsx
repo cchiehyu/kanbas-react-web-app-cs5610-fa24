@@ -1,3 +1,4 @@
+import React from 'react';
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
 
