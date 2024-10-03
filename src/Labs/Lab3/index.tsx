@@ -8,6 +8,11 @@ import LegacyFunctions from './LegacyFunctions';
 import ArrowFunctions from './ArrowFunctions';
 import ConditionalOutputIfElse from './ConditionalOutputIfElse';
 import ConditionalOutputInline from './ConditionalOutputInline';
+import MyComponent from './ImpliedReturn';
+import TemplateLiterals from './TemplateLiterals';
+import ArrayIndexAndLength from './ArrayIndexAndLength';
+import AddingAndRemovingToFromArrays from './AddingAndRemovingToFromArrays';
+import ForLoops from './ForLoops';
 export default function Lab3() {
     return (
       <div id="wd-lab3" className="container-fluid">
@@ -20,6 +25,11 @@ export default function Lab3() {
         <TernaryOperator/>
         <LegacyFunctions/>
         <ArrowFunctions/>
+        <MyComponent/>
+        <TemplateLiterals/>
+        <ArrayIndexAndLength/>
+        <AddingAndRemovingToFromArrays/>
+        <ForLoops/>
       </div>
     );
   }
