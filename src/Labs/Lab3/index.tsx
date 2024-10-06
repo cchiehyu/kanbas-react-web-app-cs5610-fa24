@@ -23,6 +23,12 @@ import Spreading from './Spreading';
 import FindIndex from './FindIndex';
 import Destructing from './Destructing';
 import FunctionDestructing from './FunctionDestructing';
+import Classes from './Classes';
+import Add from "./Add";
+import Square from "./Square";
+import Highlight from "./Highlight";
+import AddPathParameters from './AddPathParameters';
+
 export default function Lab3() {
     return (
       <div id="wd-lab3" className="container-fluid">
@@ -52,6 +58,17 @@ export default function Lab3() {
         <FindIndex/>
         <Destructing/>
         <FunctionDestructing/>
+        <Classes/>
+        <Add a={3} b={4} />
+        <h4>Square of 4</h4>
+      <Square>4</Square>
+      <hr />
+      <Highlight>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam
+        vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.
+     </Highlight>
+
+     <AddPathParameters/>
       </div>
     );
   }
