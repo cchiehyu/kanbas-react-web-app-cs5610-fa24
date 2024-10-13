@@ -1,61 +1,105 @@
-@media (min-width: 768px) {
-    #wd-kanbas .wd-main-content-offset {
-      padding-left: 140px !important;
-    }
-  }
+/* Navigation List Styles */
+.wd.list-group {
+  background-color: white;
+  padding: 0;
+  border: none;
+}
 
-  .wd-dashboard-course .card {
-    width: 300px; /* Ensure consistent width */
-    min-height: 400px; /* Set a minimum height to make cards uniform */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .wd-dashboard-course .card img {
-    height: 160px;
-    object-fit: cover; /* Ensures images fill the space uniformly */
-  }
-  
-  .wd-dashboard-course .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%; /* Distributes the content evenly inside */
-  }
+.wd.list-group .list-group-item {
+  background-color: white;
+  color: #D41B2C;
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+}
 
-  .list-group.wd > .list-group-item.active {
-    color: black;
-    background-color: white;
-    border-left: 3px solid black !important;
+.wd.list-group .list-group-item.active {
+  background-color: transparent;
+  color: black;
+  border-left: 3px solid black;
+}
+
+.wd.list-group .list-group-item:hover {
+  color: #D41B2C;
+}
+
+.wd.list-group .list-group-item:not(.active):hover {
+  background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  .wd.list-group {
+    width: 100%;
+    font-size: 16px;
   }
-  
-body { margin: 0;  padding: 0; }
-body * { font-family:
-         Arial, Helvetica, 
-         sans-serif; }
+}
+
+/* Main Content Styles */
 @media (min-width: 768px) {
   #wd-kanbas .wd-main-content-offset {
     padding-left: 140px !important;
   }
 }
 
+/* Dashboard Course Card Styles */
+.wd-dashboard-course .card {
+  width: 300px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.wd-dashboard-course .card img {
+  height: 160px;
+  object-fit: cover;
+}
+
+.wd-dashboard-course .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Global Body Styles */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body * {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (min-width: 768px) {
+  #wd-kanbas .wd-main-content-offset {
+    padding-left: 140px !important;
+  }
+}
+
+/* Button and Background Color Styles */
 .btn-secondary {
   --bs-btn-color: #000 !important;
   --bs-btn-bg: #c7cdd1 !important;
   --bs-btn-border-color: #c7cdd1 !important;
   --bs-btn-hover-color: #fff !important;
 }
+
 .bg-secondary {
   --bs-secondary-rgb: 199, 205, 209;
 }
+
 .list-group-item {
   --bs-list-group-border-color: gray;
 }
+
+/* Lesson Styles */
 .wd-lesson {
   border-left: 3px solid green !important;
 }
 
+/* Course List Styles */
 .wd-course-list {
   padding: 20px;
 }
@@ -88,4 +132,3 @@ body * { font-family:
 .text-danger {
   color: #D41B2C;
 }
-
