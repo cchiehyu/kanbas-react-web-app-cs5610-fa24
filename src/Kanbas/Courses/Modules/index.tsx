@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router'; 
 import { BsGripVertical } from 'react-icons/bs'; 
 import LessonControlButtons from './LessonControlButtons'; 
+import { courses } from '../../Database';  
 import ModulesControls from './ModulesControls'; 
 import * as db from '../../Database'; 
 
@@ -12,10 +13,10 @@ interface ModulesProps {
 export default function Modules() {
   const { cid } = useParams(); 
   const modules = db.modules; 
-  
+  const course = courses.find((course) => course._id === cid);
   return (
     <div id="wd-modules">
-      <h2>Course {cid}</h2>
+      <h2>Course {course && course.number}</h2>
 
       {/* Modules Controls */}
       <ModulesControls />
