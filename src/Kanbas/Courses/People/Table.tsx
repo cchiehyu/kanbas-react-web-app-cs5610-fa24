@@ -1,14 +1,13 @@
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { useParams } from "react-router-dom"; 
 
-interface PeopleTableProps {
-    courseCode: string | undefined; // Accept courseCode as a prop
-  }
+export default function PeopleTable() {
+  const { cid: courseCode } = useParams(); 
 
-export default function PeopleTable({ courseCode }: PeopleTableProps) {
   return (
     <div id="wd-people-table">
-           <h3>People in Course: {courseCode}</h3>
+      <h3>People in Course: {courseCode}</h3>
       <table className="table table-striped">
         <thead>
           <tr>
@@ -72,8 +71,8 @@ export default function PeopleTable({ courseCode }: PeopleTableProps) {
             <td className="wd-total-activity">09:37:44</td>
           </tr>
 
-            {/* Joyce Chen */}
-                    <tr>
+          {/* Joyce Chen */}
+          <tr>
             <td className="wd-full-name text-nowrap">
               <FaUserCircle className="me-2 fs-1 text-secondary" />
               <span className="wd-first-name">Joyce</span>{" "}

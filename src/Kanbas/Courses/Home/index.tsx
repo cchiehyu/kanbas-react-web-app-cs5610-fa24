@@ -6,7 +6,7 @@ export default function Home() {
 <div className="d-flex" id="wd-home">
 <div className="flex-fill">
             {/* This will render the Modules component on the left */}
-            <Modules courseCode={""} />
+            <Modules/>
             </div>
             <div className="d-none d-md-block">
             {/* This will render the CourseStatus component on the right */}
