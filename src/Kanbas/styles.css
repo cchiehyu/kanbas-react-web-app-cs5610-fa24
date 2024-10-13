@@ -13,10 +13,13 @@
   border: none;
 }
 
-.wd.list-group .list-group-item.active {
-  background-color: transparent;
-  color: black;
-  border-left: 3px solid black;
+#wd-courses-navigation.wd.list-group .list-group-item.active {
+  background-color: white !important;
+  color: black !important;
+  border-left: 10px solid black !important;
+  border-top: 1px solid rgba(0,0,0,.125) !important;
+  border-bottom: 1px solid rgba(0,0,0,.125) !important;
+  border-right: 1px solid rgba(0,0,0,.125) !important;
 }
 
 .wd.list-group .list-group-item:hover {
@@ -72,12 +75,6 @@ body * {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@media (min-width: 768px) {
-  #wd-kanbas .wd-main-content-offset {
-    padding-left: 140px !important;
-  }
-}
-
 /* Button and Background Color Styles */
 .btn-secondary {
   --bs-btn-color: #000 !important;
@@ -91,7 +88,7 @@ body * {
 }
 
 .list-group-item {
-  --bs-list-group-border-color: gray;
+  --bs-list-group-border-color: ;
 }
 
 /* Lesson Styles */
@@ -129,6 +126,7 @@ body * {
   margin-bottom: 5px;
 }
 
+/* Text Danger Styles */
 .text-danger {
   color: #D41B2C;
 }

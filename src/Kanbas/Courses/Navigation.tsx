@@ -1,22 +1,18 @@
 import React from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
-import '../styles.css'; // Correct path to the styles.css file
+import '../styles.css';
 
 export default function CoursesNavigation() {
-  // Get the course ID from the URL parameters
   const { cid } = useParams();
-  
-  // Get the current location (pathname)
   const location = useLocation();
-
-  // Array of navigation links
+   
   const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades", "People"];
 
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
       {links.map((link) => {
         const linkPath = `/Kanbas/Courses/${cid}/${link}`;
-        const isActive = location.pathname.includes(link.toLowerCase());
+        const isActive = location.pathname.endsWith(link);
 
         return (
           <Link
