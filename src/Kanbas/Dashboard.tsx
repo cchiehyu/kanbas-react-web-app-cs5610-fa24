@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './styles.css';
-import { courses } from './Database';
-
+import { courses } from './Database'; 
 
 export default function Dashboard() {
   return (
@@ -20,7 +19,7 @@ export default function Dashboard() {
                 className="wd-dashboard-course-link text-decoration-none text-dark"
                 to={`/Kanbas/Courses/${course._id}/Home`}
               >
-                <img src="/images/placeholder.jpg" width="100%" height={160} alt={course.name} />
+                <img src={course.image} width="100%" height={160} alt={course.name} />
                 <div className="card-body">
                   <h5 className="wd-dashboard-course-title card-title">{course.name}</h5>
                   <p className="wd-dashboard-course-text card-text">{course.description}</p>
