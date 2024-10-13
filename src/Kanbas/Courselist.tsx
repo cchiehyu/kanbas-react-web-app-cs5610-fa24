@@ -1,72 +1,29 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import './styles.css';
-
-const courses = [
-  {
-    code: 'CS1234',
-    name: 'React JS',
-    term: 'Spring 2024',
-  },
-  {
-    code: 'CS5610',
-    name: 'Web Development',
-    term: 'Summer Full 2024',
-  },
-  {
-    code: 'CS5200',
-    name: 'Database Management',
-    term: 'Summer Full 2024',
-  },
-  {
-    code: 'CS5550',
-    name: 'AI and Machine Learning',
-    term: 'Fall 2024',
-  }
-  ,
-  {
-    code: 'CS6700',
-    name: 'Data Science',
-    term: 'Fall 2024',
-  }
-  ,
-  {
-    code: 'CS7800',
-    name: 'Software Architecture',
-    term: 'Fall 2024',
-  }
-  ,
-  {
-    code: 'CS6400',
-    name: 'Cybersecurity',
-    term: 'Fall 2024',
-  }
-  ,
-  {
-    code: 'CS7000',
-    name: 'Cloud Computing',
-    term: 'Fall 2024',
-  }
-];
+import { Link } from 'react-router-dom'; // To navigate between different course pages
+import { courses } from './Database'; // Importing the courses data from your Database
 
 export default function CourseList() {
-    return (
-      <div className="wd-course-list">
-        <h1>Courses</h1>
-        <hr />
-        <h2 className="text-danger">All Courses</h2>
-        <hr />
+  return (
+    <div id="wd-course-list">
+      <h2>Courses</h2>
+      <ul className="list-group">
         {courses.map((course) => (
-          <div key={course.code} className="wd-course-item">
-            <Link to={`/Kanbas/Courses/${course.code}/Modules`} className="text-danger text-decoration-none">
-              <h3>{course.code} {course.name}</h3>
-              <p>{course.term}</p>
+          <li key={course._id} className="list-group-item border-0 p-3">
+            {/* Course name as a clickable link */}
+            <Link to={`/courses/${course._id}`} className="text-danger" style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
+              {course.number} {course.name}
             </Link>
-          </div>
+
+            {/* Additional details about the course */}
+            <div className="course-details" style={{ fontSize: '0.9rem', color: 'gray' }}>
+              <p className="mb-1">Term: {course.startDate} to {course.endDate}</p>
+              <p className="mb-1">Semester Full Term, {course.credits} Credits</p>
+            </div>
+          </li>
         ))}
-        <p>
-          Welcome to your courses! To customize the list of courses, click on the "All Courses" link and star the courses to display.
-        </p>
-      </div>
-    );
-  }
+      </ul>
+
+      <p className="mt-4">Welcome to your courses! To customize the list of courses, click on the "All Courses" link and star the courses to display.</p>
+    </div>
+  );
+}
