@@ -5,7 +5,7 @@ import LessonControlButtons from './LessonControlButtons';
 import { courses } from '../../Database';  
 import ModulesControls from './ModulesControls'; 
 import * as db from '../../Database'; 
-
+import { useEffect }  from 'react';
 interface ModulesProps {
   courseCode?: string;
 }
@@ -14,6 +14,13 @@ export default function Modules() {
   const { cid } = useParams(); 
   const modules = db.modules; 
   const course = courses.find((course) => course._id === cid);
+  useEffect(() => {
+    console.log(`Total modules: ${modules.length}`);
+    const filteredModules = modules.filter((module: any) => module.course === cid);
+    console.log(`Modules for course ${cid}: ${filteredModules.length}`);
+  }, [modules, cid]);
+
+
   return (
     <div id="wd-modules">
       <h2>Course {course && course.number}</h2>
@@ -21,6 +28,8 @@ export default function Modules() {
       {/* Modules Controls */}
       <ModulesControls />
       <br /><br /><br /><br />
+
+      
 
       {/* Dynamically rendered modules based on the course ID */}
       <ul id="wd-modules" className="list-group rounded-0">

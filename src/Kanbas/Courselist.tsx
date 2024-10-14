@@ -11,7 +11,7 @@ export default function CourseList() {
           <li key={course._id} className="list-group-item border-0 p-3">
             {/* Display Course ID (number) and Name */}
             <Link
-              to={`/Kanbas/Courses/${course.number}/Home`}
+              to={`/Kanbas/Courses/${course._id}/Home`}
               className="text-danger"
               style={{ fontSize: '1.1rem', fontWeight: 'bold' }}
             >

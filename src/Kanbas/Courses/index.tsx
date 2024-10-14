@@ -11,8 +11,8 @@ import { FaAlignJustify } from 'react-icons/fa';
 
 
 export default function Courses() {
-  const { cid: courseNumber } = useParams<{ cid: string }>(); // Get course number from URL
-  const course = courses.find((course) => course.number === courseNumber); // Find by course number
+  const { cid: courseId } = useParams<{ cid: string }>(); // Get course number from URL
+  const course = courses.find((course) => course._id === courseId); // Find by course number
   const { pathname } = useLocation();
   
   return (
@@ -20,7 +20,7 @@ export default function Courses() {
       <h2 className="text-danger">
         <FaAlignJustify className="me-3 fs-4 mb-1" />
         {/* Display course number and name */}
-        {courseNumber} {course && course.name} &gt; {pathname.split("/")[4]}
+        {course && course.number} {course && course.name} &gt; {pathname.split("/")[4]}
       </h2>
       <hr />
 
