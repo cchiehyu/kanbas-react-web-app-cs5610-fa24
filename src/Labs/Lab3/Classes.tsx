@@ -2,7 +2,6 @@ import './Classes.css';
 import React from 'react';
 
 export default function Classes() {
-  const color = 'blue';
   const dangerous = true;
 
   return (
