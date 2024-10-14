@@ -6,9 +6,7 @@ import { courses } from '../../Database';
 import ModulesControls from './ModulesControls'; 
 import * as db from '../../Database'; 
 import { useEffect }  from 'react';
-interface ModulesProps {
-  courseCode?: string;
-}
+
 
 export default function Modules() {
   const { cid } = useParams(); 
