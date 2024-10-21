@@ -2,6 +2,10 @@ import PassingFunctions from "./PassingFunctions";
 import PassingDataOnEvent from "./PassingDataOnEvent";
 import ClickEvent from "./ClickEvent";
 import EventObject from "./EventObject";
+import Counter from "./Counter";
+import BooleanStateVariables from "./BooleanStateVariables";
+import StringStateVariables from "./StringStateVariables";
+import DateStateVariable from "./DateStateVariable";
 
 export default function Lab4() {
     function sayHello() {
@@ -27,6 +31,22 @@ export default function Lab4() {
         
         <section>
           <PassingDataOnEvent />
+        </section>
+
+        <section>
+          <Counter />
+        </section>
+
+        <section>
+        <BooleanStateVariables/>
+        </section>
+
+        <section>
+          <StringStateVariables/>
+        </section>
+
+        <section>
+          <DateStateVariable/>
         </section>
       </div>
     );
