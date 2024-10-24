@@ -60,7 +60,7 @@
   min-height: 100vh; /* Ensure it spans the full height */
   display: flex;
   flex-direction: column;
-  justify-content: start; /* Align items to the top */
+  justify-content: flex-start; /* Use flex-start for better compatibility */
 }
 
 /* The content section next to the sidebar */

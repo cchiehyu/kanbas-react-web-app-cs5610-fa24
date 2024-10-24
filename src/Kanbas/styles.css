@@ -1,61 +1,79 @@
-@media (min-width: 768px) {
-    #wd-kanbas .wd-main-content-offset {
-      padding-left: 140px !important;
-    }
-  }
-
-  .wd-dashboard-course .card {
-    width: 300px; /* Ensure consistent width */
-    min-height: 400px; /* Set a minimum height to make cards uniform */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .wd-dashboard-course .card img {
-    height: 160px;
-    object-fit: cover; /* Ensures images fill the space uniformly */
-  }
-  
-  .wd-dashboard-course .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%; /* Distributes the content evenly inside */
-  }
-
-  .list-group.wd > .list-group-item.active {
-    color: black;
-    background-color: white;
-    border-left: 3px solid black !important;
-  }
-  
-body { margin: 0;  padding: 0; }
-body * { font-family:
-         Arial, Helvetica, 
-         sans-serif; }
+/* General Layout for Content Padding */
 @media (min-width: 768px) {
   #wd-kanbas .wd-main-content-offset {
     padding-left: 140px !important;
   }
 }
 
-.btn-secondary {
-  --bs-btn-color: #000 !important;
-  --bs-btn-bg: #c7cdd1 !important;
-  --bs-btn-border-color: #c7cdd1 !important;
-  --bs-btn-hover-color: #fff !important;
-}
-.bg-secondary {
-  --bs-secondary-rgb: 199, 205, 209;
-}
-.list-group-item {
-  --bs-list-group-border-color: gray;
-}
-.wd-lesson {
-  border-left: 3px solid green !important;
+/* Card Layout for Course Dashboard */
+.wd-dashboard-course .card {
+  width: 100%; 
+  max-width: 300px; 
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
+/* Card Image Styling */
+.wd-dashboard-course .card img {
+  height: 160px;
+  object-fit: cover; 
+}
+
+/* Card Body Content */
+.wd-dashboard-course .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%; 
+}
+
+/* Sidebar Navigation - General Styling */
+#wd-courses-navigation {
+  background-color: #f9f9f9; 
+  padding: 10px;
+  min-height: 100vh; 
+  width: 200px;
+}
+
+/* Styling for Each Sidebar Link */
+#wd-courses-navigation .list-group-item {
+  color: #D41B2C; 
+  font-size: 1.1rem;
+  padding: 15px; 
+  text-align: center; 
+  border: none; 
+}
+
+/* Hover Effect for Links */
+#wd-courses-navigation .list-group-item:hover {
+  background-color: #ececec; 
+  color: black; 
+}
+
+/* Active Link Styling */
+.list-group.wd > .list-group-item.active {
+  color: black;
+  background-color: white;
+  border-left: 3px solid black !important; 
+}
+
+/* Responsive Design for Sidebar */
+@media (max-width: 768px) {
+  #wd-courses-navigation {
+    display: none; 
+  }
+}
+
+/* Typography and General Styling */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif; 
+}
+
+/* Course List Section Styling */
 .wd-course-list {
   padding: 20px;
 }
@@ -71,6 +89,7 @@ body * { font-family:
   margin-bottom: 10px;
 }
 
+/* Course Item Styling */
 .wd-course-item {
   margin-bottom: 20px;
 }
@@ -85,7 +104,37 @@ body * { font-family:
   margin-bottom: 5px;
 }
 
+/* Lesson Item Styling */
+.wd-lesson {
+  border-left: 3px solid green !important; /* Green border for lesson items */
+}
+
+/* Text Color for Danger (Error, Important Warnings) */
 .text-danger {
   color: #D41B2C;
 }
 
+/* Button and Secondary Element Styles */
+.btn-secondary {
+  --bs-btn-color: #000 !important;
+  --bs-btn-bg: #c7cdd1 !important;
+  --bs-btn-border-color: #c7cdd1 !important;
+  --bs-btn-hover-color: #fff !important;
+}
+
+/* Secondary Background Colors */
+.bg-secondary {
+  --bs-secondary-rgb: 199, 205, 209;
+}
+
+/* General Styling for List Group Items */
+.list-group-item {
+  --bs-list-group-border-color: #c7cdd1;
+}
+
+/* Responsive Card Layout for Smaller Screens */
+@media (max-width: 768px) {
+  .wd-dashboard-course .card {
+    width: 100%; /* Full width on small screens */
+  }
+}
