@@ -5,23 +5,29 @@ import LessonControlButtons from './LessonControlButtons';
 import { courses } from '../../Database';  
 import ModulesControls from './ModulesControls'; 
 import * as db from '../../Database'; 
-import { useEffect, useState }  from 'react';
+import { useEffect, useState } from 'react';
 
-export default function Modules({ courseCode }: ModulesProps) {
+// Making the interface props optional since we're using useParams
+interface ModulesProps {
+  courseCode?: string;
+}
+
+export default function Modules({ courseCode }: ModulesProps = {}) {
   const [isExpanded, setIsExpanded] = useState({
     module1: true,
     module2: true
   });
 
   const { cid } = useParams(); 
+  const currentCourseId = courseCode || cid;
   const modules = db.modules; 
-  const course = courses.find((course) => course._id === cid);
+  const course = courses.find((course) => course._id === currentCourseId);
+
   useEffect(() => {
     console.log(`Total modules: ${modules.length}`);
-    const filteredModules = modules.filter((module: any) => module.course === cid);
-    console.log(`Modules for course ${cid}: ${filteredModules.length}`);
-  }, [modules, cid]);
-
+    const filteredModules = modules.filter((module: any) => module.course === currentCourseId);
+    console.log(`Modules for course ${currentCourseId}: ${filteredModules.length}`);
+  }, [modules, currentCourseId]);
 
   const toggleModule = (moduleId: 'module1' | 'module2') => {
     setIsExpanded(prev => ({
@@ -52,12 +58,10 @@ export default function Modules({ courseCode }: ModulesProps) {
       <ModulesControls onCollapseAll={handleCollapseAll} onExpandAll={handleExpandAll} />
       <br /><br /><br /><br />
 
-      
-
-      {/* Dynamically rendered modules based on the course ID */}
-      <ul id="wd-modules" className="list-group rounded-0">
+      {/* Dynamic modules */}
+      <ul className="list-group rounded-0">
         {modules
-          .filter((module: any) => module.course === cid) // Filter modules by course ID
+          .filter((module: any) => module.course === currentCourseId)
           .map((module: any) => (
             <li key={module.id} className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
               <div className="wd-title p-3 ps-2 bg-secondary">
@@ -75,6 +79,9 @@ export default function Modules({ courseCode }: ModulesProps) {
               )}
             </li>
           ))}
+      </ul>
+
+      {/* Static modules */}
       <ul className="list-group rounded-0 mt-4">
         {/* Week 1, Lecture 1 */}
         <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
@@ -92,7 +99,6 @@ export default function Modules({ courseCode }: ModulesProps) {
           
           {isExpanded.module1 && (
             <ul className="list-group rounded-0">
-              {/* Learning Objectives Section */}
               <li className="list-group-item p-0">
                 <div className="p-3 ps-4 bg-light fw-bold">LEARNING OBJECTIVES</div>
                 <ul className="list-group rounded-0">
@@ -101,7 +107,6 @@ export default function Modules({ courseCode }: ModulesProps) {
                 </ul>
               </li>
 
-              {/* Reading Section */}
               <li className="list-group-item p-0">
                 <div className="p-3 ps-4 bg-light fw-bold">READING</div>
                 <ul className="list-group rounded-0">
@@ -110,7 +115,6 @@ export default function Modules({ courseCode }: ModulesProps) {
                 </ul>
               </li>
 
-              {/* Slides Section */}
               <li className="list-group-item p-0">
                 <div className="p-3 ps-4 bg-light fw-bold">SLIDES</div>
                 <ul className="list-group rounded-0">
@@ -139,7 +143,6 @@ export default function Modules({ courseCode }: ModulesProps) {
           
           {isExpanded.module2 && (
             <ul className="list-group rounded-0">
-              {/* Learning Objectives Section */}
               <li className="list-group-item p-0">
                 <div className="p-3 ps-4 bg-light fw-bold">LEARNING OBJECTIVES</div>
                 <ul className="list-group rounded-0">
@@ -148,7 +151,6 @@ export default function Modules({ courseCode }: ModulesProps) {
                 </ul>
               </li>
 
-              {/* Slides Section */}
               <li className="list-group-item p-0">
                 <div className="p-3 ps-4 bg-light fw-bold">SLIDES</div>
                 <ul className="list-group rounded-0">
