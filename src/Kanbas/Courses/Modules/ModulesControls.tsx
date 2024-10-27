@@ -2,75 +2,87 @@ import React from 'react';
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
 
-export default function ModulesControls() {
+interface ModulesControlsProps {
+  onCollapseAll: () => void;
+  onExpandAll: () => void;
+}
+
+export default function ModulesControls({ onCollapseAll, onExpandAll }: ModulesControlsProps) {
   return (
-    <div id="wd-modules-controls" className="text-nowrap">
-      {/* Add Module Button */}
-      <button id="wd-add-module-btn" className="btn btn-lg btn-danger me-1 float-end">
-        <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
-        Module
+    <div className="d-flex justify-content-end align-items-center mb-3">
+      <button
+        id="wd-collapse-all"
+        className="btn btn-outline-secondary me-2"
+        onClick={() => onCollapseAll()}
+        type="button"
+      >
+        Collapse All
       </button>
 
-      {/* Publish All Dropdown */}
-      <div className="dropdown d-inline me-1 float-end">
+      <button
+        id="wd-view-progress"
+        className="btn btn-outline-secondary me-2"
+      >
+        View Progress
+      </button>
+
+      <div className="dropdown me-2">
         <button
           id="wd-publish-all-btn"
-          className="btn btn-lg btn-secondary dropdown-toggle"
+          className="btn btn-outline-secondary dropdown-toggle"
           type="button"
           data-bs-toggle="dropdown"
+          aria-expanded="false"
         >
           <GreenCheckmark />
           Publish All
         </button>
         <ul className="dropdown-menu">
-          {/* Publish all modules and items */}
           <li>
-            <a id="wd-publish-all-modules-and-items-btn" className="dropdown-item" href="#/Kanbas/Courses/1234/Home">
+            <button 
+              className="dropdown-item"
+              id="wd-publish-all-modules-and-items-btn"
+            >
               <GreenCheckmark />
               Publish all modules and items
-            </a>
+            </button>
           </li>
-
-          {/* Publish modules only */}
           <li>
-            <a id="wd-publish-modules-only-btn" className="dropdown-item" href="#/Kanbas/Courses/1234/Home">
+            <button 
+              className="dropdown-item"
+              id="wd-publish-modules-only-btn"
+            >
               <GreenCheckmark />
               Publish modules only
-            </a>
+            </button>
           </li>
-
-          {/* Unpublish all modules and items */}
           <li>
-            <a id="wd-unpublish-all-modules-and-items" className="dropdown-item" href="#/Kanbas/Courses/1234/Home">
+            <button 
+              className="dropdown-item"
+              id="wd-unpublish-all-modules-and-items"
+            >
               <GreenCheckmark />
               Unpublish all modules and items
-            </a>
+            </button>
           </li>
-
-          {/* Unpublish modules only */}
           <li>
-            <a id="wd-unpublish-modules-only" className="dropdown-item" href="#/Kanbas/Courses/1234/Home" >
+            <button 
+              className="dropdown-item"
+              id="wd-unpublish-modules-only"
+            >
               <GreenCheckmark />
               Unpublish modules only
-            </a>
+            </button>
           </li>
         </ul>
       </div>
 
-      {/* View Progress Button */}
-      <button
-        id="wd-view-progress"
-        className="btn btn-lg btn-outline-primary me-1 float-end"
+      <button 
+        id="wd-add-module-btn"
+        className="btn btn-danger"
       >
-        View Progress
-      </button>
-
-      {/* Collapse All Button */}
-      <button
-        id="wd-collapse-all"
-        className="btn btn-lg btn-outline-primary me-1 float-end"
-      >
-        Collapse All
+        <FaPlus className="me-2" style={{ marginBottom: "2px" }} />
+        Module
       </button>
     </div>
   );
