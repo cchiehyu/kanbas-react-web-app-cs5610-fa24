@@ -1,13 +1,31 @@
 import React from 'react';
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
+import ModuleEditor from "./ModuleEditor";
 
 interface ModulesControlsProps {
   onCollapseAll: () => void;
   onExpandAll: () => void;
 }
 
-export default function ModulesControls({ onCollapseAll, onExpandAll }: ModulesControlsProps) {
+// Separate interface for editor props
+interface ModuleEditorProps {
+  moduleName: string;
+  setModuleName: (title: string) => void;
+  addModule: () => void;
+}
+
+// Combine both interfaces for the component
+type Props = ModulesControlsProps & ModuleEditorProps;
+
+export default function ModulesControls({
+  onCollapseAll,
+  onExpandAll,
+  moduleName,
+  setModuleName,
+  addModule
+}: Props) {
+  
   return (
     <div className="d-flex justify-content-end align-items-center mb-3">
       <button
@@ -78,12 +96,16 @@ export default function ModulesControls({ onCollapseAll, onExpandAll }: ModulesC
       </div>
 
       <button 
-        id="wd-add-module-btn"
-        className="btn btn-danger"
+        className="btn btn-lg btn-danger me-1 float-end" id="wd-add-module-btn"
+        data-bs-toggle="modal" data-bs-target="#wd-add-module-dialog"
       >
         <FaPlus className="me-2" style={{ marginBottom: "2px" }} />
         Module
       </button>
+
+      <ModuleEditor dialogTitle="Add Module" moduleName={moduleName}
+                    setModuleName={setModuleName} addModule={addModule} />
+                    
     </div>
   );
 }

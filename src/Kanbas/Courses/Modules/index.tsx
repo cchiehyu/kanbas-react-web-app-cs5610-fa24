@@ -22,6 +22,12 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
   const currentCourseId = courseCode || cid;
   const [modules, setModules] = useState<any[]>(db.modules);
   const course = courses.find((course) => course._id === currentCourseId);
+  const [moduleName, setModuleName] = useState("");
+  const addModule = () => {
+    setModules([ ...modules, { _id: new Date().getTime().toString(),
+                                     name: moduleName, course: cid, lessons: [] } ]);
+    setModuleName("");
+  };
 
   useEffect(() => {
     console.log(`Total modules: ${modules.length}`);
@@ -55,7 +61,7 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
       <h2>Course {course && course.number}</h2>
 
       {/* Modules Controls */}
-      <ModulesControls onCollapseAll={handleCollapseAll} onExpandAll={handleExpandAll} />
+      <ModulesControls onCollapseAll={handleCollapseAll} onExpandAll={handleExpandAll} setModuleName={setModuleName} moduleName={moduleName} addModule={addModule}/>
       <br /><br /><br /><br />
 
       {/* Dynamic modules */}
