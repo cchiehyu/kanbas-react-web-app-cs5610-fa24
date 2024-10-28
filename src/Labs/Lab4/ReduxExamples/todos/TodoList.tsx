@@ -1,59 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import TodoForm from "./TodoForm";
 import TodoItem from "./TodoItem";
-import { useSelector, useDispatch } from "react-redux";
-import { addTodo, deleteTodo, updateTodo } from "./todosReducer"; 
+import { useSelector } from "react-redux";
 
 export default function TodoList() {
-  const todos = useSelector((state: any) => state.todosReducer || []); // Fallback to an empty array
-  const dispatch = useDispatch();
-  const [todo, setTodo] = useState({ id: "-1", title: "" });
-
-  const handleAddTodo = () => {
-    if (todo.title.trim()) {
-      dispatch(addTodo({ title: todo.title })); 
-      setTodo({ id: "-1", title: "" });
-    }
-  };
-
-  const handleDeleteTodo = (id: string) => {
-    dispatch(deleteTodo(id));
-  };
-
-  const handleUpdateTodo = () => {
-    if (todo.title.trim()) {
-      dispatch(updateTodo(todo));
-      setTodo({ id: "-1", title: "" });
-    }
-  };
+  const todos = useSelector((state: any) => state.todosReducer.todos); 
 
   return (
-    <div>
+    <div id="wd-todo-list-redux">
       <h2>Todo List</h2>
       <ul className="list-group">
-        <TodoForm
-          todo={todo}
-          setTodo={setTodo}
-          addTodo={handleAddTodo}
-          updateTodo={handleUpdateTodo}
-        />
+        <TodoForm />
         {todos.map((todo: any) => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            deleteTodo={handleDeleteTodo}
-            setTodo={setTodo}
-          />
+          <TodoItem key={todo.id} todo={todo} />
         ))}
-
-        <li className="list-group-item">
-          <button onClick={handleAddTodo} id="wd-add-todo-click">Add</button>
-          <button onClick={handleUpdateTodo} id="wd-update-todo-click">Update</button>
-          <input
-            value={todo.title}
-            onChange={(e) => setTodo({ ...todo, title: e.target.value })}
-          />
-        </li>
       </ul>
       <hr />
     </div>
