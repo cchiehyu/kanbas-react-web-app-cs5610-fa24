@@ -10,11 +10,14 @@ import ObjectStateVariable from "./ObjectStateVariable";
 import ArrayStateVariable from "./ArrayStateVariable";
 import ParentStateComponent from "./ParentStateComponent";
 import ReduxExamples from "./ReduxExamples";
+import { useSelector } from "react-redux";
 
 export default function Lab4() {
   function sayHello() {
     alert("Hello");
   }
+
+  const todos = useSelector((state: any) => state.todos?.todos || []);
 
   return (
     <div id="wd-lab4">
@@ -68,6 +71,15 @@ export default function Lab4() {
       <section>
         <ReduxExamples />
       </section>
+
+      <ul className="list-group">
+        {todos.map((todo: any) => (
+          <li className="list-group-item" key={todo.id}>
+            {todo.title}
+          </li>
+        ))}
+      </ul>
+      <hr />
     </div>
   );
 }
