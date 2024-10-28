@@ -20,7 +20,7 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
 
   const { cid } = useParams(); 
   const currentCourseId = courseCode || cid;
-  const modules = db.modules; 
+  const [modules, setModules] = useState<any[]>(db.modules);
   const course = courses.find((course) => course._id === currentCourseId);
 
   useEffect(() => {
