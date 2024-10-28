@@ -2,7 +2,7 @@ import React from "react";
 import AddRedux from "./AddRedux";
 import CounterRedux from "./CounterRedux";
 import HelloRedux from "./HelloRedux";
-
+import TodoList from "./todos/TodoList";
 export default function ReduxExamples() {
   return (
     <div>
@@ -10,6 +10,7 @@ export default function ReduxExamples() {
       <AddRedux />
       <CounterRedux />
       <HelloRedux />
+      <TodoList />
     </div>
   );
 }

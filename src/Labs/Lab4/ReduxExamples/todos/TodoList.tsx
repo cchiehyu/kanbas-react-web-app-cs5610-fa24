@@ -1,55 +1,61 @@
 import React, { useState } from "react";
+import TodoForm from "./TodoForm";
+import TodoItem from "./TodoItem";
+import { useSelector, useDispatch } from "react-redux";
+import { addTodo, deleteTodo, updateTodo } from "./todosReducer"; 
+
 export default function TodoList() {
-  const [todos, setTodos] = useState([
-    { id: "1", title: "Learn React" },
-    { id: "2", title: "Learn Node"  }]);
-  const [todo, setTodo] = useState({ id: "-1", title: "Learn Mongo" });
-  const addTodo = (todo: any) => {
-    const newTodos = [ ...todos, { ...todo,
-      id: new Date().getTime().toString() }];
-    setTodos(newTodos);
-    setTodo({id: "-1", title: ""});
+  const todos = useSelector((state: any) => state.todosReducer || []); // Fallback to an empty array
+  const dispatch = useDispatch();
+  const [todo, setTodo] = useState({ id: "-1", title: "" });
+
+  const handleAddTodo = () => {
+    if (todo.title.trim()) {
+      dispatch(addTodo({ title: todo.title })); 
+      setTodo({ id: "-1", title: "" });
+    }
   };
-  const deleteTodo = (id: string) => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
+
+  const handleDeleteTodo = (id: string) => {
+    dispatch(deleteTodo(id));
   };
-  const updateTodo = (todo: any) => {
-    const newTodos = todos.map((item) =>
-      (item.id === todo.id ? todo : item));
-    setTodos(newTodos);
-    setTodo({id: "-1", title: ""});
+
+  const handleUpdateTodo = () => {
+    if (todo.title.trim()) {
+      dispatch(updateTodo(todo));
+      setTodo({ id: "-1", title: "" });
+    }
   };
+
   return (
     <div>
       <h2>Todo List</h2>
       <ul className="list-group">
+        <TodoForm
+          todo={todo}
+          setTodo={setTodo}
+          addTodo={handleAddTodo}
+          updateTodo={handleUpdateTodo}
+        />
+        {todos.map((todo: any) => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            deleteTodo={handleDeleteTodo}
+            setTodo={setTodo}
+          />
+        ))}
+
         <li className="list-group-item">
-          <button onClick={() => addTodo(todo)}
-                  id="wd-add-todo-click">Add</button>
-          <button onClick={() => updateTodo(todo)}
-                  id="wd-update-todo-click">
-            Update </button>
-          <input defaultValue={todo.title}
-            onChange={(e) =>
-              setTodo({ ...todo,
-                title: e.target.value })
-            }
+          <button onClick={handleAddTodo} id="wd-add-todo-click">Add</button>
+          <button onClick={handleUpdateTodo} id="wd-update-todo-click">Update</button>
+          <input
+            value={todo.title}
+            onChange={(e) => setTodo({ ...todo, title: e.target.value })}
           />
         </li>
-        {todos.map((todo) => (
-          <li key={todo.id} className="list-group-item">
-            <button onClick={() => deleteTodo(todo.id)}
-                    id="wd-delete-todo-click">
-              Delete </button>
-            <button onClick={() => setTodo(todo)}
-                    id="wd-set-todo-click">
-              Edit </button>
-            {todo.title}
-          </li>
-        ))}
       </ul>
-      <hr/>
+      <hr />
     </div>
   );
 }
