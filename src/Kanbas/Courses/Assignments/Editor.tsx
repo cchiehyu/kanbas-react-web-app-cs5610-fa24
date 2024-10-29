@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { addAssignment, updateAssignment } from './reducer';
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { BsGripVertical, BsPlus } from 'react-icons/bs';
+import { FaSearch, FaTrash } from 'react-icons/fa';
+import { FaPencil } from 'react-icons/fa6';
+import { deleteAssignment } from './reducer';
 
 interface Assignment {
   _id: string;
@@ -22,190 +25,185 @@ interface KanbasState {
   };
 }
 
-export default function AssignmentEditor() {
-  const { aid, cid } = useParams();
-  const navigate = useNavigate();
+export default function Assignments() {
+  const { cid } = useParams();
   const dispatch = useDispatch();
   
-  const isNewAssignment = aid === 'new';
-  
+  // State for delete confirmation dialog
+  const [deleteDialog, setDeleteDialog] = useState({
+    isOpen: false,
+    assignmentId: '',
+    assignmentTitle: ''
+  });
+
   // Get assignments from Redux store
   const assignments = useSelector((state: KanbasState) => 
-    state.assignmentsReducer.assignments);
-  
-  const [assignment, setAssignment] = useState<Assignment>({
-    _id: isNewAssignment ? new Date().getTime().toString() : '',
-    title: '',
-    course: cid || '',
-    description: '',
-    points: 100,
-    dueDate: '',
-    availableFrom: '',
-    availableUntil: '',
-    group: 'Assignments',
-    submissionType: 'online'
-  });
-  
-  const [saveMessage, setSaveMessage] = useState<string>('');
+    state.assignmentsReducer.assignments.filter(
+      assignment => assignment.course === cid
+    )
+  );
 
-  useEffect(() => {
-    if (!isNewAssignment) {
-      const foundAssignment = assignments.find((a) => a._id === aid);
-      if (foundAssignment) {
-        setAssignment({
-          ...foundAssignment,
-          description: foundAssignment.description || '',
-          points: foundAssignment.points || 0,
-          dueDate: foundAssignment.dueDate || '',
-          availableFrom: foundAssignment.availableFrom || '',
-          availableUntil: foundAssignment.availableUntil || '',
-          group: foundAssignment.group || 'Assignments',
-          submissionType: foundAssignment.submissionType || 'online',
-        });
-      }
-    }
-  }, [aid, assignments, isNewAssignment]);
+  // Get course details from Redux store
+  const course = useSelector((state: any) => 
+    state.coursesReducer?.courses.find((c: any) => c._id === cid)
+  );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { id, value } = e.target;
-    setAssignment(prev => ({
-      ...prev,
-      [id.replace('wd-', '')]: value,
-    }));
+  const handleDeleteClick = (assignmentId: string, title: string) => {
+    setDeleteDialog({
+      isOpen: true,
+      assignmentId,
+      assignmentTitle: title
+    });
   };
 
-  const handleSave = () => {
-    if (isNewAssignment) {
-      dispatch(addAssignment(assignment));
-      setSaveMessage('New assignment created successfully!');
-    } else {
-      dispatch(updateAssignment(assignment));
-      setSaveMessage('Assignment updated successfully!');
-    }
-    
-    setTimeout(() => {
-      setSaveMessage('');
-      navigate(`/Kanbas/Courses/${cid}/Assignments`);
-    }, 2000);
+  const handleDeleteConfirm = () => {
+    dispatch(deleteAssignment(deleteDialog.assignmentId));
+    setDeleteDialog({
+      isOpen: false,
+      assignmentId: '',
+      assignmentTitle: ''
+    });
   };
 
-  const handleCancel = () => {
-    navigate(`/Kanbas/Courses/${cid}/Assignments`);
+  const handleDeleteCancel = () => {
+    setDeleteDialog({
+      isOpen: false,
+      assignmentId: '',
+      assignmentTitle: ''
+    });
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return 'No due date';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   return (
-    <div id="wd-assignments-editor" className="container mt-4">
-      <h4>{isNewAssignment ? 'Create New Assignment' : 'Edit Assignment'}</h4>
-      
-      {/* Assignment Name */}
-      <div className="row mb-3">
-        <label htmlFor="wd-title" className="form-label col-md-2">Assignment Name *</label>
-        <div className="col-md-10">
+    <div id="wd-assignments" className="container mt-4">
+      {/* Search Bar and Filter Buttons */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="input-group" style={{ width: '250px' }}>
+          <span className="input-group-text bg-white">
+            <FaSearch />
+          </span>
           <input 
-            id="wd-title" 
-            value={assignment.title} 
-            onChange={handleInputChange} 
+            id="wd-search-assignment"
             className="form-control"
-            required 
+            placeholder="Search for Assignments" 
           />
+        </div>
+        <div>
+          <button className="btn btn-secondary me-2">SHOW BY DATE</button>
+          <button className="btn btn-secondary">SHOW BY TYPE</button>
+          <Link 
+            to={`/Kanbas/Courses/${cid}/Assignments/new`}
+            className="btn btn-danger ms-3"
+          >
+            <BsPlus className="me-1" /> Assignment
+          </Link>
         </div>
       </div>
 
-      {/* Description */}
-      <div className="row mb-4">
-        <label htmlFor="wd-description" className="form-label col-md-2">Description</label>
-        <div className="col-md-10">
-          <textarea
-            id="wd-description"
-            className="form-control"
-            rows={6}
-            value={assignment.description}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
+      {/* Assignments List */}
+      <ul id="wd-assignments-list" className="list-group rounded-0">
+        {assignments.map((assignment) => (
+          <li 
+            key={assignment._id}
+            className="wd-assignment list-group-item p-0 mb-5 fs-5 border-gray"
+            style={{ borderLeft: '5px solid green' }}
+          >
+            <div className="d-flex align-items-center">
+              <BsGripVertical className="me-2 fs-3" />
+              <div className="wd-title p-3 ps-2 bg-light flex-grow-1">
+                {assignment.title}
+              </div>
+            </div>
+            <ul className="wd-assignments-list list-group rounded-0">
+              <li className="wd-assignment-item list-group-item p-3 ps-1">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <Link 
+                      to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                      className="wd-assignment-link text-decoration-none"
+                    >
+                      {assignment.title}
+                      <p className="text-muted mb-0">
+                        {assignment.description && assignment.description.substring(0, 100)}
+                        {assignment.description && assignment.description.length > 100 ? '...' : ''}
+                      </p>
+                    </Link>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <div className="text-end me-3">
+                      <div className="text-muted">
+                        Due: {formatDate(assignment.dueDate)}
+                      </div>
+                      <div>
+                        <strong>Points:</strong> {assignment.points}
+                      </div>
+                    </div>
+                    <div>
+                      <Link 
+                        to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                        className="text-decoration-none me-2"
+                      >
+                        <FaPencil className="text-primary" />
+                      </Link>
+                      <FaTrash
+                        className="text-danger"
+                        onClick={() => handleDeleteClick(assignment._id, assignment.title)}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        ))}
+      </ul>
 
-      {/* Points */}
-      <div className="row mb-3">
-        <div className="col-md-6">
-          <label htmlFor="wd-points" className="form-label">Points *</label>
-          <input 
-            id="wd-points" 
-            type="number" 
-            value={assignment.points} 
-            onChange={handleInputChange} 
-            className="form-control"
-            required 
-          />
-        </div>
-      </div>
-
-      {/* Due Date and Available Dates */}
-      <div className="row mb-3">
-        <div className="col-md-4">
-          <label htmlFor="wd-dueDate" className="form-label">Due Date *</label>
-          <input
-            type="datetime-local"
-            id="wd-dueDate"
-            value={assignment.dueDate.slice(0, 16)}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="wd-availableFrom" className="form-label">Available From</label>
-          <input
-            type="datetime-local"
-            id="wd-availableFrom"
-            value={assignment.availableFrom.slice(0, 16)}
-            onChange={handleInputChange}
-            className="form-control"
-          />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="wd-availableUntil" className="form-label">Until</label>
-          <input
-            type="datetime-local"
-            id="wd-availableUntil"
-            value={assignment.availableUntil.slice(0, 16)}
-            onChange={handleInputChange}
-            className="form-control"
-          />
-        </div>
-      </div>
-
-      {/* Save Message */}
-      {saveMessage && (
-        <div className="row mb-3">
-          <div className="col-md-12">
-            <div className="alert alert-info" role="alert">
-              {saveMessage}
+      {/* Delete Confirmation Dialog */}
+      {deleteDialog.isOpen && (
+        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Delete Assignment</h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  onClick={handleDeleteCancel}
+                ></button>
+              </div>
+              <div className="modal-body">
+                Are you sure you want to delete the assignment "{deleteDialog.assignmentTitle}"?
+              </div>
+              <div className="modal-footer">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={handleDeleteCancel}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-danger" 
+                  onClick={handleDeleteConfirm}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Save and Cancel Buttons */}
-      <div className="row mt-4">
-        <div className="col-md-12 d-flex justify-content-end">
-          <button 
-            id="wd-cancel" 
-            className="btn btn-secondary me-2" 
-            onClick={handleCancel}
-          >
-            Cancel
-          </button>
-          <button 
-            id="wd-save" 
-            className="btn btn-danger" 
-            onClick={handleSave}
-            disabled={!assignment.title || !assignment.points || !assignment.dueDate}
-          >
-            {isNewAssignment ? 'Create' : 'Save'}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
