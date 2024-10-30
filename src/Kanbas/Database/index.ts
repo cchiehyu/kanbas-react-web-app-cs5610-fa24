@@ -5,3 +5,7 @@ import users from "./users.json";
 import enrollments from "./enrollments.json";
 
 export { courses, modules, assignments, users, enrollments };
+
+export function unenrollCourse(_id: string, courseId: string): any {
+  throw new Error('Function not implemented.');
+}
