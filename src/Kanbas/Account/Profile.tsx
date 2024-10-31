@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
@@ -20,7 +20,7 @@ export default function Profile() {
     navigate("/Kanbas/Account/Signin");
   };
 
-  useEffect(() => { fetchProfile(); }, []);
+  useEffect(() => { fetchProfile(); }, [fetchProfile]);
 
   return (
     <div className="wd-profile-screen">
