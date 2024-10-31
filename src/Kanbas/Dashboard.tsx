@@ -33,7 +33,7 @@ export default function Dashboard({
   updateCourse
 }: DashboardProps) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const enrollmentState = useSelector((state: RootState) => state.enrollmentReducer);

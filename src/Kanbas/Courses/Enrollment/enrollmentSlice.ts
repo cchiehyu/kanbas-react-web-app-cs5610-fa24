@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { EnrollmentState, Enrollment } from './types';
+import { EnrollmentState } from './types';
 
 const initialState: EnrollmentState = {
   enrollments: [

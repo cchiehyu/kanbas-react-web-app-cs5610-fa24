@@ -44,9 +44,9 @@ export default function Assignments() {
   );
 
   // Get course details from Redux store
-  const course = useSelector((state: any) => 
-    state.coursesReducer?.courses.find((c: any) => c._id === cid)
-  );
+  // const course = useSelector((state: any) => 
+  //   state.coursesReducer?.courses.find((c: any) => c._id === cid)
+  // );
 
   const handleDeleteClick = (assignmentId: string, title: string) => {
     setDeleteDialog({
