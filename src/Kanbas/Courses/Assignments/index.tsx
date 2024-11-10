@@ -15,11 +15,11 @@ interface Assignment {
   dueDate?: string;
 }
 
-interface Course {
-  _id: string;
-  name: string;
-  number: string;
-}
+// interface Course {
+//   _id: string;
+//   name: string;
+//   number: string;
+// }
 
 interface KanbasState {
   assignmentsReducer: {
