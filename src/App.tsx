@@ -19,14 +19,6 @@ export default function App() {
           <Route path="/Kanbas/*" element={<Kanbas />} />
         </Routes>
       </HashRouter>
-
-      {/* Placeholder for other sections */}
-      <h4>Anchor tag</h4>
-      Please
-      <a id="wd-lipsum" href="https://www.lipsum.com"> click here </a>
-      to get dummy text<br />
-      <a id="wd-github" href="https://github.com/cchiehyu/kanbas-react-web-app-cs5610-fa24"> click here </a>
-      to my github<br />
     </div>
   );
 }
