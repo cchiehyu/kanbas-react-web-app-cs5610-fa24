@@ -47,9 +47,9 @@ export default function Assignments() {
   );
 
   // Get course details from Redux store
-  const course = useSelector((state: any) => 
-    state.coursesReducer?.courses.find((c: Course) => c._id === cid)
-  );
+  // const course = useSelector((state: any) => 
+  //   state.coursesReducer?.courses.find((c: Course) => c._id === cid)
+  // );
 
   const handleAddAssignment = () => {
     navigate(`/Kanbas/Courses/${cid}/Assignments/new`);
