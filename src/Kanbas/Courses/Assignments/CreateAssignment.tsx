@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { addAssignment, updateAssignment } from './reducer';
+import { useDispatch } from 'react-redux';
+import { addAssignment } from './reducer';
 
 interface AssignmentForm {
   title: string;
@@ -12,28 +12,10 @@ interface AssignmentForm {
   availableUntilDate: string;
 }
 
-interface KanbasState {
-  assignmentsReducer: {
-    assignments: Assignment[];
-  };
-}
-
-interface Assignment extends AssignmentForm {
-  _id: string;
-  course: string;
-}
-
 export default function AssignmentEditor() {
-  const { cid, aid } = useParams();
+  const { cid } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  // Get existing assignment if editing
-  const existingAssignment = useSelector((state: KanbasState) => 
-    aid !== 'new' ? 
-      state.assignmentsReducer.assignments.find(a => a._id === aid) 
-      : null
-  );
 
   const [formData, setFormData] = useState<AssignmentForm>({
     title: '',
@@ -44,20 +26,6 @@ export default function AssignmentEditor() {
     availableUntilDate: ''
   });
 
-  // Load existing assignment data if editing
-  useEffect(() => {
-    if (existingAssignment) {
-      setFormData({
-        title: existingAssignment.title || '',
-        description: existingAssignment.description || '',
-        points: existingAssignment.points || 100,
-        dueDate: existingAssignment.dueDate || '',
-        availableFromDate: existingAssignment.availableFromDate || '',
-        availableUntilDate: existingAssignment.availableUntilDate || ''
-      });
-    }
-  }, [existingAssignment]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -67,20 +35,12 @@ export default function AssignmentEditor() {
   };
 
   const handleSubmit = () => {
-    if (aid === 'new') {
-      // Creating new assignment
-      dispatch(addAssignment({
-        ...formData,
-        course: cid
-      }));
-    } else {
-      // Updating existing assignment
-      dispatch(updateAssignment({
-        ...formData,
-        _id: aid,
-        course: cid
-      }));
-    }
+    const newAssignment = {
+      ...formData,
+      course: cid,
+    };
+    
+    dispatch(addAssignment(newAssignment));
     navigate(`/Kanbas/Courses/${cid}/Assignments`);
   };
 
