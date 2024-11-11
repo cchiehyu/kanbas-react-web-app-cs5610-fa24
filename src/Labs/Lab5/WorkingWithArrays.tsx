@@ -48,6 +48,54 @@ export default function WorkingWithArrays() {
         onChange={(e) => setTodo({ ...todo, title: e.target.value })} />
       <br /><br /><hr />
 
+      <h3>Update Todo Description</h3>
+      <a
+        href={`${API}/${todo.id}/description/${todo.description}`}
+        className="btn btn-primary float-end"
+      >
+        Update Description
+      </a>
+      <input
+        defaultValue={todo.id}
+        className="form-control w-25 float-start me-2"
+        onChange={(e) => setTodo({ ...todo, id: e.target.value })}
+      />
+      <input
+        defaultValue={todo.description}
+        className="form-control w-50 float-start"
+        onChange={(e) => setTodo({ ...todo, description: e.target.value })}
+      />
+      <br /><br /><hr />
+
+
+      <h3>Update Todo Status</h3>
+      <a
+        href={`${API}/${todo.id}/completed/${todo.completed}`}
+        className="btn btn-primary float-end"
+      >
+        Set Completed Status
+      </a>
+      <input
+        value={todo.id}
+        className="form-control w-25 float-start me-2"
+        onChange={(e) => setTodo({ ...todo, id: e.target.value })}
+      />
+      <div className="form-check float-start">
+        <input
+          className="form-check-input"
+          type="checkbox"
+          checked={todo.completed}
+          onChange={(e) => {
+            const newStatus = e.target.checked;
+            setTodo({ ...todo, completed: newStatus });
+          }}
+        />
+        <label className="form-check-label">
+          Status: {todo.completed ? "Completed" : "Not Completed"}
+        </label>
+      </div>
+      <br /><br /><hr />
+
     </div>
   );
 }
