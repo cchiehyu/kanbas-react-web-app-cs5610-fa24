@@ -22,10 +22,16 @@ export default function WorkingWithArrays() {
         Get Completed Todos
       </a><hr />
       <h3>Creating new Items in an Array</h3>
-  <a id="wd-retrieve-completed-todos" className="btn btn-primary"
-     href={`${API}/create`}>
-    Create Todo
-  </a><hr/>
+      <a id="wd-retrieve-completed-todos" className="btn btn-primary"
+        href={`${API}/create`}>
+        Create Todo
+      </a><hr />
+
+      <h3>Deleting from an Array</h3>
+      <a id="wd-retrieve-completed-todos" className="btn btn-primary float-end" href={`${API}/${todo.id}/delete`}>
+        Delete Todo with ID = {todo.id} </a>
+      <input defaultValue={todo.id} className="form-control w-50" onChange={(e) => setTodo({ ...todo, id: e.target.value })} /><hr />
+
     </div>
   );
 }
