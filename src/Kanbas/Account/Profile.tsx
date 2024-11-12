@@ -21,10 +21,12 @@ export default function Profile() {
     setProfile(currentUser);
   }, [currentUser, navigate]);
 
-  const signout = () => {
+  const signout = async () => {
+    await client.signout();
     dispatch(setCurrentUser(null));
     navigate("/Kanbas/Account/Signin");
   };
+
 
   
 
