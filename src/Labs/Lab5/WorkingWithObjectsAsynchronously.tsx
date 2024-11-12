@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as client from "./client";
 import { FaTrash } from "react-icons/fa";
 import { FaPlusCircle } from "react-icons/fa";
+import { TiDelete } from "react-icons/ti";
 
 export default function WorkingWithObjectsAsynchronously() {
     const [assignment, setAssignment] = useState<any>({});
@@ -34,6 +35,13 @@ export default function WorkingWithObjectsAsynchronously() {
     const postTodo = async () => {
         const newTodo = await client.postTodo({ title: "New Posted Todo", completed: false, });
         setTodos([...todos, newTodo]);
+    };
+
+
+    const deleteTodo = async (todo: any) => {
+        await client.deleteTodo(todo);
+        const newTodos = todos.filter((t) => t.id !== todo.id);
+        setTodos(newTodos);
     };
 
 
@@ -70,13 +78,13 @@ export default function WorkingWithObjectsAsynchronously() {
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <h4 className="mb-0">Todos</h4>
                     <div>
-                        <FaPlusCircle 
+                        <FaPlusCircle
                             onClick={createTodo}
                             className="text-success fs-4 me-2"
                             id="wd-create-todo"
                             style={{ cursor: 'pointer' }}
                         />
-                        <FaPlusCircle 
+                        <FaPlusCircle
                             onClick={postTodo}
                             className="text-primary fs-4"
                             id="wd-post-todo"
@@ -86,27 +94,30 @@ export default function WorkingWithObjectsAsynchronously() {
                 </div>
                 <ul className="list-group list-group-flush">
                     {todos.map((todo) => (
-                        <li key={todo.id} 
+                        <li key={todo.id}
                             className="list-group-item d-flex justify-content-between align-items-center"
                         >
                             <div className="d-flex align-items-center">
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     className="form-check-input me-2"
-                                    defaultChecked={todo.completed} 
+                                    defaultChecked={todo.completed}
                                 />
-                                <span style={{ 
+                                <span style={{
                                     textDecoration: todo.completed ? "line-through" : "none",
                                     marginLeft: "8px"
                                 }}>
                                     {todo.title}
                                 </span>
                             </div>
-                            <button 
-                                className="btn btn-link text-danger p-0" 
+                            <button
+                                className="btn btn-link text-danger p-0"
                                 onClick={() => removeTodo(todo)}
                             >
                                 <FaTrash id="wd-remove-todo" />
+
+                                <TiDelete onClick={() => deleteTodo(todo)} className="text-danger float-end me-2 fs-3" id="wd-delete-todo" />
+
                             </button>
                         </li>
                     ))}
