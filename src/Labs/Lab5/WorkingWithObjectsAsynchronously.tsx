@@ -31,6 +31,11 @@ export default function WorkingWithObjectsAsynchronously() {
     };
 
 
+    const postTodo = async () => {
+        const newTodo = await client.postTodo({ title: "New Posted Todo", completed: false, });
+        setTodos([...todos, newTodo]);
+    };
+
 
     useEffect(() => {
         fetchTodos();
@@ -61,26 +66,52 @@ export default function WorkingWithObjectsAsynchronously() {
             </button>
             <pre>{JSON.stringify(assignment, null, 2)}</pre>
             <hr />
-            <h4>Todos</h4>
-            <ul className="list-group">
-                {todos.map((todo) => (
-                    <li key={todo.id} className="list-group-item">
-                        <input type="checkbox" className="form-check-input me-2"
-                            defaultChecked={todo.completed} />
-                        <span style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
-                            {todo.title}
-
-                        </span>
-                        <FaTrash onClick={() => removeTodo(todo)}
-                            className="text-danger float-end mt-1" id="wd-remove-todo" />
-                    </li>
-                ))}
-            </ul> <hr />
-
-            <h4> Todos
-                <FaPlusCircle onClick={createTodo} className="text-success float-end fs-3"
-                    id="wd-create-todo" /> </h4>
-
+            <div className="card">
+                <div className="card-header d-flex justify-content-between align-items-center">
+                    <h4 className="mb-0">Todos</h4>
+                    <div>
+                        <FaPlusCircle 
+                            onClick={createTodo}
+                            className="text-success fs-4 me-2"
+                            id="wd-create-todo"
+                            style={{ cursor: 'pointer' }}
+                        />
+                        <FaPlusCircle 
+                            onClick={postTodo}
+                            className="text-primary fs-4"
+                            id="wd-post-todo"
+                            style={{ cursor: 'pointer' }}
+                        />
+                    </div>
+                </div>
+                <ul className="list-group list-group-flush">
+                    {todos.map((todo) => (
+                        <li key={todo.id} 
+                            className="list-group-item d-flex justify-content-between align-items-center"
+                        >
+                            <div className="d-flex align-items-center">
+                                <input 
+                                    type="checkbox" 
+                                    className="form-check-input me-2"
+                                    defaultChecked={todo.completed} 
+                                />
+                                <span style={{ 
+                                    textDecoration: todo.completed ? "line-through" : "none",
+                                    marginLeft: "8px"
+                                }}>
+                                    {todo.title}
+                                </span>
+                            </div>
+                            <button 
+                                className="btn btn-link text-danger p-0" 
+                                onClick={() => removeTodo(todo)}
+                            >
+                                <FaTrash id="wd-remove-todo" />
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 }
