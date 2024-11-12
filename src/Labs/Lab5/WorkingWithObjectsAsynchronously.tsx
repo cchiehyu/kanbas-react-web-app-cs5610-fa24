@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as client from "./client";
 import { FaTrash } from "react-icons/fa";
+import { FaPlusCircle } from "react-icons/fa";
 
 export default function WorkingWithObjectsAsynchronously() {
     const [assignment, setAssignment] = useState<any>({});
@@ -22,8 +23,14 @@ export default function WorkingWithObjectsAsynchronously() {
     const removeTodo = async (todo: any) => {
         const updatedTodos = await client.removeTodo(todo);
         setTodos(updatedTodos);
-      };
-    
+    };
+
+    const createTodo = async () => {
+        const todos = await client.createTodo();
+        setTodos(todos);
+    };
+
+
 
     useEffect(() => {
         fetchTodos();
@@ -62,13 +69,17 @@ export default function WorkingWithObjectsAsynchronously() {
                             defaultChecked={todo.completed} />
                         <span style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
                             {todo.title}
-                            
+
                         </span>
                         <FaTrash onClick={() => removeTodo(todo)}
-                     className="text-danger float-end mt-1" id="wd-remove-todo"/>
+                            className="text-danger float-end mt-1" id="wd-remove-todo" />
                     </li>
                 ))}
             </ul> <hr />
+
+            <h4> Todos
+                <FaPlusCircle onClick={createTodo} className="text-success float-end fs-3"
+                    id="wd-create-todo" /> </h4>
 
         </div>
     );
