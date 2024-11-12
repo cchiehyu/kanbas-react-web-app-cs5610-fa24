@@ -3,6 +3,7 @@ import * as client from "./client";
 import { FaTrash } from "react-icons/fa";
 import { FaPlusCircle } from "react-icons/fa";
 import { TiDelete } from "react-icons/ti";
+import { FaPencil } from "react-icons/fa6";
 
 export default function WorkingWithObjectsAsynchronously() {
     const [assignment, setAssignment] = useState<any>({});
@@ -15,7 +16,7 @@ export default function WorkingWithObjectsAsynchronously() {
         const updatedAssignment = await client.updateTitle(title);
         setAssignment(updatedAssignment);
     };
-    const [todos, setTodos] = useState<any[]>([]);
+
     const fetchTodos = async () => {
         const todos = await client.fetchTodos();
         setTodos(todos);
@@ -44,7 +45,18 @@ export default function WorkingWithObjectsAsynchronously() {
         setTodos(newTodos);
     };
 
+    const [todos, setTodos] = useState<any[]>([]);
 
+    const editTodo = (todo: any) => {
+        const updatedTodos = todos.map(
+          (t) => t.id === todo.id ? { ...todo, editing: true } : t );
+        setTodos(updatedTodos);
+      };
+      const updateTodo = async (todo: any) => {
+        await client.updateTodo(todo);
+        setTodos(todos.map((t) => (t.id === todo.id ? todo : t)));
+      };
+    
     useEffect(() => {
         fetchTodos();
     }, []);
@@ -78,13 +90,13 @@ export default function WorkingWithObjectsAsynchronously() {
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <h4 className="mb-0">Todos</h4>
                     <div>
-                        <FaPlusCircle
+                        <FaPlusCircle 
                             onClick={createTodo}
                             className="text-success fs-4 me-2"
                             id="wd-create-todo"
                             style={{ cursor: 'pointer' }}
                         />
-                        <FaPlusCircle
+                        <FaPlusCircle 
                             onClick={postTodo}
                             className="text-primary fs-4"
                             id="wd-post-todo"
@@ -94,31 +106,64 @@ export default function WorkingWithObjectsAsynchronously() {
                 </div>
                 <ul className="list-group list-group-flush">
                     {todos.map((todo) => (
-                        <li key={todo.id}
+                        <li key={todo.id} 
                             className="list-group-item d-flex justify-content-between align-items-center"
                         >
                             <div className="d-flex align-items-center">
-                                <input
-                                    type="checkbox"
+                                <input 
+                                    type="checkbox" 
                                     className="form-check-input me-2"
                                     defaultChecked={todo.completed}
+                                    onChange={(e) => updateTodo({ 
+                                        ...todo, 
+                                        completed: e.target.checked 
+                                    })}
                                 />
-                                <span style={{
-                                    textDecoration: todo.completed ? "line-through" : "none",
-                                    marginLeft: "8px"
-                                }}>
-                                    {todo.title}
-                                </span>
+                                {!todo.editing ? (
+                                    <span style={{ 
+                                        textDecoration: todo.completed ? "line-through" : "none",
+                                        marginLeft: "8px"
+                                    }}>
+                                        {todo.title}
+                                    </span>
+                                ) : (
+                                    <input 
+                                        className="form-control"
+                                        defaultValue={todo.title}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                updateTodo({ ...todo, editing: false });
+                                            }
+                                        }}
+                                        onChange={(e) => 
+                                            updateTodo({ ...todo, title: e.target.value })
+                                        }
+                                        autoFocus
+                                    />
+                                )}
                             </div>
-                            <button
-                                className="btn btn-link text-danger p-0"
-                                onClick={() => removeTodo(todo)}
-                            >
-                                <FaTrash id="wd-remove-todo" />
+                            <div className="d-flex align-items-center">
+                                <FaPencil 
+                                    onClick={() => editTodo(todo)} 
+                                    className="text-primary me-3"
+                                    style={{ cursor: 'pointer' }}
+                                />
+                                <button 
+                                    className="btn btn-link text-danger p-0"
+                                    onClick={() => removeTodo(todo)}
+                                >
+                                    <FaTrash id="wd-remove-todo" />
+                                </button>
 
-                                <TiDelete onClick={() => deleteTodo(todo)} className="text-danger float-end me-2 fs-3" id="wd-delete-todo" />
+                                <TiDelete 
+                                    onClick={() => deleteTodo(todo)} 
+                                    className="text-danger fs-3" 
+                                    id="wd-delete-todo"
+                                    style={{ cursor: 'pointer' }}
+                                />
 
-                            </button>
+                                
+                            </div>
                         </li>
                     ))}
                 </ul>
