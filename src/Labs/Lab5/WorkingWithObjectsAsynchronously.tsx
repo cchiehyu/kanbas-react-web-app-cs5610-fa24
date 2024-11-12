@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as client from "./client";
+import { FaTrash } from "react-icons/fa";
+
 export default function WorkingWithObjectsAsynchronously() {
     const [assignment, setAssignment] = useState<any>({});
     const fetchAssignment = async () => {
@@ -16,6 +18,13 @@ export default function WorkingWithObjectsAsynchronously() {
         const todos = await client.fetchTodos();
         setTodos(todos);
     };
+
+    const removeTodo = async (todo: any) => {
+        const updatedTodos = await client.removeTodo(todo);
+        setTodos(updatedTodos);
+      };
+    
+
     useEffect(() => {
         fetchTodos();
     }, []);
@@ -23,6 +32,7 @@ export default function WorkingWithObjectsAsynchronously() {
     useEffect(() => {
         fetchAssignment();
     }, []);
+
     return (
         <div id="wd-asynchronous-objects">
             <h3>Working with Objects Asynchronously</h3>
@@ -52,7 +62,10 @@ export default function WorkingWithObjectsAsynchronously() {
                             defaultChecked={todo.completed} />
                         <span style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
                             {todo.title}
+                            
                         </span>
+                        <FaTrash onClick={() => removeTodo(todo)}
+                     className="text-danger float-end mt-1" id="wd-remove-todo"/>
                     </li>
                 ))}
             </ul> <hr />
