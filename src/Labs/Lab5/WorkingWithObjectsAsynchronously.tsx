@@ -40,9 +40,13 @@ export default function WorkingWithObjectsAsynchronously() {
 
 
     const deleteTodo = async (todo: any) => {
-        await client.deleteTodo(todo);
-        const newTodos = todos.filter((t) => t.id !== todo.id);
-        setTodos(newTodos);
+        try {
+            await client.deleteTodo(todo);
+            const newTodos = todos.filter((t) => t.id !== todo.id);
+            setTodos(newTodos);
+        } catch (error) {
+            setErrorMessage("Unable to delete todo");
+        }
     };
 
     const [todos, setTodos] = useState<any[]>([]);
@@ -52,10 +56,17 @@ export default function WorkingWithObjectsAsynchronously() {
           (t) => t.id === todo.id ? { ...todo, editing: true } : t );
         setTodos(updatedTodos);
       };
+
+      const [errorMessage, setErrorMessage] = useState<string | null>(null);
       const updateTodo = async (todo: any) => {
-        await client.updateTodo(todo);
-        setTodos(todos.map((t) => (t.id === todo.id ? todo : t)));
-      };
+        try {
+            await client.updateTodo(todo);
+            setTodos(todos.map((t) => (t.id === todo.id ? todo : t)));
+        } catch (error) {
+            setErrorMessage("Unable to update todo");
+        }
+    };
+    
     
     useEffect(() => {
         fetchTodos();
@@ -68,6 +79,7 @@ export default function WorkingWithObjectsAsynchronously() {
     return (
         <div id="wd-asynchronous-objects">
             <h3>Working with Objects Asynchronously</h3>
+            {errorMessage && (<div id="wd-todo-error-message" className="alert alert-danger mb-2 mt-2">{errorMessage}</div>)}
             <h4>Assignment</h4>
             <input defaultValue={assignment.title} className="form-control mb-2"
                 onChange={(e) => setAssignment({ ...assignment, title: e.target.value })} />
