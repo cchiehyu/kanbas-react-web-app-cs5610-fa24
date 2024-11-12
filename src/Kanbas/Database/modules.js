@@ -1,4 +1,4 @@
-[
+export default[
     {
       "_id": "M101",
       "name": "Introduction to Rocket Propulsion",
@@ -113,4 +113,4 @@
       "description": "Overview of spacecraft systems and subsystems engineering.",
       "course": "RS103"
     }
-  ]
+  ];
