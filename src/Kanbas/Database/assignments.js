@@ -1,4 +1,4 @@
-[
+export default[
     {
       "_id": "A101",
       "title": "Propulsion Assignment",
@@ -107,5 +107,5 @@
       "group": "Exams",
       "submissionType": "online"
     }
-  ]
+  ];
   
