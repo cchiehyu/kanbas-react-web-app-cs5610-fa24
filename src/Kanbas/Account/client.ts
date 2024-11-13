@@ -28,3 +28,8 @@ export const signup = async (user: any) => {
     return response.data;
   };
   
+  export const findMyCourses = async () => {
+    const { data } = await axiosWithCredentials.get(`${USERS_API}/current/courses`);
+    return data;
+  };
+  
