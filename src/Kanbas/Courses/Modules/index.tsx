@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { BsGripVertical } from 'react-icons/bs';
 import ModuleControlButtons from './ModuleControlButtons';
 import ModulesControls from './ModulesControls';
 import { courses } from '../../Database';
 import { useSelector, useDispatch } from "react-redux";
-import { addModule, editModule, updateModule, deleteModule } from "./reducer";
+import { setModules, addModule, editModule, updateModule, deleteModule } from "./reducer";
+import * as coursesClient from "../client";
 
 interface ModulesProps {
   courseCode?: string;
@@ -21,6 +22,14 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
 
   // Redux setup
   const dispatch = useDispatch();
+  const fetchModules = async () => {
+    const modules = await coursesClient.findModulesForCourse(cid as string);
+    dispatch(setModules(modules));
+  };
+  useEffect(() => {
+    fetchModules();
+  }, []);
+
   const modules = useSelector((state: any) => state.modulesReducer.modules);
   
   // Route params
@@ -70,7 +79,7 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
       {/* Dynamic modules */}
       <ul className="list-group rounded-0">
         {modules
-          .filter((module: any) => module.course === currentCourseId)
+          //.filter((module: any) => module.course === currentCourseId)
           .map((module: any) => (
             <li key={module._id} className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
               <div className="wd-title p-3 ps-2 bg-secondary">
