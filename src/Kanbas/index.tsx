@@ -6,13 +6,11 @@ import Courses from "./Courses";
 import KanbasNavigation from "./Navigation";
 import './styles.css';
 import CourseList from './Courselist';
-//import * as db from "./Database";
-import store from "./store";
 import { Provider, useSelector } from "react-redux";
 import ProtectedRoute from './Account/ProtectedRoute';
 import Session from "./Account/Session";
-import * as client from "./Courses/client";
 import * as userClient from "./Account/client";
+import * as courseClient from "./Courses/client";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -41,7 +39,8 @@ export default function Kanbas() {
     setCourses([...courses,newCourse]);
   };
 
-  const deleteCourse = (courseId: any) => {
+  const deleteCourse = async (courseId: string) => {
+    const status = await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
   };
 
@@ -58,7 +57,7 @@ export default function Kanbas() {
   };
 
   return (
-    <Provider store={store}>
+
       <Session>
         <div id="wd-kanbas">
           {/* Sidebar Navigation */}
@@ -93,6 +92,5 @@ export default function Kanbas() {
           </div>
         </div>
       </Session>
-    </Provider>
   );
 }
