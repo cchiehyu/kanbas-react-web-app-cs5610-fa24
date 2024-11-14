@@ -7,6 +7,7 @@ import { courses } from '../../Database';
 import { useSelector, useDispatch } from "react-redux";
 import { setModules, addModule, editModule, updateModule, deleteModule } from "./reducer";
 import * as coursesClient from "../client";
+import * as modulesClient from "../client";
 
 interface ModulesProps {
   courseCode?: string;
@@ -22,6 +23,18 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
 
   // Redux setup
   const dispatch = useDispatch();
+  const saveModule = async (module: any) => {
+    await modulesClient.updateModule(module);
+    dispatch(updateModule(module));
+  };
+
+  const createModuleForCourse = async () => {
+    if (!cid) return;
+    const newModule = { name: moduleName, course: cid };
+    const module = await coursesClient.createModuleForCourse(cid, newModule);
+    dispatch(addModule(module));
+  };
+
   const fetchModules = async () => {
     const modules = await coursesClient.findModulesForCourse(cid as string);
     dispatch(setModules(modules));
@@ -31,7 +44,11 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
   }, []);
 
   const modules = useSelector((state: any) => state.modulesReducer.modules);
-  
+  const removeModule = async (moduleId: string) => {
+    await modulesClient.deleteModule(moduleId);
+    dispatch(deleteModule(moduleId));
+  };
+
   // Route params
   const { cid } = useParams();
   const currentCourseId = courseCode || cid;
@@ -64,15 +81,12 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
       <h2>Course {course && course.number}</h2>
 
       {/* Modules Controls */}
-      <ModulesControls 
-        onCollapseAll={handleCollapseAll} 
-        onExpandAll={handleExpandAll} 
-        setModuleName={setModuleName} 
-        moduleName={moduleName} 
-        addModule={() => {
-          dispatch(addModule({ name: moduleName, course: currentCourseId }));
-          setModuleName("");
-        }}
+      <ModulesControls
+        onCollapseAll={handleCollapseAll}
+        onExpandAll={handleExpandAll}
+        setModuleName={setModuleName}
+        moduleName={moduleName}
+        addModule={createModuleForCourse}
       />
       <br /><br /><br /><br />
 
@@ -87,14 +101,15 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
                 {!module.editing ? (
                   module.name
                 ) : (
-                  <input 
+                  <input
                     className="form-control w-50 d-inline-block"
-                    onChange={(e) => 
+                    onChange={(e) =>
                       dispatch(updateModule({ ...module, name: e.target.value }))
                     }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        dispatch(updateModule({ ...module, editing: false }));
+                        saveModule({ ...module, editing: false });
+
                       }
                     }}
                     defaultValue={module.name}
@@ -102,7 +117,7 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
                 )}
                 <ModuleControlButtons
                   moduleId={module._id}
-                  deleteModule={(moduleId) => dispatch(deleteModule(moduleId))}
+                  deleteModule={(moduleId) => removeModule(moduleId)}
                   editModule={(moduleId) => dispatch(editModule(moduleId))}
                 />
               </div>
@@ -124,8 +139,8 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
       <ul className="list-group rounded-0 mt-4">
         {/* Week 1, Lecture 1 */}
         <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
-          <div 
-            className="d-flex align-items-center" 
+          <div
+            className="d-flex align-items-center"
             onClick={() => toggleModule('module1')}
             style={{ cursor: 'pointer' }}
           >
@@ -135,10 +150,10 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
             </div>
           </div>
           <ModuleControlButtons
-          moduleId={module.id}
-          deleteModule={deleteModule}
-          editModule={editModule}/>
-          
+            moduleId={module.id}
+            deleteModule={deleteModule}
+            editModule={editModule} />
+
           {isExpanded.module1 && (
             <ul className="list-group rounded-0">
               <li className="list-group-item p-0">
@@ -171,7 +186,7 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
 
         {/* Week 1, Lecture 2 */}
         <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
-          <div 
+          <div
             className="d-flex align-items-center"
             onClick={() => toggleModule('module2')}
             style={{ cursor: 'pointer' }}
@@ -182,10 +197,10 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
             </div>
           </div>
           <ModuleControlButtons
-        moduleId={module.id}
-        deleteModule={deleteModule}
-        editModule={editModule}/>
-          
+            moduleId={module.id}
+            deleteModule={deleteModule}
+            editModule={editModule} />
+
           {isExpanded.module2 && (
             <ul className="list-group rounded-0">
               <li className="list-group-item p-0">
