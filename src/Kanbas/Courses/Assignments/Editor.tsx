@@ -5,6 +5,7 @@ import { BsGripVertical, BsPlus } from 'react-icons/bs';
 import { FaSearch, FaTrash } from 'react-icons/fa';
 import { FaPencil } from 'react-icons/fa6';
 import { deleteAssignment } from './reducer';
+import * as assignmentsClient from "./client";
 
 interface Assignment {
   _id: string;

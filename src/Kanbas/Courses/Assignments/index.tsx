@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { BsGripVertical, BsPlus } from 'react-icons/bs';
 import { FaSearch, FaTrash } from 'react-icons/fa';
 import { FaPen } from 'react-icons/fa';
-import { deleteAssignment } from './reducer';
+import { deleteAssignment, setAssignments, addAssignment } from './reducer';
+import * as assignmentsClient from "./client";
 
 interface Assignment {
   _id: string;
@@ -14,12 +15,6 @@ interface Assignment {
   points?: number;
   dueDate?: string;
 }
-
-// interface Course {
-//   _id: string;
-//   name: string;
-//   number: string;
-// }
 
 interface KanbasState {
   assignmentsReducer: {
@@ -32,24 +27,29 @@ export default function Assignments() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  // State for delete confirmation dialog
   const [deleteDialog, setDeleteDialog] = useState({
     isOpen: false,
     assignmentId: '',
     assignmentTitle: ''
   });
 
-  // Get assignments from Redux store
   const assignments = useSelector((state: KanbasState) => 
     state.assignmentsReducer.assignments.filter(
       assignment => assignment.course === cid
     )
   );
 
-  // Get course details from Redux store
-  // const course = useSelector((state: any) => 
-  //   state.coursesReducer?.courses.find((c: Course) => c._id === cid)
-  // );
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      try {
+        const assignments = await assignmentsClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+      } catch (error) {
+        console.error("Error fetching assignments:", error);
+      }
+    };
+    fetchAssignments();
+  }, [cid, dispatch]);
 
   const handleAddAssignment = () => {
     navigate(`/Kanbas/Courses/${cid}/Assignments/new`);
@@ -63,13 +63,18 @@ export default function Assignments() {
     });
   };
 
-  const handleDeleteConfirm = () => {
-    dispatch(deleteAssignment(deleteDialog.assignmentId));
-    setDeleteDialog({
-      isOpen: false,
-      assignmentId: '',
-      assignmentTitle: ''
-    });
+  const handleDeleteConfirm = async () => {
+    try {
+      await assignmentsClient.deleteAssignment(deleteDialog.assignmentId);
+      dispatch(deleteAssignment(deleteDialog.assignmentId));
+      setDeleteDialog({
+        isOpen: false,
+        assignmentId: '',
+        assignmentTitle: ''
+      });
+    } catch (error) {
+      console.error("Error deleting assignment:", error);
+    }
   };
 
   const handleDeleteCancel = () => {
@@ -92,7 +97,6 @@ export default function Assignments() {
 
   return (
     <div id="wd-assignments" className="container mt-4">
-      {/* Search Bar and Filter Buttons */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="input-group" style={{ width: '250px' }}>
           <span className="input-group-text bg-white">
@@ -116,7 +120,6 @@ export default function Assignments() {
         </div>
       </div>
 
-      {/* Assignments List */}
       <ul id="wd-assignments-list" className="list-group rounded-0">
         {assignments.map((assignment) => (
           <li 
@@ -177,7 +180,6 @@ export default function Assignments() {
         ))}
       </ul>
 
-      {/* Delete Confirmation Dialog */}
       {deleteDialog.isOpen && (
         <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog">
