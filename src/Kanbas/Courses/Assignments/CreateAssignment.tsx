@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAssignment, updateAssignment } from './reducer';
+import * as assignmentsClient from "./client";
 
 interface AssignmentForm {
   title: string;
@@ -41,6 +42,7 @@ export default function AssignmentEditor() {
     availableFromDate: '',
     availableUntilDate: ''
   });
+  
 
   // Load existing assignment data when editing
   useEffect(() => {
@@ -64,22 +66,31 @@ export default function AssignmentEditor() {
     }));
   };
 
-  const handleSubmit = () => {
-    if (aid && aid !== 'new') {
-      // Editing existing assignment
-      dispatch(updateAssignment({
-        ...formData,
-        _id: aid,
-        course: cid
-      }));
-    } else {
-      // Creating new assignment
-      dispatch(addAssignment({
-        ...formData,
-        course: cid
-      }));
+  const handleSubmit = async () => {
+    try {
+      if (aid && aid !== 'new') {
+        // Editing existing assignment
+        const updatedAssignment = await assignmentsClient.updateAssignment({
+          ...formData,
+          _id: aid,
+          course: cid
+        });
+        dispatch(updateAssignment(updatedAssignment));
+      } else {
+        // Creating new assignment
+        const newAssignment = await assignmentsClient.createAssignmentForCourse(
+          cid as string,
+          {
+            ...formData,
+            course: cid
+          }
+        );
+        dispatch(addAssignment(newAssignment));
+      }
+      navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    } catch (error) {
+      console.error("Error saving assignment:", error);
     }
-    navigate(`/Kanbas/Courses/${cid}/Assignments`);
   };
 
   const handleCancel = () => {

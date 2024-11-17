@@ -4,7 +4,7 @@ import { Navigate, Route, Routes, useParams, useLocation } from "react-router-do
 import CoursesNavigation from "./Navigation";
 import Home from "./Home";
 import Modules from "./Modules";
-import Assignments from "./Assignments";
+import Assignments from "./Assignments/Editor";
 import AssignmentEditor from './Assignments/CreateAssignment';
 import PeopleTable from './People/Table';
 import { FaAlignJustify } from 'react-icons/fa';

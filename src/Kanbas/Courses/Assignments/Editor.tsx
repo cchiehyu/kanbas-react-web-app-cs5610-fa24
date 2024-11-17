@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { BsGripVertical, BsPlus } from 'react-icons/bs';
 import { FaSearch, FaTrash } from 'react-icons/fa';
 import { FaPencil } from 'react-icons/fa6';
-import { deleteAssignment } from './reducer';
+import { deleteAssignment, setAssignments, addAssignment } from './reducer';
 import * as assignmentsClient from "./client";
 
 interface Assignment {
@@ -43,11 +43,19 @@ export default function Assignments() {
       assignment => assignment.course === cid
     )
   );
+  
 
-  // Get course details from Redux store
-  // const course = useSelector((state: any) => 
-  //   state.coursesReducer?.courses.find((c: any) => c._id === cid)
-  // );
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      try {
+        const assignments = await assignmentsClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+      } catch (error) {
+        console.error("Error fetching assignments:", error);
+      }
+    };
+    fetchAssignments();
+  }, [cid, dispatch]);
 
   const handleDeleteClick = (assignmentId: string, title: string) => {
     setDeleteDialog({
@@ -57,13 +65,18 @@ export default function Assignments() {
     });
   };
 
-  const handleDeleteConfirm = () => {
-    dispatch(deleteAssignment(deleteDialog.assignmentId));
-    setDeleteDialog({
-      isOpen: false,
-      assignmentId: '',
-      assignmentTitle: ''
-    });
+  const handleDeleteConfirm = async () => {
+    try {
+      await assignmentsClient.deleteAssignment(deleteDialog.assignmentId);
+      dispatch(deleteAssignment(deleteDialog.assignmentId));
+      setDeleteDialog({
+        isOpen: false,
+        assignmentId: '',
+        assignmentTitle: ''
+      });
+    } catch (error) {
+      console.error("Error deleting assignment:", error);
+    }
   };
 
   const handleDeleteCancel = () => {
