@@ -83,7 +83,7 @@ export default function Kanbas() {
                   /></ProtectedRoute>
                 }
               />
-              <Route path="/Courses" element={<CourseList />} />
+              <Route path="/Courses" element={<ProtectedRoute><CourseList courses={courses} /></ProtectedRoute>} />
               <Route
                 path="/Courses/:cid/*"
                 element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>}

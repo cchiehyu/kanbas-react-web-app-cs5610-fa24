@@ -1,35 +1,104 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { courses } from './Database';
+import { useSelector, useDispatch } from "react-redux";
+import { toggleShowAllCourses } from './Courses/Enrollment/enrollmentSlice';
+import { RootState } from './store';
 
-export default function CourseList() {
+interface Course {
+  _id: string;
+  name: string;
+  number: string;
+  startDate: string;
+  endDate: string;
+  department: string;
+  credits: number;
+}
+
+interface CourseListProps {
+  courses: Course[];  // Add this prop to match Dashboard
+}
+
+export default function CourseList({ courses }: CourseListProps) {
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const { enrollments, showAllCourses } = useSelector(
+    (state: RootState) => state.enrollmentReducer
+  );
+
+  const isEnrolled = (courseId: string) => {
+    return enrollments.some(
+      (enrollment) =>
+        enrollment.user === currentUser._id &&
+        enrollment.course === courseId
+    );
+  };
+
+  const displayedCourses = showAllCourses
+    ? courses
+    : courses.filter(course => isEnrolled(course._id));
+
   return (
-    <div id="wd-course-list">
-      <h2>Courses</h2>
+    <div id="wd-course-list" className="container-fluid px-4">
+      <div className="row align-items-center mb-4 mt-3">
+        <div className="col">
+          <h2 className="m-0">Courses ({displayedCourses.length})</h2>
+        </div>
+        {currentUser.role === 'STUDENT' && (
+          <div className="col-auto">
+            <button
+              className="btn btn-primary"
+              style={{ minWidth: '140px' }}
+              onClick={() => dispatch(toggleShowAllCourses())}
+            >
+              {showAllCourses ? 'Show My Courses' : 'Show All Courses'}
+            </button>
+          </div>
+        )}
+      </div>
+
       <ul className="list-group">
-        {courses.map((course) => (
-          <li key={course._id} className="list-group-item border-0 p-3">
-            {/* Display Course ID (number) and Name */}
+        {displayedCourses.map((course: Course) => (
+          <li key={course._id} 
+              className="list-group-item border-0 p-3"
+              style={{
+                borderBottom: '1px solid #dee2e6',
+                marginBottom: '0.5rem'
+              }}>
             <Link
               to={`/Kanbas/Courses/${course._id}/Home`}
-              className="text-danger"
+              className="text-danger text-decoration-none d-block mb-2"
               style={{ fontSize: '1.1rem', fontWeight: 'bold' }}
             >
               {course.number} - {course.name}
             </Link>
-
-            {/* Additional details about the course */}
+            
             <div className="course-details" style={{ fontSize: '0.9rem', color: 'gray' }}>
               <p className="mb-1">Term: {course.startDate} to {course.endDate}</p>
               <p className="mb-1">Department: {course.department}, {course.credits} Credits</p>
+              {currentUser.role === 'STUDENT' && isEnrolled(course._id) && (
+                <p className="mb-0 text-success fw-bold">
+                  ✓ Enrolled
+                </p>
+              )}
             </div>
           </li>
         ))}
       </ul>
 
-      <p className="mt-4">
-        Welcome to your courses! To customize the list of courses, click on the "All Courses" link and star the courses to display.
-      </p>
+      {displayedCourses.length === 0 && !showAllCourses && (
+        <div className="alert alert-info mt-4">
+          You are not enrolled in any courses yet.
+          <br />
+          Click "Show All Courses" to view available courses.
+        </div>
+      )}
+
+      {showAllCourses && displayedCourses.length > 0 && (
+        <div className="alert alert-light mt-4 border">
+          Browse all available courses above.
+          Click "Show My Courses" to see only your enrolled courses.
+        </div>
+      )}
     </div>
   );
 }

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { toggleShowAllCourses, enrollInCourse, unenrollFromCourse } from './Courses/Enrollment/enrollmentSlice';
+import { toggleShowAllCourses, enrollInCourse, unenrollFromCourse, fetchEnrollments } from './Courses/Enrollment/client';
 import { RootState } from './store';
+import { AppDispatch } from './store';
 import './styles.css';
 
 interface Course {
@@ -32,12 +33,17 @@ export default function Dashboard({
   deleteCourse,
   updateCourse
 }: DashboardProps) {
-  const dispatch = useDispatch();
-  //const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const enrollmentState = useSelector((state: RootState) => state.enrollmentReducer);
   const { enrollments, showAllCourses } = enrollmentState;
+
+  useEffect(() => {
+    courses.forEach((course) => {
+      dispatch(fetchEnrollments(course._id));
+    });
+  }, [dispatch, courses]);
   
   const isEnrolled = (courseId: string) => {
     return enrollments.some(
