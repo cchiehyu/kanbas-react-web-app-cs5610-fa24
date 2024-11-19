@@ -46,7 +46,7 @@ export default function Dashboard({
     coursesToCheck.forEach((course) => {
       dispatch(fetchEnrollments(course._id));
     });
-  }, [dispatch, allCourses]); 
+  }, [dispatch, courses, allCourses, currentUser.role]);
 
   
   
