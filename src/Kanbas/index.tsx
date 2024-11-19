@@ -14,6 +14,7 @@ import * as courseClient from "./Courses/client";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
+  const [allCourses, setAllCourses] = useState<any[]>([]);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const fetchCourses = async () => {
     let courses = [];
@@ -26,6 +27,21 @@ export default function Kanbas() {
   };
   useEffect(() => {
     fetchCourses();
+  }, [currentUser]);
+
+  const fetchAllCourses = async () => {
+    try {
+      const allCourses = await courseClient.fetchAllCourses();
+      console.log("Total available courses:", allCourses.length);
+      console.log("All courses data:", allCourses);
+      setAllCourses(allCourses);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllCourses();
   }, [currentUser]);
 
   const [course, setCourse] = useState<any>({
@@ -72,18 +88,31 @@ export default function Kanbas() {
               <Route path="/Account/*" element={<Account />} />
               <Route
                 path="/Dashboard"
-                element={<ProtectedRoute>
-                  <Dashboard
-                    courses={courses}
-                    course={course}
-                    setCourse={setCourse}
-                    addNewCourse={addNewCourse}
-                    deleteCourse={deleteCourse}
-                    updateCourse={updateCourse}
-                  /></ProtectedRoute>
+                element={
+                  <ProtectedRoute>
+                    <Dashboard
+                      courses={courses}
+                      allCourses={allCourses} // Add this line
+                      course={course}
+                      setCourse={setCourse}
+                      addNewCourse={addNewCourse}
+                      deleteCourse={deleteCourse}
+                      updateCourse={updateCourse}
+                    />
+                  </ProtectedRoute>
                 }
               />
-              <Route path="/Courses" element={<ProtectedRoute><CourseList courses={courses} /></ProtectedRoute>} />
+              <Route 
+                path="/Courses" 
+                element={
+                  <ProtectedRoute>
+                    <CourseList 
+                      courses={courses} 
+                      allCourses={allCourses}
+                    />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/Courses/:cid/*"
                 element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>}

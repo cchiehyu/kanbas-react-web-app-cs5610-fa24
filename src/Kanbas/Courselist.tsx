@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { toggleShowAllCourses } from './Courses/Enrollment/enrollmentSlice';
+import { toggleShowAllCourses } from './Courses/Enrollment/client';
 import { RootState } from './store';
 
 interface Course {
@@ -15,10 +15,11 @@ interface Course {
 }
 
 interface CourseListProps {
-  courses: Course[];  // Add this prop to match Dashboard
+  courses: Course[];
+  allCourses: Course[];
 }
 
-export default function CourseList({ courses }: CourseListProps) {
+export default function CourseList({ courses, allCourses }: CourseListProps) {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const { enrollments, showAllCourses } = useSelector(
@@ -33,15 +34,17 @@ export default function CourseList({ courses }: CourseListProps) {
     );
   };
 
-  const displayedCourses = showAllCourses
-    ? courses
-    : courses.filter(course => isEnrolled(course._id));
+  const enrolledCourses = courses.filter(course => isEnrolled(course._id));
+  const availableCourses = allCourses.filter(course => !isEnrolled(course._id));
+  const displayedCourses = showAllCourses ? availableCourses : enrolledCourses;
 
   return (
     <div id="wd-course-list" className="container-fluid px-4">
       <div className="row align-items-center mb-4 mt-3">
         <div className="col">
-          <h2 className="m-0">Courses ({displayedCourses.length})</h2>
+          <h2 className="m-0">
+            {showAllCourses ? 'Available' : 'My'} Courses ({displayedCourses.length})
+          </h2>
         </div>
         {currentUser.role === 'STUDENT' && (
           <div className="col-auto">
@@ -85,7 +88,7 @@ export default function CourseList({ courses }: CourseListProps) {
         ))}
       </ul>
 
-      {displayedCourses.length === 0 && !showAllCourses && (
+      {enrolledCourses.length === 0 && !showAllCourses && (
         <div className="alert alert-info mt-4">
           You are not enrolled in any courses yet.
           <br />
@@ -93,7 +96,13 @@ export default function CourseList({ courses }: CourseListProps) {
         </div>
       )}
 
-      {showAllCourses && displayedCourses.length > 0 && (
+      {showAllCourses && availableCourses.length === 0 && (
+        <div className="alert alert-info mt-4">
+          No additional courses are available for enrollment at this time.
+        </div>
+      )}
+
+      {showAllCourses && availableCourses.length > 0 && (
         <div className="alert alert-light mt-4 border">
           Browse all available courses above.
           Click "Show My Courses" to see only your enrolled courses.
