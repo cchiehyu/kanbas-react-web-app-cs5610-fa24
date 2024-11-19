@@ -47,6 +47,8 @@ export default function Dashboard({
       dispatch(fetchEnrollments(course._id));
     });
   }, [dispatch, courses, allCourses, currentUser.role]);
+
+  
   
   const isEnrolled = (courseId: string) => {
     return enrollments.some(
@@ -55,6 +57,14 @@ export default function Dashboard({
         enrollment.course === courseId
     );
   };
+
+  useEffect(() => {
+    const coursesToCheck = allCourses;
+    coursesToCheck.forEach((course) => {
+      dispatch(fetchEnrollments(course._id));
+    });
+  }, [dispatch, allCourses, enrollments]); // Remove courses and currentUser.role, add enrollments
+  
 
   const handleEnrollmentClick = (courseId: string) => {
     if (isEnrolled(courseId)) {
@@ -71,7 +81,7 @@ export default function Dashboard({
     }
   };
 
-  const enrolledCourses = courses.filter(course => isEnrolled(course._id));
+  const enrolledCourses = allCourses.filter(course => isEnrolled(course._id));
   const availableCourses = allCourses.filter(course => !isEnrolled(course._id));
   const displayedCourses = currentUser.role === 'FACULTY' 
     ? allCourses 

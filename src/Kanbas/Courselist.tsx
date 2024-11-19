@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { toggleShowAllCourses } from './Courses/Enrollment/client';
-import { RootState } from './store';
+import { toggleShowAllCourses, enrollInCourse, unenrollFromCourse, fetchEnrollments } from './Courses/Enrollment/client';
+import { RootState, AppDispatch  } from './store';
 
 interface Course {
   _id: string;
@@ -20,11 +20,18 @@ interface CourseListProps {
 }
 
 export default function CourseList({ courses, allCourses }: CourseListProps) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const { enrollments, showAllCourses } = useSelector(
     (state: RootState) => state.enrollmentReducer
   );
+
+  // Add useEffect to fetch enrollments
+  useEffect(() => {
+    allCourses.forEach((course) => {
+      dispatch(fetchEnrollments(course._id));
+    });
+  }, [dispatch, allCourses, enrollments]);
 
   const isEnrolled = (courseId: string) => {
     return enrollments.some(
@@ -34,7 +41,8 @@ export default function CourseList({ courses, allCourses }: CourseListProps) {
     );
   };
 
-  const enrolledCourses = courses.filter(course => isEnrolled(course._id));
+  // Update the filtering logic to use allCourses
+  const enrolledCourses = allCourses.filter(course => isEnrolled(course._id));
   const availableCourses = allCourses.filter(course => !isEnrolled(course._id));
   const displayedCourses = showAllCourses ? availableCourses : enrolledCourses;
 
@@ -46,7 +54,7 @@ export default function CourseList({ courses, allCourses }: CourseListProps) {
             {showAllCourses ? 'Available' : 'My'} Courses ({displayedCourses.length})
           </h2>
         </div>
-        {currentUser.role === 'STUDENT' && (
+        { (
           <div className="col-auto">
             <button
               className="btn btn-primary"
