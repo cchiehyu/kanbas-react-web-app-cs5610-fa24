@@ -53,11 +53,13 @@ export default function Kanbas() {
     const newCourse = await userClient.createCourse(course);
 
     setCourses([...courses,newCourse]);
+    fetchAllCourses();
   };
 
   const deleteCourse = async (courseId: string) => {
     const status = await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
+    fetchAllCourses();
   };
 
   const updateCourse = async () => {
@@ -72,6 +74,7 @@ export default function Kanbas() {
         }
       })
     );
+    fetchAllCourses();
   };
 
   return (
