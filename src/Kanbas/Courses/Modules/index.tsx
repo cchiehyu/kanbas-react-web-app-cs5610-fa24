@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { BsGripVertical } from 'react-icons/bs';
 import ModuleControlButtons from './ModuleControlButtons';
@@ -14,14 +14,17 @@ interface ModulesProps {
 }
 
 export default function Modules({ courseCode }: ModulesProps = {}) {
-  // Local state only for UI controls
+  
   const [isExpanded, setIsExpanded] = useState({
     module1: true,
     module2: true
   });
   const [moduleName, setModuleName] = useState("");
-
-  // Redux setup
+  
+  const { cid } = useParams();
+  const currentCourseId = courseCode || cid;
+  const course = courses.find((course) => course._id === currentCourseId);
+ 
   const dispatch = useDispatch();
   const saveModule = async (module: any) => {
     await modulesClient.updateModule(module);
@@ -35,10 +38,12 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
     dispatch(addModule(module));
   };
 
-  const fetchModules = async () => {
+  const fetchModules = useCallback(async () => {
+    if (!cid) return;
     const modules = await coursesClient.findModulesForCourse(cid as string);
     dispatch(setModules(modules));
-  };
+  }, [cid, dispatch]);
+
   useEffect(() => {
     fetchModules();
   }, [fetchModules]);
@@ -49,12 +54,8 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
     dispatch(deleteModule(moduleId));
   };
 
-  // Route params
-  const { cid } = useParams();
-  const currentCourseId = courseCode || cid;
-  const course = courses.find((course) => course._id === currentCourseId);
 
-  // UI handlers
+
   const toggleModule = (moduleId: 'module1' | 'module2') => {
     setIsExpanded(prev => ({
       ...prev,
