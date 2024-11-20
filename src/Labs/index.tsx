@@ -45,6 +45,8 @@ function AllLabs() {
   return (
     <div style={{width: '100%'}}>
       <h1>All Labs</h1>
+      <h2>Chen,Chieh-Yu</h2>
+      <h3>CS5610 - 20595.202510</h3>
       <div style={labStyle}><Lab1 /></div>
       <div style={labStyle}><Lab2 /></div>
       <div style={labStyle}><Lab3 /></div>
