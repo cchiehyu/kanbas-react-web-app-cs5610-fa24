@@ -1,4 +1,4 @@
-export default[
+const data = [
     {
       "_id": "A101",
       "title": "Propulsion Assignment",
@@ -108,4 +108,4 @@ export default[
       "submissionType": "online"
     }
   ];
-  
+  export default data;

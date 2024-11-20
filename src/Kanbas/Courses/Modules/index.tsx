@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useParams } from 'react-router';
 import { BsGripVertical } from 'react-icons/bs';
 import ModuleControlButtons from './ModuleControlButtons';
@@ -41,7 +41,7 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
   };
   useEffect(() => {
     fetchModules();
-  }, []);
+  }, [fetchModules]);
 
   const modules = useSelector((state: any) => state.modulesReducer.modules);
   const removeModule = async (moduleId: string) => {
