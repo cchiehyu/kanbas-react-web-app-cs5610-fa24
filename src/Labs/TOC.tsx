@@ -90,9 +90,32 @@ export default function TOC() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          GitHub
+          GitHub - Frontend(React App)
+        </a>
+      </li>
+
+      <li className="nav-item">
+        <a
+          href="https://github.com/cchiehyu/kanbas-node-server-app-cs5610-fa24"
+          className="nav-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub - Backend(NodeJS Server)
+        </a>
+      </li>
+
+      <li className="nav-item">
+        <a
+          href="https://kanbas-node-server-app-a5-25ca51243a6d.herokuapp.com/"
+          className="nav-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Heroku - Backend(NodeJS Server)
         </a>
       </li>
     </ul>
+    
   );
 }
