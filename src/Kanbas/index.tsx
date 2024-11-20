@@ -6,7 +6,7 @@ import Courses from "./Courses";
 import KanbasNavigation from "./Navigation";
 import './styles.css';
 import CourseList from './Courselist';
-import { Provider, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import ProtectedRoute from './Account/ProtectedRoute';
 import Session from "./Account/Session";
 import * as userClient from "./Account/client";
@@ -57,7 +57,7 @@ export default function Kanbas() {
   };
 
   const deleteCourse = async (courseId: string) => {
-    const status = await courseClient.deleteCourse(courseId);
+    //const status = await courseClient.deleteCourse(courseId);
     setCourses(courses.filter((course) => course._id !== courseId));
     fetchAllCourses();
   };

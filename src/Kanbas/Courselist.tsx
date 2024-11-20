@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { toggleShowAllCourses, enrollInCourse, unenrollFromCourse, fetchEnrollments } from './Courses/Enrollment/client';
+import { toggleShowAllCourses, fetchEnrollments } from './Courses/Enrollment/client';
 import { RootState, AppDispatch  } from './store';
 
 interface Course {

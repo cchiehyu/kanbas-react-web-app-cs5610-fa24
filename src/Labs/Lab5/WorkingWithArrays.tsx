@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import * as client from "./client";
+//import * as client from "./client";
 
 const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 

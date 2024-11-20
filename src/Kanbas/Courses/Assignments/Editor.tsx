@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { BsGripVertical, BsPlus } from 'react-icons/bs';
 import { FaSearch, FaTrash } from 'react-icons/fa';
 import { FaPencil } from 'react-icons/fa6';
-import { deleteAssignment, setAssignments, addAssignment } from './reducer';
+import { deleteAssignment, setAssignments } from './reducer';
 import * as assignmentsClient from "./client";
 
 interface Assignment {
