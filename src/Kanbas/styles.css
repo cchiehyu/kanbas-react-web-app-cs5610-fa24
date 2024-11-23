@@ -1,87 +1,102 @@
-/* General Layout for Content Padding */
+/* Navigation List Styles */
+.wd.list-group {
+  background-color: white;
+  padding: 0;
+  border: none;
+}
+
+.wd.list-group .list-group-item {
+  background-color: white;
+  color: #D41B2C;
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+}
+
+#wd-courses-navigation.wd.list-group .list-group-item.active {
+  background-color: white !important;
+  color: black !important;
+  border-left: 10px solid black !important;
+  border-top: 1px solid rgba(0,0,0,.125) !important;
+  border-bottom: 1px solid rgba(0,0,0,.125) !important;
+  border-right: 1px solid rgba(0,0,0,.125) !important;
+}
+
+.wd.list-group .list-group-item:hover {
+  color: #D41B2C;
+}
+
+.wd.list-group .list-group-item:not(.active):hover {
+  background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  .wd.list-group {
+    width: 100%;
+    font-size: 16px;
+  }
+}
+
+/* Main Content Styles */
 @media (min-width: 768px) {
   #wd-kanbas .wd-main-content-offset {
     padding-left: 140px !important;
   }
 }
 
-/* Adjusting the main content margin to remove the gap */
-#wd-kanbas .content {
-  flex-grow: 1;
-  margin-left: 200px; /* Adjusted to align with sidebar width */
-  padding: 20px;
-}
-
-/* Card Layout for Course Dashboard */
+/* Dashboard Course Card Styles */
 .wd-dashboard-course .card {
-  width: 100%; 
-  max-width: 300px; 
+  width: 300px;
   min-height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* Card Image Styling */
 .wd-dashboard-course .card img {
   height: 160px;
-  object-fit: cover; 
+  object-fit: cover;
 }
 
-/* Card Body Content */
 .wd-dashboard-course .card-body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%; 
+  height: 100%;
 }
 
-/* Sidebar Navigation - General Styling */
-#wd-courses-navigation {
-  background-color: transparent; /* No background for sidebar */
-  padding: 0;
-  margin: 0;
-  min-height: 100vh; 
-  width: 200px; /* Adjust to desired width */
-}
-
-/* Styling for Each Sidebar Link */
-#wd-courses-navigation .list-group-item {
-  color: #D41B2C; 
-  font-size: 1.1rem;
-  padding: 15px; 
-  text-align: left; /* Align links to the left */
-  border: none; 
-}
-
-/* Hover Effect for Links */
-#wd-courses-navigation .list-group-item:hover {
-  background-color: #ececec; 
-  color: black; 
-}
-
-/* Active Link Styling */
-.list-group.wd > .list-group-item.active {
-  color: black;
-  background-color: white;
-  border-left: 3px solid black !important; 
-}
-
-/* Responsive Design for Sidebar */
-@media (max-width: 768px) {
-  #wd-courses-navigation {
-    display: none; /* Hide the sidebar on smaller screens */
-  }
-}
-
-/* Typography and General Styling */
+/* Global Body Styles */
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif; 
 }
 
-/* Course List Section Styling */
+body * {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Button and Background Color Styles */
+.btn-secondary {
+  --bs-btn-color: #000 !important;
+  --bs-btn-bg: #c7cdd1 !important;
+  --bs-btn-border-color: #c7cdd1 !important;
+  --bs-btn-hover-color: #fff !important;
+}
+
+.bg-secondary {
+  --bs-secondary-rgb: 199, 205, 209;
+}
+
+.list-group-item {
+  --bs-list-group-border-color: ;
+}
+
+/* Lesson Styles */
+.wd-lesson {
+  border-left: 3px solid green !important;
+}
+
+/* Course List Styles */
 .wd-course-list {
   padding: 20px;
 }
@@ -112,37 +127,7 @@ body {
   margin-bottom: 5px;
 }
 
-/* Lesson Item Styling */
-.wd-lesson {
-  border-left: 3px solid green !important; /* Green border for lesson items */
-}
-
-/* Text Color for Danger (Error, Important Warnings) */
+/* Text Danger Styles */
 .text-danger {
   color: #D41B2C;
-}
-
-/* Button and Secondary Element Styles */
-.btn-secondary {
-  --bs-btn-color: #000 !important;
-  --bs-btn-bg: #c7cdd1 !important;
-  --bs-btn-border-color: #c7cdd1 !important;
-  --bs-btn-hover-color: #fff !important;
-}
-
-/* Secondary Background Colors */
-.bg-secondary {
-  --bs-secondary-rgb: 199, 205, 209;
-}
-
-/* General Styling for List Group Items */
-.list-group-item {
-  --bs-list-group-border-color: #c7cdd1;
-}
-
-/* Responsive Card Layout for Smaller Screens */
-@media (max-width: 768px) {
-  .wd-dashboard-course .card {
-    width: 100%; /* Full width on small screens */
-  }
 }
