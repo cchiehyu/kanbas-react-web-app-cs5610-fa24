@@ -113,7 +113,7 @@ export default function Dashboard({
             placeholder="Course Name"
           />
           <input
-            value={course.number}
+            value={course.number} 
             className="form-control mb-2"
             onChange={(e) => setCourse({ ...course, number: e.target.value })}
             placeholder="Course Number"
@@ -142,9 +142,30 @@ export default function Dashboard({
             onChange={(e) => setCourse({ ...course, description: e.target.value })}
             placeholder="Course Description"
           />
-          <button className="btn btn-success mb-4" onClick={addNewCourse}>
-            Add Course
-          </button>
+          <div className="d-flex gap-2">
+            <button 
+              className="btn btn-success mb-4" 
+              onClick={course._id ? updateCourse : addNewCourse}
+            >
+              {course._id ? "Update Course" : "Add Course"}
+            </button>
+            {course._id && (
+              <button 
+                className="btn btn-secondary mb-4" 
+                onClick={() => setCourse({
+                  _id: "",
+                  name: "",
+                  number: "",
+                  startDate: "",
+                  endDate: "",
+                  image: "",
+                  description: ""
+                })}
+              >
+                Cancel Edit
+              </button>
+            )}
+          </div>
           <hr />
         </>
       )}
