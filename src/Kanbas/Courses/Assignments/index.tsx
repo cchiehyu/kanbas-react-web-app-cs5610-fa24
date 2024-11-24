@@ -129,27 +129,27 @@ export default function Assignments() {
           >
             <div className="d-flex align-items-center">
               <BsGripVertical className="me-2 fs-3" />
-              <div className="wd-title p-3 ps-2 bg-light flex-grow-1">
-                {assignment.title}
+              <div className="wd-title p-3 ps-2 bg-light flex-grow-1 fw-bold">
+                  {assignment.title}
               </div>
             </div>
             <ul className="wd-assignments-list list-group rounded-0">
               <li className="wd-assignment-item list-group-item p-3 ps-1">
                 <div className="d-flex justify-content-between">
-                  <div className="d-flex flex-column">
-                    <Link 
-                      to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
-                      className="text-decoration-none"
-                    >
-                      {assignment.title}
-                    </Link>
-                    {assignment.description && (
-                      <p className="text-muted mb-0">
-                        {assignment.description.substring(0, 100)}
-                        {assignment.description.length > 100 ? '...' : ''}
-                      </p>
-                    )}
-                  </div>
+                <div className="d-flex flex-column">
+                  <Link
+                    to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                    className="text-decoration-none fw-bold"
+                  >
+                    {assignment.title}
+                  </Link>
+                  {assignment.description && (
+                    <p className="text-muted mb-0">
+                      {assignment.description.substring(0, 100)}
+                      {assignment.description.length > 100 ? '...' : ''}
+                    </p>
+                  )}
+                </div>
                   <div className="d-flex align-items-center">
                     <div className="text-end me-3">
                       <div className="text-muted">
