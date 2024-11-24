@@ -50,11 +50,35 @@ export default function Kanbas() {
   });
 
   const addNewCourse = async () => {
-    const newCourse = await userClient.createCourse(course);
-
-    setCourses([...courses,newCourse]);
-    fetchAllCourses();
+    try {
+      // Check for duplicate course number in existing courses
+      const isDuplicate = allCourses.some(
+        existingCourse => existingCourse.number.toLowerCase() === course.number.toLowerCase()
+      );
+  
+      if (isDuplicate) {
+        alert(`Course with number ${course.number} already exists`);
+        return;
+      }
+  
+      const newCourse = await userClient.createCourse(course);
+      setCourses([...courses, newCourse]);
+      fetchAllCourses();
+      
+      setCourse({
+        _id: "", 
+        name: "", 
+        number: "",
+        startDate: "", 
+        endDate: "", 
+        description: "",
+        image: ""
+      });
+    } catch (error) {
+      alert( "Failed to create course");
+    }
   };
+  
 
   const deleteCourse = async (courseId: string) => {
     //const status = await courseClient.deleteCourse(courseId);
