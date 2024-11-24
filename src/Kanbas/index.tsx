@@ -51,20 +51,32 @@ export default function Kanbas() {
 
   const addNewCourse = async () => {
     try {
-      // Check for duplicate course number in existing courses
+      // Validate required fields
+      if (!course.name.trim()) {
+        alert("Course name cannot be empty");
+        return;
+      }
+      
+      if (!course.description.trim()) {
+        alert("Course description cannot be empty"); 
+        return;
+      }
+   
+      // Check for duplicate course number
       const isDuplicate = allCourses.some(
         existingCourse => existingCourse.number.toLowerCase() === course.number.toLowerCase()
       );
-  
+   
       if (isDuplicate) {
         alert(`Course with number ${course.number} already exists`);
         return;
       }
-  
+   
       const newCourse = await userClient.createCourse(course);
       setCourses([...courses, newCourse]);
       fetchAllCourses();
       
+      // Reset form after successful creation
       setCourse({
         _id: "", 
         name: "", 
@@ -75,9 +87,9 @@ export default function Kanbas() {
         image: ""
       });
     } catch (error) {
-      alert( "Failed to create course");
+      alert("Failed to create course");
     }
-  };
+   };
   
 
  const deleteCourse = async (courseId: string) => {
@@ -91,9 +103,32 @@ export default function Kanbas() {
   }
 };
 
-  const updateCourse = async () => {
+const updateCourse = async () => {
+  try {
+    // Validate required fields
+    if (!course.name.trim()) {
+      alert("Course name cannot be empty");
+      return;
+    }
+    
+    if (!course.description.trim()) {
+      alert("Course description cannot be empty"); 
+      return;
+    }
+ 
+    // Check for duplicate course number, excluding current course
+    const isDuplicate = allCourses.some(
+      existingCourse => 
+        existingCourse.number.toLowerCase() === course.number.toLowerCase() && 
+        existingCourse._id !== course._id
+    );
+ 
+    if (isDuplicate) {
+      alert(`Course with number ${course.number} already exists`);
+      return;
+    }
+ 
     await courseClient.updateCourse(course);
-
     setCourses(
       courses.map((c) => {
         if (c._id === course._id) {
@@ -104,7 +139,21 @@ export default function Kanbas() {
       })
     );
     fetchAllCourses();
-  };
+ 
+    // Reset form after successful update
+    setCourse({
+      _id: "", 
+      name: "", 
+      number: "",
+      startDate: "", 
+      endDate: "", 
+      description: "",
+      image: ""
+    });
+  } catch (error) {
+    alert("Failed to update course");
+  }
+ };
 
   return (
 
