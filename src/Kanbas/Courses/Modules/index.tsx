@@ -15,10 +15,10 @@ interface ModulesProps {
 
 export default function Modules({ courseCode }: ModulesProps = {}) {
   
-  const [isExpanded, setIsExpanded] = useState({
-    module1: true,
-    module2: true
-  });
+  // const [isExpanded, setIsExpanded] = useState({
+  //   module1: true,
+  //   module2: true
+  // });
   const [moduleName, setModuleName] = useState("");
   
   const { cid } = useParams();
@@ -56,25 +56,25 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
 
 
 
-  const toggleModule = (moduleId: 'module1' | 'module2') => {
-    setIsExpanded(prev => ({
-      ...prev,
-      [moduleId]: !prev[moduleId]
-    }));
-  };
+  // const toggleModule = (moduleId: 'module1' | 'module2') => {
+  //   setIsExpanded(prev => ({
+  //     ...prev,
+  //     [moduleId]: !prev[moduleId]
+  //   }));
+  // };
 
   const handleCollapseAll = () => {
-    setIsExpanded({
-      module1: false,
-      module2: false
-    });
+    // setIsExpanded({
+    //   module1: false,
+    //   module2: false
+    // });
   };
 
   const handleExpandAll = () => {
-    setIsExpanded({
-      module1: true,
-      module2: true
-    });
+    // setIsExpanded({
+    //   module1: true,
+    //   module2: true
+    // });
   };
 
   return (
