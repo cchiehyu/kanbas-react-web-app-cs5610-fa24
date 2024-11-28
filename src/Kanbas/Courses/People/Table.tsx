@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { FaUserCircle, FaSort } from "react-icons/fa";
-import { useParams } from "react-router-dom";
-import * as db from "../../Database";
 
 interface User {
   _id: string;
@@ -22,40 +20,24 @@ interface Enrollment {
 
 type SortKey = keyof User;
 
-export default function PeopleTable() {
-  const { cid } = useParams<{ cid: string }>();
-  const { users, enrollments } = db;
+export default function PeopleTable({ users = [] }: { users?: any[] }) {
   const [sortKey, setSortKey] = useState<SortKey>("lastName");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-
-  const sortedUsers = useMemo(() => {
-    const filteredUsers = (users as User[]).filter((user) =>
-      (enrollments as Enrollment[]).some(
-        (enrollment) => enrollment.user === user._id && enrollment.course === cid
-      )
-    );
-
-    return filteredUsers.sort((a, b) => {
-      if (a[sortKey] < b[sortKey]) return sortOrder === "asc" ? -1 : 1;
-      if (a[sortKey] > b[sortKey]) return sortOrder === "asc" ? 1 : -1;
-      return 0;
-    });
-  }, [users, enrollments, cid, sortKey, sortOrder]);
 
   const handleSort = (key: SortKey) => {
     setSortOrder(sortOrder === "asc" && sortKey === key ? "desc" : "asc");
     setSortKey(key);
   };
 
-  if (!users || !enrollments) {
+  if (!users) {
     return <div>Loading...</div>;
   }
 
   return (
     <div id="wd-people-table">
-      <h3>People in Course: {cid}</h3>
-      {sortedUsers.length === 0 ? (
-        <p>No users enrolled in this course.</p>
+      <h3>People in Course: </h3>
+      {users.length === 0 ? (
+        <p>No users found.</p>
       ) : (
         <table className="table table-striped">
           <thead>
@@ -81,7 +63,7 @@ export default function PeopleTable() {
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.map((user) => (
+            {users.map((user) => (
               <tr key={user._id}>
                 <td className="wd-full-name text-nowrap">
                   <FaUserCircle className="me-2 fs-1 text-secondary" />

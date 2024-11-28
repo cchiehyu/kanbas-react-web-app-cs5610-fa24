@@ -32,8 +32,8 @@ export default function Kanbas() {
   const fetchAllCourses = async () => {
     try {
       const allCourses = await courseClient.fetchAllCourses();
-      console.log("Total available courses:", allCourses.length);
-      console.log("All courses data:", allCourses);
+      // console.log("Total available courses:", allCourses.length);
+      // console.log("All courses data:", allCourses);
       setAllCourses(allCourses);
     } catch (error) {
       console.error("Error fetching courses:", error);

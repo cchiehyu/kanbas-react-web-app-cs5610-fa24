@@ -13,6 +13,19 @@ export const createCourse = async (course: any) => {
 export const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 export const USERS_API = `${REMOTE_SERVER}/api/users`;
 
+export const findAllUsers = async () => {
+  try {
+    const response = await axiosWithCredentials.get(USERS_API);
+    console.log("Users API Response:", response);
+    console.log("Users Data:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
+};
+
+
 export const signin = async (credentials: any) => {
   console.log('Signin attempt:', { url: `${USERS_API}/signin`, credentials });  
   const response = await axiosWithCredentials.post(`${USERS_API}/signin`, credentials);

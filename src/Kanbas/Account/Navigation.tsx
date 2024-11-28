@@ -10,39 +10,56 @@ interface AccountState {
   } | null;
 }
 
+interface RootState {
+  accountReducer: AccountState;
+}
+
 export default function AccountNavigation() {
-  const { currentUser } = useSelector((state: { accountReducer: AccountState }) => 
-    state.accountReducer
-  );
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const { pathname } = useLocation();
-  
+
+  const active = (path: string): string => {
+    return pathname.includes(path) ? 'active' : '';
+  };
+
   return (
     <div id="wd-account-navigation" className="list-group fs-5 rounded-0">
       {!currentUser && (
         <>
-          <Link 
-            id="wd-account-signin-link" 
-            className={`list-group-item ${pathname.includes('Signin') ? 'active' : ''} border border-0`}
+          <Link
+            id="wd-account-signin-link"
+            className={`list-group-item ${active('Signin')} border border-0`}
             to="/Kanbas/Account/Signin"
           >
             Signin
           </Link>
-          <Link 
-            id="wd-account-signup-link" 
-            className={`list-group-item ${pathname.includes('Signup') ? 'active' : ''} border border-0`}
+          <Link
+            id="wd-account-signup-link"
+            className={`list-group-item ${active('Signup')} border border-0`}
             to="/Kanbas/Account/Signup"
           >
             Signup
           </Link>
         </>
       )}
+      
       {currentUser && (
-        <Link 
-          id="wd-account-profile-link" 
-          className={`list-group-item ${pathname.includes('Profile') ? 'active' : ''} border border-0`}
+        <Link
+          id="wd-account-profile-link"
+          className={`list-group-item ${active('Profile')} border border-0`}
           to="/Kanbas/Account/Profile"
         >
           Profile
+        </Link>
+      )}
+
+      {currentUser && currentUser.role === "FACULTY" && (
+        <Link
+          id="wd-account-users-link"
+          className={`list-group-item ${active('Users')} border border-0`}
+          to="/Kanbas/Account/Users"
+        >
+          Users
         </Link>
       )}
     </div>
