@@ -36,7 +36,18 @@ export const findUsersByPartialName = async (name: string) => {
   return response.data;
 };
 
-
+export const findUserById = async (id: string) => {
+  console.log("Client findUserById called with id:", id);
+  console.log("Full URL being called:", `${USERS_API}/${id}`);
+  try {
+    const response = await axios.get(`${USERS_API}/${id}`);
+    console.log("Response received:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error in client findUserById:", error);
+    throw error;
+  }
+};
 
 export const signin = async (credentials: any) => {
   console.log('Signin attempt:', { url: `${USERS_API}/signin`, credentials });  
