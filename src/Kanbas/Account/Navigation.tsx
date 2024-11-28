@@ -53,7 +53,7 @@ export default function AccountNavigation() {
         </Link>
       )}
 
-      {currentUser && currentUser.role === "FACULTY" && (
+      {currentUser && currentUser.role === "ADMIN" && (
         <Link
           id="wd-account-users-link"
           className={`list-group-item ${active('Users')} border border-0`}
