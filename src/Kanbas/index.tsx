@@ -49,7 +49,7 @@ export default function Kanbas() {
     startDate: "2023-09-10", endDate: "2023-12-15", description: "New Description",
   });
 
-  const addNewCourse = async () => {
+  const addNewCourse = async  () => {
     try {
       // Validate required fields
       if (!course.name.trim()) {
@@ -72,7 +72,8 @@ export default function Kanbas() {
         return;
       }
    
-      const newCourse = await userClient.createCourse(course);
+      //const newCourse = await userClient.createCourse(course);
+      const newCourse = courseClient.createCourse(course);
       setCourses([...courses, newCourse]);
       fetchAllCourses();
       
