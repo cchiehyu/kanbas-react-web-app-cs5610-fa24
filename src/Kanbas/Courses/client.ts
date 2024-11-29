@@ -1,8 +1,8 @@
 import axios from "axios";
 const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 const MODULES_API = `${REMOTE_SERVER}/api/modules`;
-
 const COURSES_API = `${REMOTE_SERVER}/api/courses`;
+const axiosWithCredentials = axios.create({ withCredentials: true });
 
 export const updateModule = async (module: any) => {
   const { data } = await axios.put(`${MODULES_API}/${module._id}`, module);
@@ -27,18 +27,21 @@ export const findModulesForCourse = async (courseId: string) => {
     .get(`${COURSES_API}/${courseId}/modules`);
   return response.data;
 };
-
 export const fetchAllCourses = async () => {
-  const { data } = await axios.get(COURSES_API);
+  const { data } = await axiosWithCredentials.get(COURSES_API);
   return data;
-};
+ };
 
-export const deleteCourse = async (id: string) => {
-  const { data } = await axios.delete(`${COURSES_API}/${id}`);
+ export const deleteCourse = async (id: string) => {
+  const { data } = await axiosWithCredentials.delete(`${COURSES_API}/${id}`);
   return data;
-};
+ };
 
 export const updateCourse = async (course: any) => {
-  const { data } = await axios.put(`${COURSES_API}/${course._id}`, course);
+  const { data } = await axiosWithCredentials.put(`${COURSES_API}/${course._id}`, course);
   return data;
 };
+
+export function createCourse(course: any) {
+  throw new Error('Function not implemented.');
+}
