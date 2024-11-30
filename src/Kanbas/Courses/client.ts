@@ -35,9 +35,7 @@ export const findModulesForCourse = async (courseId: string) => {
 };
 export const fetchAllCourses = async () => {
   try {
-    console.log('Fetching all courses...');
-    const response = await axios.get(COURSES_API);
-    console.log('Courses fetched:', response.data);
+    const response = await axiosWithCredentials.get(COURSES_API);
     return response.data;
   } catch (error) {
     console.error('Error fetching courses:', error);

@@ -18,26 +18,44 @@ export const enrollmentSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchEnrollments.fulfilled, (state, action) => {
-        const newEnrollments = action.payload;
+        // Add safety check for payload
+        const newEnrollments = Array.isArray(action.payload) ? action.payload : [action.payload];
+        
+        // Clear existing enrollments for this course if needed
+        // state.enrollments = [];
+        
+        // Add new enrollments, avoiding duplicates
         newEnrollments.forEach((newEnroll: any) => {
-          const exists = state.enrollments.some(
-            e => e.user === newEnroll.user && e.course === newEnroll.course
-          );
-          if (!exists) {
-            state.enrollments.push(newEnroll);
+          if (newEnroll && newEnroll.user && newEnroll.course) {
+            const exists = state.enrollments.some(
+              e => e.user === newEnroll.user && e.course === newEnroll.course
+            );
+            if (!exists) {
+              state.enrollments.push(newEnroll);
+            }
           }
         });
       })
       .addCase(enrollInCourse.fulfilled, (state, action) => {
-        state.enrollments.push(action.payload);
+        // Add safety check
+        if (action.payload && action.payload.user && action.payload.course) {
+          const exists = state.enrollments.some(
+            e => e.user === action.payload.user && e.course === action.payload.course
+          );
+          if (!exists) {
+            state.enrollments.push(action.payload);
+          }
+        }
       })
       .addCase(unenrollFromCourse.fulfilled, (state, action) => {
         const { userId, courseId } = action.payload;
-        state.enrollments = state.enrollments.filter(
-          enrollment =>
-            !(enrollment.user === userId &&
-              enrollment.course === courseId)
-        );
+        if (userId && courseId) {
+          state.enrollments = state.enrollments.filter(
+            enrollment => 
+              !(enrollment.user === userId && 
+                enrollment.course === courseId)
+          );
+        }
       });
   }
 });

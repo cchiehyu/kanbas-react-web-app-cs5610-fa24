@@ -30,7 +30,6 @@ export default function Kanbas() {
     try {
       if (currentUser?._id) {
         const courses = await userClient.findCoursesForUser(currentUser._id);
-        console.log("User courses fetched:", courses);
         setUserCourses(courses);
       }
     } catch (error) {
@@ -60,7 +59,6 @@ export default function Kanbas() {
   const fetchAllCourses = async () => {
     try {
       const courses = await courseClient.fetchAllCourses();
-      console.log("All courses fetched:", courses);
       setAllCourses(courses);
     } catch (error) {
       console.error("Error fetching all courses:", error);
@@ -204,11 +202,6 @@ export default function Kanbas() {
     }
   }, [currentUser, enrolling, fetchCourses, findCoursesForUser]);
 
-  useEffect(() => {
-    console.log("Current User:", currentUser);
-    console.log("User Courses:", userCourses);
-    console.log("All Courses:", allCourses);
-  }, [currentUser, userCourses, allCourses]);
   return (
     <Session>
       <div id="wd-kanbas">
