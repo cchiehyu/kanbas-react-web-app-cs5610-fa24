@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUserCircle, FaSort } from "react-icons/fa";
 import PeopleDetails from "./Details";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { findUsersForCourse } from "../client";
 
 interface User {
   _id: string;
@@ -22,16 +24,35 @@ interface Enrollment {
 
 type SortKey = keyof User;
 
+
 export default function PeopleTable({ users = [] }: { users?: any[] }) {
   const [sortKey, setSortKey] = useState<SortKey>("lastName");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [courseUsers, setCourseUsers] = useState<User[]>([]); 
+  const { cid: courseId } = useParams<{ cid: string }>();
+
+  useEffect(() => {
+    const fetchCourseUsers = async () => {
+      try {
+        if (courseId) {
+          const fetchedUsers = await findUsersForCourse(courseId);
+          setCourseUsers(fetchedUsers);
+        }
+      } catch (error) {
+        console.error("Error fetching course users:", error);
+      }
+    };
+    fetchCourseUsers();
+  }, [courseId]);
 
   const handleSort = (key: SortKey) => {
     setSortOrder(sortOrder === "asc" && sortKey === key ? "desc" : "asc");
     setSortKey(key);
   };
 
-  if (!users) {
+  const displayUsers = courseId ? courseUsers : users;
+
+  if (!displayUsers) {
     return <div>Loading...</div>;
   }
 
@@ -39,7 +60,7 @@ export default function PeopleTable({ users = [] }: { users?: any[] }) {
     <div id="wd-people-table">
       <PeopleDetails />
       <h3>People: </h3>
-      {users.length === 0 ? (
+      {displayUsers .length === 0 ? (
         <p>No users found.</p>
       ) : (
         <table className="table table-striped">
@@ -69,7 +90,7 @@ export default function PeopleTable({ users = [] }: { users?: any[] }) {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {displayUsers .map((user) => (
               <tr key={user._id}>
                     <td className="text-nowrap">
                     <small className="text-muted">ID: {user._id}</small>

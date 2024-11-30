@@ -22,15 +22,28 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
   return response.data;
 };
 
+export const findUsersForCourse = async (courseId: string) => {
+  const response = await axios.get(`${COURSES_API}/${courseId}/users`);
+  return response.data;
+ };
+ 
+
 export const findModulesForCourse = async (courseId: string) => {
   const response = await axios
     .get(`${COURSES_API}/${courseId}/modules`);
   return response.data;
 };
 export const fetchAllCourses = async () => {
-  const { data } = await axiosWithCredentials.get(COURSES_API);
-  return data;
- };
+  try {
+    console.log('Fetching all courses...');
+    const response = await axios.get(COURSES_API);
+    console.log('Courses fetched:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+    throw error;
+  }
+};
 
  export const deleteCourse = async (id: string) => {
   const { data } = await axiosWithCredentials.delete(`${COURSES_API}/${id}`);

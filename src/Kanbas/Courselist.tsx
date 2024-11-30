@@ -10,13 +10,13 @@ interface Course {
   number: string;
   startDate: string;
   endDate: string;
-  department: string;
-  credits: number;
+  department?: string;
+  credits?: number;
 }
 
 interface CourseListProps {
-  courses: Course[];
-  allCourses: Course[];
+  courses: any[]; 
+  allCourses: any[]; 
 }
 
 export default function CourseList({ courses, allCourses }: CourseListProps) {
@@ -26,11 +26,12 @@ export default function CourseList({ courses, allCourses }: CourseListProps) {
     (state: RootState) => state.enrollmentReducer
   );
 
-  // Add useEffect to fetch enrollments
   useEffect(() => {
-    allCourses.forEach((course) => {
-      dispatch(fetchEnrollments(course._id));
-    });
+    if (Array.isArray(allCourses)) {
+      allCourses.forEach((course) => {
+        dispatch(fetchEnrollments(course._id));
+      });
+    }
   }, [dispatch, allCourses, enrollments]);
 
   const isEnrolled = (courseId: string) => {
@@ -41,9 +42,8 @@ export default function CourseList({ courses, allCourses }: CourseListProps) {
     );
   };
 
-  // Update the filtering logic to use allCourses
-  const enrolledCourses = allCourses.filter(course => isEnrolled(course._id));
-  const availableCourses = allCourses.filter(course => !isEnrolled(course._id));
+  const enrolledCourses = Array.isArray(allCourses) ? allCourses.filter(course => isEnrolled(course._id)) : [];
+  const availableCourses = Array.isArray(allCourses) ? allCourses.filter(course => !isEnrolled(course._id)) : [];
   const displayedCourses = showAllCourses ? availableCourses : enrolledCourses;
 
   return (
