@@ -15,7 +15,7 @@ export const deleteModule = async (moduleId: string) => {
  };
  
 export const createModuleForCourse = async (courseId: string, module: any) => {
-  const response = await axios.post(
+  const response = await axiosWithCredentials.post(
     `${COURSES_API}/${courseId}/modules`,
     module
   );
