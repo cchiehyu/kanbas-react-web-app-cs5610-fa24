@@ -26,7 +26,16 @@ export default function Kanbas() {
     description: "New Description",
   });
 
-  const findCoursesForUser = useCallback(async () => {
+  const fetchAllCourses = async () => {
+    try {
+      const courses = await courseClient.fetchAllCourses();
+      setAllCourses(courses);
+    } catch (error) {
+      console.error("Error fetching all courses:", error);
+    }
+  };
+  
+  const findCoursesForUser = async () => {
     try {
       if (currentUser?._id) {
         const courses = await userClient.findCoursesForUser(currentUser._id);
@@ -35,14 +44,14 @@ export default function Kanbas() {
     } catch (error) {
       console.error("Error fetching user courses:", error);
     }
-  }, [currentUser]);
-
-  const fetchCourses = useCallback(async () => {
+  };
+  
+  const fetchCourses = async () => {
     try {
       if (currentUser?._id) {
         const availableCourses = await courseClient.fetchAllCourses();
         const enrolledCourses = await userClient.findCoursesForUser(currentUser._id);
-
+  
         const coursesWithEnrollment = availableCourses.map((course: any) => {
           if (enrolledCourses.find((c: any) => c._id === course._id)) {
             return { ...course, enrolled: true };
@@ -50,18 +59,9 @@ export default function Kanbas() {
             return { ...course, enrolled: false };
           }
         });
-
+  
         setUserCourses(coursesWithEnrollment);
       }
-    } catch (error) {
-      console.error("Error fetching all courses:", error);
-    }
-  }, [currentUser]);
-  
-  const fetchAllCourses = async () => {
-    try {
-      const courses = await courseClient.fetchAllCourses();
-      setAllCourses(courses);
     } catch (error) {
       console.error("Error fetching all courses:", error);
     }
@@ -75,8 +75,6 @@ export default function Kanbas() {
         await userClient.unenrollFromCourse(currentUser._id, courseId);
       }
 
-      console.log("userCourses user in updateEnrollment:", userCourses)
-
       setUserCourses(
         userCourses.map((course) => {
           if (course._id === courseId) {
@@ -85,7 +83,6 @@ export default function Kanbas() {
           return course;
         })
       );
-      await fetchCourses(); // Refresh courses after enrollment change
     } catch (error) {
       console.error("Error updating enrollment:", error);
     }
@@ -192,20 +189,27 @@ export default function Kanbas() {
   };
 
   useEffect(() => {
-    if (currentUser?._id) {  // Add this check
-      fetchAllCourses();
+    if (currentUser?._id) {
+
+      if(enrolling)
+      {
+        fetchCourses();
+      }
+      else
+      {
+        fetchAllCourses();
+      }
     }
-  }, [currentUser]);
+  }, [currentUser]); 
+  
 
   useEffect(() => {
     if (currentUser?._id) {
-      if (enrolling) {
-        fetchCourses();
-      } else {
-        findCoursesForUser();
-      }
+
+      findCoursesForUser();
+      
     }
-  }, [currentUser, enrolling, fetchCourses, findCoursesForUser]);
+  }, [enrolling]);
 
   return (
     <Session>
