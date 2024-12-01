@@ -13,7 +13,7 @@ export default function Signup() {
     navigate("/Kanbas/Account/Profile");
   };
   return (
-    <div className="container-fluid bg-light">
+    <div className="container-fluid">
       <div className="row">
         <div className="col-12">
           <div className="card mt-3">
