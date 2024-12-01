@@ -22,28 +22,33 @@ interface CourseListProps {
 export default function CourseList({ courses, allCourses }: CourseListProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-  const { enrollments, showAllCourses } = useSelector(
+  const { showAllCourses } = useSelector(
     (state: RootState) => state.enrollmentReducer
   );
 
   useEffect(() => {
     if (Array.isArray(allCourses)) {
-      allCourses.forEach((course) => {
-        dispatch(fetchEnrollments(course._id));
-      });
+      const fetchEnrollmentsInBatches = async () => {
+        const batchSize = 3;
+        for (let i = 0; i < allCourses.length; i += batchSize) {
+          const batch = allCourses.slice(i, i + batchSize);
+          await Promise.all(
+            batch.map(course => dispatch(fetchEnrollments(course._id)))
+          );
+        }
+      };
+      fetchEnrollmentsInBatches();
     }
-  }, [dispatch, allCourses, enrollments]);
+  }, [dispatch, allCourses]);
 
   const isEnrolled = (courseId: string) => {
-    return enrollments.some(
-      (enrollment) =>
-        enrollment.user === currentUser._id &&
-        enrollment.course === courseId
-    );
+    return courses.some(course => course._id === courseId);
   };
 
-  const enrolledCourses = Array.isArray(allCourses) ? allCourses.filter(course => isEnrolled(course._id)) : [];
-  const availableCourses = Array.isArray(allCourses) ? allCourses.filter(course => !isEnrolled(course._id)) : [];
+  const enrolledCourses = courses;
+  const availableCourses = Array.isArray(allCourses) 
+    ? allCourses.filter(course => !isEnrolled(course._id)) 
+    : [];
   const displayedCourses = showAllCourses ? availableCourses : enrolledCourses;
 
   return (
