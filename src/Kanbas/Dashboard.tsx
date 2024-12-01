@@ -46,6 +46,8 @@ export default function Dashboard({
  
  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
 
+ const isAdminOrFaculty = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
+
  useEffect(() => {
   if (Array.isArray(allCourses)) {
     const coursesToCheck = allCourses;
@@ -68,7 +70,7 @@ const enrolledCourses = courses || [];
 const availableCourses = (Array.isArray(allCourses) ? allCourses : [])
   .filter(course => !enrolledCourses.some(enrolled => enrolled._id === course._id));
 
-const displayedCourses = currentUser.role === 'FACULTY' 
+const displayedCourses = isAdminOrFaculty 
   ? (Array.isArray(allCourses) ? allCourses : [])
   : (enrolling ? availableCourses : enrolledCourses);
   
@@ -95,7 +97,7 @@ const displayedCourses = currentUser.role === 'FACULTY'
             </div>
   
             {/* Faculty Course Creation Form */}
-            {currentUser.role === 'FACULTY' && (
+            {isAdminOrFaculty && (
               <div className="bg-white p-4 rounded shadow-sm mb-4">
                 <h5 className="mb-3 text-dark">Create New Course</h5>
                 <div className="row g-3">
@@ -181,7 +183,7 @@ const displayedCourses = currentUser.role === 'FACULTY'
             {/* Courses Section */}
             <div className="bg-white p-4 rounded shadow-sm">
               <h2 className="h4 mb-4 text-dark">
-                {currentUser.role === 'FACULTY' 
+                {isAdminOrFaculty
                   ? `Available Courses (${allCoursesCount})`
                   : (enrolling
                       ? `Available Courses (${availableCoursesCount})` 
@@ -226,12 +228,19 @@ const displayedCourses = currentUser.role === 'FACULTY'
                         </div>
                       </Link>
                       
-                      {currentUser.role === 'FACULTY' && (
+                      {isAdminOrFaculty && (
                         <div className="card-footer bg-white border-top-0 p-3">
                           <div className="d-flex gap-2 justify-content-between">
-                            <Link 
+                            <Link
                               to={`/Kanbas/Courses/${course._id}/Home`}
-                              className="btn btn-outline-dark btn-sm flex-grow-1"
+                              className="btn btn-sm flex-grow-1"
+                              style={{ 
+                                backgroundColor: '#0d6efd',
+                                color: 'white',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3d8bfd'}
+                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#0d6efd'}
                             >
                               View Course
                             </Link>
@@ -240,7 +249,14 @@ const displayedCourses = currentUser.role === 'FACULTY'
                                 event.preventDefault();
                                 setCourse(course);
                               }}
-                              className="btn btn-outline-warning btn-sm"
+                              className="btn btn-sm"
+                              style={{ 
+                                backgroundColor: '#ffc107',
+                                color: 'black',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#ffcd39'}
+                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ffc107'}
                             >
                               Edit
                             </button>
@@ -249,7 +265,14 @@ const displayedCourses = currentUser.role === 'FACULTY'
                                 event.preventDefault();
                                 deleteCourse(course._id);
                               }}
-                              className="btn btn-outline-danger btn-sm"
+                              className="btn btn-sm"
+                              style={{ 
+                                backgroundColor: '#dc3545',
+                                color: 'white',
+                                transition: 'all 0.2s ease'
+                              }}
+                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e35d6a'}
+                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#dc3545'}
                             >
                               Delete
                             </button>
