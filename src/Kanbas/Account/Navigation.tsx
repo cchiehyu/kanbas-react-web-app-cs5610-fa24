@@ -23,13 +23,23 @@ export default function AccountNavigation() {
   };
 
   return (
-    <div id="wd-account-navigation" className="list-group fs-5 rounded-0">
+    <div 
+      id="wd-account-navigation" 
+      className="list-group fs-5 rounded-0"
+      style={{ maxWidth: '300px' }}
+    >
       {!currentUser && (
         <>
           <Link
             id="wd-account-signin-link"
             className={`list-group-item ${active('Signin')} border border-0`}
             to="/Kanbas/Account/Signin"
+            style={{ 
+              backgroundColor: active('Signin') ? '#6c63ff' : 'white',
+              color: active('Signin') ? 'white' : '#2d3b45',
+              padding: '12px 20px',
+              transition: 'all 0.2s ease'
+            }}
           >
             Signin
           </Link>
@@ -37,17 +47,29 @@ export default function AccountNavigation() {
             id="wd-account-signup-link"
             className={`list-group-item ${active('Signup')} border border-0`}
             to="/Kanbas/Account/Signup"
+            style={{ 
+              backgroundColor: active('Signup') ? '#6c63ff' : 'white',
+              color: active('Signup') ? 'white' : '#2d3b45',
+              padding: '12px 20px',
+              transition: 'all 0.2s ease'
+            }}
           >
             Signup
           </Link>
         </>
       )}
-      
+
       {currentUser && (
         <Link
           id="wd-account-profile-link"
           className={`list-group-item ${active('Profile')} border border-0`}
           to="/Kanbas/Account/Profile"
+          style={{ 
+            backgroundColor: active('Profile') ? '#6c63ff' : 'white',
+            color: active('Profile') ? 'white' : '#2d3b45',
+            padding: '12px 20px',
+            transition: 'all 0.2s ease'
+          }}
         >
           Profile
         </Link>
@@ -58,6 +80,12 @@ export default function AccountNavigation() {
           id="wd-account-users-link"
           className={`list-group-item ${active('Users')} border border-0`}
           to="/Kanbas/Account/Users"
+          style={{ 
+            backgroundColor: active('Users') ? '#6c63ff' : 'white',
+            color: active('Users') ? 'white' : '#2d3b45',
+            padding: '12px 20px',
+            transition: 'all 0.2s ease'
+          }}
         >
           Users
         </Link>

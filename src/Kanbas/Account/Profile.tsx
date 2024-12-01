@@ -27,82 +27,111 @@ export default function Profile() {
     navigate("/Kanbas/Account/Signin");
   };
 
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
 
-  
-
-  useEffect(() => { fetchProfile(); }, [fetchProfile]);
-
-  return (
-    <div className="wd-profile-screen">
-      <h3>Profile</h3>
-      {profile && (
-        <div>
-          <input 
-            defaultValue={profile.username}
-            id="wd-username"
-            placeholder="username"
-            className="form-control mb-2"
-            onChange={(e) => setProfile({ ...profile, username: e.target.value })}
-          />
-          <input 
-            defaultValue={profile.password}
-            id="wd-password"
-            placeholder="password"
-            type="password"
-            className="form-control mb-2"
-            onChange={(e) => setProfile({ ...profile, password: e.target.value })}
-          />
-          <input 
-            defaultValue={profile.firstName}
-            id="wd-firstname"
-            placeholder="First Name"
-            className="form-control mb-2"
-            onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
-          />
-          <input 
-            defaultValue={profile.lastName}
-            id="wd-lastname"
-            placeholder="Last Name"
-            className="form-control mb-2"
-            onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
-          />
-          <input 
-            defaultValue={profile.dob}
-            id="wd-dob"
-            type="date"
-            className="form-control mb-2"
-            onChange={(e) => setProfile({ ...profile, dob: e.target.value })}
-          />
-          <input 
-            defaultValue={profile.email}
-            id="wd-email"
-            type="email"
-            placeholder="email"
-            className="form-control mb-2"
-            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-          />
-          <select 
-            defaultValue={profile.role}
-            id="wd-role"
-            className="form-control mb-2"
-            onChange={(e) => setProfile({ ...profile, role: e.target.value })}
-          >
-            <option value="USER">User</option>
-            <option value="ADMIN">Admin</option>
-            <option value="FACULTY">Faculty</option>
-            <option value="STUDENT">Student</option>
-          </select>
-          
-          <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
-          <button 
-            onClick={signout}
-            className="btn btn-danger w-100 mb-2"
-            id="wd-signout-btn"
-          >
-            Sign out
-          </button>
+    return (
+      <div className="container-fluid">
+      <div className="row">
+        <div className="col-12">
+          <div className="card mt-3">
+            <div className="card-header bg-white">
+              <h3 className="text-center">Profile</h3>
+            </div>
+            <div className="card-body">
+              {profile && (
+                <div className="row">
+                  <div className="col-12">
+                    <input
+                      defaultValue={profile.username}
+                      id="wd-username"
+                      placeholder="Username"
+                      className="form-control mb-3"
+                      onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+                    />
+                    
+                    <input
+                      defaultValue={profile.password}
+                      id="wd-password"
+                      placeholder="Password"
+                      type="password"
+                      className="form-control mb-3"
+                      onChange={(e) => setProfile({ ...profile, password: e.target.value })}
+                    />
+                    
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <input
+                          defaultValue={profile.firstName}
+                          id="wd-firstname"
+                          placeholder="First Name"
+                          className="form-control"
+                          onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <input
+                          defaultValue={profile.lastName}
+                          id="wd-lastname"
+                          placeholder="Last Name"
+                          className="form-control"
+                          onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    
+                    <input
+                      defaultValue={profile.dob}
+                      id="wd-dob"
+                      type="date"
+                      className="form-control mb-3"
+                      onChange={(e) => setProfile({ ...profile, dob: e.target.value })}
+                    />
+                    
+                    <input
+                      defaultValue={profile.email}
+                      id="wd-email"
+                      type="email"
+                      placeholder="Email"
+                      className="form-control mb-3"
+                      onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                    />
+                    
+                    <select
+                      defaultValue={profile.role}
+                      id="wd-role"
+                      className="form-select mb-4"
+                      onChange={(e) => setProfile({ ...profile, role: e.target.value })}
+                    >
+                      <option value="USER">User</option>
+                      <option value="ADMIN">Admin</option>
+                      <option value="FACULTY">Faculty</option>
+                      <option value="STUDENT">Student</option>
+                    </select>
+                    
+                    <button 
+                      onClick={updateProfile}
+                      className="btn btn-primary w-100 mb-2"
+                      style={{ backgroundColor: '#6c63ff' }}
+                    >
+                      Update
+                    </button>
+                    
+                    <button
+                      onClick={signout}
+                      className="btn btn-danger w-100"
+                      id="wd-signout-btn"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

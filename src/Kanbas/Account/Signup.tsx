@@ -13,13 +13,37 @@ export default function Signup() {
     navigate("/Kanbas/Account/Profile");
   };
   return (
-    <div className="wd-signup-screen">
-      <h1>Sign up</h1>
-      <input value={user.username} onChange={(e) => setUser({ ...user, username: e.target.value })}
-             className="wd-username form-control mb-2" placeholder="username" />
-      <input value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} type="password"
-             className="wd-password form-control mb-2" placeholder="password" />
-      <button onClick={signup} className="wd-signup-btn btn btn-primary mb-2 w-100"> Sign up </button><br />
-      <Link to="/Kanbas/Account/Signin" className="wd-signin-link">Sign in</Link>
+    <div className="container-fluid bg-light">
+      <div className="row">
+        <div className="col-12">
+          <div className="card mt-3">
+            <div className="card-header bg-white">
+              <h3 className="text-center">Sign up</h3>
+            </div>
+            <div className="card-body">
+              <input 
+                value={user.username} 
+                onChange={(e) => setUser({ ...user, username: e.target.value })}
+                className="wd-username form-control mb-3" 
+                placeholder="Username" 
+              />
+              <input 
+                value={user.password} 
+                onChange={(e) => setUser({ ...user, password: e.target.value })} 
+                type="password"
+                className="wd-password form-control mb-3" 
+                placeholder="Password" 
+              />
+              <button 
+                onClick={signup} 
+                className="wd-signup-btn btn btn-primary w-100"
+                style={{ backgroundColor: '#6c63ff' }}
+              > 
+                Sign up 
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-);}
+  );}
