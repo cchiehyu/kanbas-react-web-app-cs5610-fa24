@@ -49,17 +49,22 @@ export default function CourseList({ courses, allCourses }: CourseListProps) {
   const availableCourses = Array.isArray(allCourses) 
     ? allCourses.filter(course => !isEnrolled(course._id)) 
     : [];
-  const displayedCourses = showAllCourses ? availableCourses : enrolledCourses;
+
+    const displayedCourses = currentUser.role === 'STUDENT' 
+    ? enrolledCourses 
+    : (showAllCourses ? availableCourses : enrolledCourses);
 
   return (
     <div id="wd-course-list" className="container-fluid px-4">
       <div className="row align-items-center mb-4 mt-3">
         <div className="col">
           <h2 className="m-0">
-            {showAllCourses ? 'Available' : 'My'} Courses ({displayedCourses.length})
+            {currentUser.role === 'STUDENT' 
+              ? 'My Courses' 
+              : (showAllCourses ? 'Available Courses' : 'My Courses')} ({displayedCourses.length})
           </h2>
         </div>
-        { (
+        {currentUser.role !== 'STUDENT' && (
           <div className="col-auto">
             <button
               className="btn btn-primary"
@@ -101,26 +106,37 @@ export default function CourseList({ courses, allCourses }: CourseListProps) {
         ))}
       </ul>
 
-      {enrolledCourses.length === 0 && !showAllCourses && (
+      {currentUser.role !== 'STUDENT' && (
+        <>
+          {enrolledCourses.length === 0 && !showAllCourses && (
+            <div className="alert alert-info mt-4">
+              You are not enrolled in any courses yet.
+              <br />
+              Click "Show All Courses" to view available courses.
+            </div>
+          )}
+
+          {showAllCourses && availableCourses.length === 0 && (
+            <div className="alert alert-info mt-4">
+              No additional courses are available for enrollment at this time.
+            </div>
+          )}
+
+          {showAllCourses && availableCourses.length > 0 && (
+            <div className="alert alert-light mt-4 border">
+              Browse all available courses above.
+              Click "Show My Courses" to see only your enrolled courses.
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Add a specific message for students with no courses */}
+      {currentUser.role === 'STUDENT' && enrolledCourses.length === 0 && (
         <div className="alert alert-info mt-4">
           You are not enrolled in any courses yet.
-          <br />
-          Click "Show All Courses" to view available courses.
         </div>
       )}
-
-      {showAllCourses && availableCourses.length === 0 && (
-        <div className="alert alert-info mt-4">
-          No additional courses are available for enrollment at this time.
-        </div>
-      )}
-
-      {showAllCourses && availableCourses.length > 0 && (
-        <div className="alert alert-light mt-4 border">
-          Browse all available courses above.
-          Click "Show My Courses" to see only your enrolled courses.
-        </div>
-      )}
-    </div>
+      </div>
   );
 }
