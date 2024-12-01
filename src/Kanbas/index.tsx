@@ -54,24 +54,18 @@ export default function Kanbas() {
         await userClient.unenrollFromCourse(currentUser._id, courseId);
       }
   
+      // Get fresh data regardless of enrolling state
+      const availableCourses = await courseClient.fetchAllCourses();
+      const enrolledCourses = await userClient.findCoursesForUser(currentUser._id);
+      
+      // Update the correct list based on current view
       if (enrolling) {
-        const availableCourses = await courseClient.fetchAllCourses();
-        const enrolledCourses = await userClient.findCoursesForUser(currentUser._id);
-        
-        const filteredCourses = availableCourses.filter((course: any) => 
+        const filteredCourses = availableCourses.filter((course: any) =>
           !enrolledCourses.some((enrolled: any) => enrolled._id === course._id)
         );
-        
         setAllCourses(filteredCourses);
       } else {
-        setUserCourses(
-          userCourses.map((course) => {
-            if (course._id === courseId) {
-              return { ...course, enrolled: enrolled };
-            }
-            return course;
-          })
-        );
+        setUserCourses(enrolledCourses);
       }
     } catch (error) {
       console.error("Error updating enrollment:", error);
