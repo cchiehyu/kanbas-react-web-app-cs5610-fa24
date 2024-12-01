@@ -11,6 +11,16 @@ export interface Quiz {
   numberOfQuestions: number;
 }
 
+export interface QuizForm {
+  title: string;
+  description: string;
+  points: number;
+  dueDate: string;
+  availableFromDate: string;
+  availableUntilDate: string;
+  numberOfQuestions: number;
+}
+
 export interface RootState {
   quizzesReducer: {
     quizzes: Quiz[];

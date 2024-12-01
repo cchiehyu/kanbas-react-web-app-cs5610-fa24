@@ -20,11 +20,19 @@ export default function QuizList() {
     quizTitle: ''
   });
 
+  // Filter quizzes based on user role and search term
   const quizzes = useSelector((state: RootState) => 
-    state.quizzesReducer.quizzes.filter(quiz => 
-      quiz.course === cid &&
-      quiz.title.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    state.quizzesReducer.quizzes.filter(quiz => {
+      const baseFilter = quiz.course === cid &&
+        quiz.title.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      // Students can only see published quizzes
+      if (currentUser.role === 'STUDENT') {
+        return baseFilter && quiz.published;
+      }
+      
+      return baseFilter;
+    })
   );
 
   useEffect(() => {
@@ -115,27 +123,31 @@ export default function QuizList() {
             <FaSearch />
           </span>
         </div>
-        <div className="d-flex gap-2">
-          <Link 
-            to={`/Kanbas/Courses/${cid}/Quizzes/new`}
-            className="btn btn-danger"
-          >
-            + Quiz
-          </Link>
-          <div className="dropdown">
-            <button 
-              className="btn btn-light" 
-              type="button" 
-              data-bs-toggle="dropdown"
+        
+        {/* Only show Add Quiz and options for non-students */}
+        {currentUser.role !== 'STUDENT' && (
+          <div className="d-flex gap-2">
+            <Link 
+              to={`/Kanbas/Courses/${cid}/Quizzes/new`}
+              className="btn btn-danger"
             >
-              <BsThreeDotsVertical />
-            </button>
-            <ul className="dropdown-menu dropdown-menu-end">
-              <li><a className="dropdown-item" href="#">Sort by Due Date</a></li>
-              <li><a className="dropdown-item" href="#">Sort by Title</a></li>
-            </ul>
+              + Quiz
+            </Link>
+            <div className="dropdown">
+              <button 
+                className="btn btn-light" 
+                type="button" 
+                data-bs-toggle="dropdown"
+              >
+                <BsThreeDotsVertical />
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                <li><a className="dropdown-item" href="#">Sort by Due Date</a></li>
+                <li><a className="dropdown-item" href="#">Sort by Title</a></li>
+              </ul>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Quizzes Section */}
@@ -154,51 +166,63 @@ export default function QuizList() {
               
               <div className="flex-grow-1">
                 <div className="d-flex justify-content-between align-items-center">
-                  <Link 
-                    to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
-                    className="text-decoration-none text-dark fw-bold"
-                  >
-                    {quiz.title}
-                  </Link>
-                  <div className="d-flex align-items-center gap-2">
-                    {quiz.published && (
-                      <span className="text-success">✓</span>
-                    )}
-                    <div className="dropdown">
-                      <button 
-                        className="btn btn-light btn-sm"
-                        data-bs-toggle="dropdown"
-                      >
-                        <BsThreeDotsVertical />
-                      </button>
-                      <ul className="dropdown-menu dropdown-menu-end">
-                        <li>
-                          <Link 
-                            to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
-                            className="dropdown-item"
-                          >
-                            Edit
-                          </Link>
-                        </li>
-                        <li>
-                          <button 
-                            className="dropdown-item"
-                            onClick={() => handleDeleteClick(quiz._id, quiz.title)}
-                          >
-                            Delete
-                          </button>
-                        </li>
-                        <li>
-                          <button 
-                            className="dropdown-item"
-                            onClick={() => handlePublishToggle(quiz._id)}
-                          >
-                            {quiz.published ? 'Unpublish' : 'Publish'}
-                          </button>
-                        </li>
-                      </ul>
+                  {currentUser.role === 'STUDENT' ? (
+                    // Students just see the title as text if it's not available
+                    <span className={`fw-bold ${getAvailabilityStatus(quiz) !== "Available" ? 'text-muted' : 'text-dark'}`}>
+                      {quiz.title}
+                    </span>
+                  ) : (
+                    // Non-students see the edit link
+                    <Link 
+                      to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
+                      className="text-decoration-none text-dark fw-bold"
+                    >
+                      {quiz.title}
+                    </Link>
+                  )}
+                  
+                  {/* Only show actions for non-students */}
+                  {currentUser.role !== 'STUDENT' && (
+                    <div className="d-flex align-items-center gap-2">
+                      {quiz.published && (
+                        <span className="text-success">✓</span>
+                      )}
+                      <div className="dropdown">
+                        <button 
+                          className="btn btn-light btn-sm"
+                          data-bs-toggle="dropdown"
+                        >
+                          <BsThreeDotsVertical />
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <Link 
+                              to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
+                              className="dropdown-item"
+                            >
+                              Edit
+                            </Link>
+                          </li>
+                          <li>
+                            <button 
+                              className="dropdown-item"
+                              onClick={() => handleDeleteClick(quiz._id, quiz.title)}
+                            >
+                              Delete
+                            </button>
+                          </li>
+                          <li>
+                            <button 
+                              className="dropdown-item"
+                              onClick={() => handlePublishToggle(quiz._id)}
+                            >
+                              {quiz.published ? 'Unpublish' : 'Publish'}
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
                 
                 <div className="text-secondary small mt-1">
@@ -222,8 +246,8 @@ export default function QuizList() {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {deleteDialog.isOpen && (
+      {/* Delete Confirmation Modal - only shown for non-students */}
+      {deleteDialog.isOpen && currentUser.role !== 'STUDENT' && (
         <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog">
             <div className="modal-content">
