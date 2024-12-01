@@ -42,6 +42,7 @@ export default function Kanbas() {
       if (currentUser?._id) {
         const availableCourses = await courseClient.fetchAllCourses();
         const enrolledCourses = await userClient.findCoursesForUser(currentUser._id);
+
         const coursesWithEnrollment = availableCourses.map((course: any) => {
           if (enrolledCourses.find((c: any) => c._id === course._id)) {
             return { ...course, enrolled: true };
@@ -49,6 +50,7 @@ export default function Kanbas() {
             return { ...course, enrolled: false };
           }
         });
+
         setUserCourses(coursesWithEnrollment);
       }
     } catch (error) {
@@ -72,6 +74,9 @@ export default function Kanbas() {
       } else {
         await userClient.unenrollFromCourse(currentUser._id, courseId);
       }
+
+      console.log("userCourses user in updateEnrollment:", userCourses)
+
       setUserCourses(
         userCourses.map((course) => {
           if (course._id === courseId) {

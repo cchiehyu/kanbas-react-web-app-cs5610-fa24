@@ -8,13 +8,13 @@ import { AppDispatch } from './store';
 import './styles.css';
 
 interface Course {
- _id: string;
- name: string;
- number: string;
- startDate: string;
- endDate: string;
- image: string;
- description: string;
+  _id: string;
+  name: string;
+  number: string;
+  startDate: string;
+  endDate: string;
+  image: string;
+  description: string;
 }
 
 interface DashboardProps {
@@ -45,8 +45,6 @@ export default function Dashboard({
  const dispatch = useDispatch<AppDispatch>();
  
  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
- const enrollmentState = useSelector((state: RootState) => state.enrollmentReducer);
- const { enrollments } = enrollmentState;
 
  useEffect(() => {
   if (Array.isArray(allCourses)) {
@@ -55,29 +53,20 @@ export default function Dashboard({
       dispatch(fetchEnrollments(course._id));
     });
   }
-}, [dispatch, allCourses, enrollments]);
-
- const isEnrolled = (courseId: string) => {
-   return enrollments.some(
-     (enrollment) =>
-       enrollment.user === currentUser._id &&
-       enrollment.course === courseId
-   );
- };
+}, [dispatch, allCourses]);
 
 
- const handleCourseClick = (courseId: string, event: React.MouseEvent) => {
-   if (currentUser.role === 'STUDENT' && !isEnrolled(courseId)) {
-     event.preventDefault();
-     return;
-   }
- };
+const handleCourseClick = (courseId: string, event: React.MouseEvent) => {
+  if (currentUser.role === 'STUDENT' && !enrolledCourses.some(c => c._id === courseId)) {
+    event.preventDefault();
+    return;
+  }
+};
 
- const enrolledCourses = (Array.isArray(allCourses) ? allCourses : [])
-  .filter(course => isEnrolled(course._id));
+const enrolledCourses = courses || [];
 
 const availableCourses = (Array.isArray(allCourses) ? allCourses : [])
-  .filter(course => !isEnrolled(course._id));
+  .filter(course => !enrolledCourses.some(enrolled => enrolled._id === course._id));
 
 const displayedCourses = currentUser.role === 'FACULTY' 
   ? (Array.isArray(allCourses) ? allCourses : [])
@@ -86,6 +75,7 @@ const displayedCourses = currentUser.role === 'FACULTY'
   const allCoursesCount = Array.isArray(allCourses) ? allCourses.length : 0;
      const availableCoursesCount = availableCourses.length;
      const enrolledCoursesCount = enrolledCourses.length;
+
 
  return (
    <div id="wd-dashboard" className="p-4">
@@ -196,16 +186,16 @@ const displayedCourses = currentUser.role === 'FACULTY'
                  <p className="card-text">{course.description}</p>
                  
                  {currentUser.role === 'STUDENT' && (
-                   <button
-                     className={`btn ${isEnrolled(course._id) ? 'btn-danger' : 'btn-success'}`}
-                     onClick={(e) => {
-                       e.preventDefault();
-                       updateEnrollment(course._id, !isEnrolled(course._id));
-                     }}
-                   >
-                     {isEnrolled(course._id) ? 'Unenroll' : 'Enroll'}
-                   </button>
-                 )}
+                  <button
+                    className={`btn ${enrolledCourses.some(c => c._id === course._id) ? 'btn-danger' : 'btn-success'}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      updateEnrollment(course._id, !enrolledCourses.some(c => c._id === course._id));
+                    }}
+                  >
+                    {enrolledCourses.some(c => c._id === course._id) ? 'Unenroll' : 'Enroll'}
+                  </button>
+                )}
                  
                  {currentUser.role === 'FACULTY' && (
                    <div className="d-flex gap-2 mt-2">
