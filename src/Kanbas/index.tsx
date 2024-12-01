@@ -178,12 +178,9 @@ export default function Kanbas() {
     }
   }, [currentUser]); 
   
-
   useEffect(() => {
     if (currentUser?._id) {
-
       findCoursesForUser();
-      
     }
   }, [enrolling]);
 
