@@ -184,6 +184,21 @@ export default function Kanbas() {
     }
   }, [enrolling]);
 
+  useEffect(() => {
+    const initializeCourses = async () => {
+      if (currentUser?._id) {
+        if (currentUser.role === 'STUDENT') {
+          await findCoursesForUser();
+          await fetchAllCourses(); // Still fetch all courses for reference
+        } else {
+          await fetchAllCourses();
+        }
+      }
+    };
+  
+    initializeCourses();
+  }, [currentUser]); 
+
   return (
     <Session>
       <div id="wd-kanbas">
