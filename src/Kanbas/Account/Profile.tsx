@@ -6,15 +6,27 @@ import * as client from "./client";
 
 export default function Profile() {
   const [profile, setProfile] = useState<any>({});
+  const [feedback, setFeedback] = useState({ type: "", message: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const updateProfile = async () => {
-    const updatedProfile = await client.updateUser(profile);
-    dispatch(setCurrentUser(updatedProfile));
+    try {
+      setFeedback({ type: "", message: "" }); // Clear previous feedback
+      const updatedProfile = await client.updateUser(profile);
+      dispatch(setCurrentUser(updatedProfile));
+      setFeedback({ 
+        type: "success", 
+        message: "Profile updated successfully!" 
+      });
+    } catch (e) {
+      setFeedback({ 
+        type: "danger", 
+        message: "Failed to update profile. Please try again." 
+      });
+    }
   };
-
 
   const fetchProfile = useCallback(() => {
     if (!currentUser) return navigate("/Kanbas/Account/Signin");
@@ -31,8 +43,18 @@ export default function Profile() {
     fetchProfile();
   }, [fetchProfile]);
 
-    return (
-      <div className="container-fluid">
+  // Clear feedback after 3 seconds
+  useEffect(() => {
+    if (feedback.message) {
+      const timer = setTimeout(() => {
+        setFeedback({ type: "", message: "" });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
+
+  return (
+    <div className="container-fluid">
       <div className="row">
         <div className="col-12">
           <div className="card mt-3">
@@ -40,6 +62,11 @@ export default function Profile() {
               <h3 className="text-center">Profile</h3>
             </div>
             <div className="card-body">
+              {feedback.message && (
+                <div className={`alert alert-${feedback.type} mb-3`} role="alert">
+                  {feedback.message}
+                </div>
+              )}
               {profile && (
                 <div className="row">
                   <div className="col-12">
