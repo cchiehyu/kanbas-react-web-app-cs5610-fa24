@@ -1,4 +1,4 @@
-import React, { useEffect, Dispatch, SetStateAction } from 'react';
+import React, { useEffect, Dispatch, SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 //import { enrollInCourse, unenrollFromCourse, fetchEnrollments } from './Courses/Enrollment/client';
@@ -43,7 +43,40 @@ export default function Dashboard({
   updateEnrollment 
 }: DashboardProps) {
  const dispatch = useDispatch<AppDispatch>();
- 
+
+ const [notification, setNotification] = useState<{
+  message: string;
+  type: 'success' | 'danger' | 'info';
+  visible: boolean;
+} | null>(null);
+
+const showNotification = (message: string, type: 'success' | 'danger' | 'info') => {
+  setNotification({ message, type, visible: true });
+  setTimeout(() => {
+    setNotification(null);
+  }, 3000);
+};
+
+const handleEnrollment = async (courseId: string, enrolled: boolean) => {
+  await updateEnrollment(courseId, enrolled);
+  showNotification(
+    enrolled ? 'Successfully enrolled in course' : 'Successfully unenrolled from course',
+    'success'
+  );
+};
+
+const handleAddCourse = async () => {
+  await addNewCourse();
+  showNotification('Course successfully added', 'success');
+};
+
+// For update course
+const handleUpdateCourse = async () => {
+  await updateCourse();
+  showNotification('Course successfully updated', 'success');
+};
+
+
  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
 
  const isAdminOrFaculty = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
@@ -95,6 +128,13 @@ const displayedCourses = isAdminOrFaculty
                 </button>
               )}
             </div>
+
+            {notification && notification.visible && (
+              <div className={`alert alert-${notification.type} alert-dismissible fade show`} role="alert">
+                {notification.message}
+                <button type="button" className="btn-close" onClick={() => setNotification(null)}></button>
+              </div>
+            )}
   
             {/* Faculty Course Creation Form */}
             {isAdminOrFaculty && (
@@ -154,7 +194,7 @@ const displayedCourses = isAdminOrFaculty
                     <div className="d-flex gap-2">
                       <button 
                         className={`btn ${course._id ? 'btn-warning' : 'btn-success'}`}
-                        onClick={course._id ? updateCourse : addNewCourse}
+                        onClick={course._id ? handleUpdateCourse : handleAddCourse}
                       >
                         {course._id ? "Update Course" : "Add Course"}
                       </button>
@@ -213,7 +253,7 @@ const displayedCourses = isAdminOrFaculty
                                 className={`btn ${enrolledCourses.some(c => c._id === course._id) ? 'btn-danger' : 'btn-success'} btn-sm`}
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  updateEnrollment(course._id, !enrolledCourses.some(c => c._id === course._id));
+                                  handleEnrollment(course._id, !enrolledCourses.some(c => c._id === course._id));
                                 }}
                               >
                                 {enrolledCourses.some(c => c._id === course._id) ? 'Unenroll' : 'Enroll'}
