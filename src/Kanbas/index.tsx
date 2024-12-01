@@ -45,27 +45,6 @@ export default function Kanbas() {
       console.error("Error fetching user courses:", error);
     }
   };
-  
-  const fetchCourses = async () => {
-    try {
-      if (currentUser?._id) {
-        const availableCourses = await courseClient.fetchAllCourses();
-        const enrolledCourses = await userClient.findCoursesForUser(currentUser._id);
-  
-        const coursesWithEnrollment = availableCourses.map((course: any) => {
-          if (enrolledCourses.find((c: any) => c._id === course._id)) {
-            return { ...course, enrolled: true };
-          } else {
-            return { ...course, enrolled: false };
-          }
-        });
-  
-        setUserCourses(coursesWithEnrollment);
-      }
-    } catch (error) {
-      console.error("Error fetching all courses:", error);
-    }
-  };
 
   const updateEnrollment = async (courseId: string, enrolled: boolean) => {
     try {
@@ -74,15 +53,26 @@ export default function Kanbas() {
       } else {
         await userClient.unenrollFromCourse(currentUser._id, courseId);
       }
-
-      setUserCourses(
-        userCourses.map((course) => {
-          if (course._id === courseId) {
-            return { ...course, enrolled: enrolled };
-          }
-          return course;
-        })
-      );
+  
+      if (enrolling) {
+        const availableCourses = await courseClient.fetchAllCourses();
+        const enrolledCourses = await userClient.findCoursesForUser(currentUser._id);
+        
+        const filteredCourses = availableCourses.filter((course: any) => 
+          !enrolledCourses.some((enrolled: any) => enrolled._id === course._id)
+        );
+        
+        setAllCourses(filteredCourses);
+      } else {
+        setUserCourses(
+          userCourses.map((course) => {
+            if (course._id === courseId) {
+              return { ...course, enrolled: enrolled };
+            }
+            return course;
+          })
+        );
+      }
     } catch (error) {
       console.error("Error updating enrollment:", error);
     }
@@ -190,15 +180,7 @@ export default function Kanbas() {
 
   useEffect(() => {
     if (currentUser?._id) {
-
-      if(enrolling)
-      {
-        fetchCourses();
-      }
-      else
-      {
-        fetchAllCourses();
-      }
+      fetchAllCourses();
     }
   }, [currentUser]); 
   
