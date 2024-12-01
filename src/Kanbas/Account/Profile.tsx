@@ -27,7 +27,9 @@ export default function Profile() {
     navigate("/Kanbas/Account/Signin");
   };
 
-
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
   
 
   useEffect(() => { fetchProfile(); }, [fetchProfile]);
