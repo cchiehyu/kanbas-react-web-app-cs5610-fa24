@@ -57,62 +57,91 @@ export default function PeopleTable({ users = [] }: { users?: any[] }) {
   }
 
   return (
-    <div id="wd-people-table">
+    <div id="wd-people-table" className="container-fluid px-0">
       <PeopleDetails />
       <h3>People: </h3>
-      {displayUsers .length === 0 ? (
+      {users.length === 0 ? (
         <p>No users found.</p>
       ) : (
-        <table className="table table-striped">
-          <thead>
-            <tr>
-            <th onClick={() => handleSort("lastName")}>
-                _id <FaSort />
-              </th>
-              <th onClick={() => handleSort("lastName")}>
-                Name <FaSort />
-              </th>
-              <th onClick={() => handleSort("loginId")}>
-                Login ID <FaSort />
-              </th>
-              <th onClick={() => handleSort("section")}>
-                Section <FaSort />
-              </th>
-              <th onClick={() => handleSort("role")}>
-                Role <FaSort />
-              </th>
-              <th onClick={() => handleSort("lastActivity")}>
-                Last Activity <FaSort />
-              </th>
-              <th onClick={() => handleSort("totalActivity")}>
-                Total Activity <FaSort />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayUsers .map((user) => (
-              <tr key={user._id}>
-                    <td className="text-nowrap">
+        <div className="table-responsive-xl">
+          <table className="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th className="d-none d-md-table-cell" onClick={() => handleSort("lastName")}>
+                  <span className="d-flex align-items-center">
+                    _id <FaSort className="ms-1" />
+                  </span>
+                </th>
+                <th onClick={() => handleSort("lastName")}>
+                  <span className="d-flex align-items-center">
+                    Name <FaSort className="ms-1" />
+                  </span>
+                </th>
+                <th className="d-none d-lg-table-cell" onClick={() => handleSort("loginId")}>
+                  <span className="d-flex align-items-center">
+                    Login ID <FaSort className="ms-1" />
+                  </span>
+                </th>
+                <th className="d-none d-xl-table-cell" onClick={() => handleSort("section")}>
+                  <span className="d-flex align-items-center">
+                    Section <FaSort className="ms-1" />
+                  </span>
+                </th>
+                <th className="d-none d-lg-table-cell" onClick={() => handleSort("role")}>
+                  <span className="d-flex align-items-center">
+                    Role <FaSort className="ms-1" />
+                  </span>
+                </th>
+                <th className="d-none d-xl-table-cell" onClick={() => handleSort("lastActivity")}>
+                  <span className="d-flex align-items-center">
+                    Last Activity <FaSort className="ms-1" />
+                  </span>
+                </th>
+                <th className="d-none d-xl-table-cell" onClick={() => handleSort("totalActivity")}>
+                  <span className="d-flex align-items-center">
+                    Total Activity <FaSort className="ms-1" />
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user._id}>
+                  <td className="d-none d-md-table-cell text-nowrap">
                     <small className="text-muted">ID: {user._id}</small>
                   </td>
-                <td className="wd-full-name text-nowrap">
-                  <Link to={`/Kanbas/Account/Users/${user._id}`} className="text-decoration-none">
-
-                    <FaUserCircle className="me-2 fs-1 text-secondary" />
-                    <span className="wd-first-name">{user.firstName}</span>{" "}
-                    <span className="wd-last-name">{user.lastName}</span>
-                  </Link>
-                </td>
-                <td className="wd-login-id">{user.loginId}</td>
-                <td className="wd-section">{user.section}</td>
-                <td className="wd-role">{user.role}</td>
-                <td className="wd-last-activity">{user.lastActivity}</td>
-                <td className="wd-total-activity">{user.totalActivity}</td>
-                
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  <td className="wd-full-name">
+                    <Link 
+                      to={`/Kanbas/Account/Users/${user._id}`} 
+                      className="text-decoration-none d-flex align-items-center"
+                    >
+                      <FaUserCircle className="me-2 fs-3 text-secondary" />
+                      <div className="text-break">
+                        <span className="wd-first-name">{user.firstName}</span>{" "}
+                        <span className="wd-last-name">{user.lastName}</span>
+                      </div>
+                    </Link>
+                  </td>
+                  <td className="d-none d-lg-table-cell wd-login-id text-break">
+                    {user.loginId}
+                  </td>
+                  <td className="d-none d-xl-table-cell wd-section">
+                    {user.section}
+                  </td>
+                  <td className="d-none d-lg-table-cell wd-role">
+                    {user.role}
+                  </td>
+                  <td className="d-none d-xl-table-cell wd-last-activity">
+                    {user.lastActivity}
+                  </td>
+                  <td className="d-none d-xl-table-cell wd-total-activity">
+                    {user.totalActivity}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

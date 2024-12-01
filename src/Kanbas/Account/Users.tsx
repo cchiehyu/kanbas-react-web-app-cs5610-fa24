@@ -53,23 +53,38 @@ export default function Users() {
    fetchUsers();
  }, [uid]);
  return (
-   <div>
-   <button 
-        onClick={() => navigate("/Kanbas/Account/Users/new")} 
-        className="float-end btn btn-danger wd-add-people"
-      >
-        <FaPlus className="me-2" />
-        Users
-      </button>
-     <input onChange={(e) => filterUsersByName(e.target.value)} placeholder="Search people"
-             className="form-control float-start w-25 me-2 wd-filter-by-name" />
-
-     <select value={role} onChange={(e) =>filterUsersByRole(e.target.value)}
-              className="form-select float-start w-25 wd-select-role" >
-        <option value="">All Roles</option>    <option value="STUDENT">Students</option>
-        <option value="TA">Assistants</option> <option value="FACULTY">Faculty</option>
-        <option value="ADMIN">Administrators</option>
-      </select>
-     <PeopleTable users={users} />
-   </div>
+  <div className="container-fluid p-0">
+    <div className="row g-3 align-items-center mb-3">
+      <div className="col-12 col-sm-6 col-md-3">
+        <input
+          onChange={(e) => filterUsersByName(e.target.value)}
+          placeholder="Search people"
+          className="form-control wd-filter-by-name"
+        />
+      </div>
+      <div className="col-12 col-sm-6 col-md-3">
+        <select
+          value={role}
+          onChange={(e) => filterUsersByRole(e.target.value)}
+          className="form-select wd-select-role"
+        >
+          <option value="">All Roles</option>
+          <option value="STUDENT">Students</option>
+          <option value="TA">Assistants</option>
+          <option value="FACULTY">Faculty</option>
+          <option value="ADMIN">Administrators</option>
+        </select>
+      </div>
+      <div className="col-12 col-md-6 text-md-end">
+        <button
+          onClick={() => navigate("/Kanbas/Account/Users/new")}
+          className="btn btn-danger wd-add-people"
+        >
+          <FaPlus className="me-2" />
+          Users
+        </button>
+      </div>
+    </div>
+    <PeopleTable users={users} />
+  </div>
 );}

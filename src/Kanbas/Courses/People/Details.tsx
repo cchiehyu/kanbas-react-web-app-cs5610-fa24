@@ -92,7 +92,12 @@ export default function PeopleDetails() {
 
 
   return (
-    <div className="wd-people-details position-fixed top-0 end-0 bottom-0 bg-white p-4 shadow w-25">
+  <div  className="wd-people-details position-fixed top-0 end-0 bottom-0 bg-white p-4 shadow" 
+        style={{ 
+          width: '400px',
+          zIndex: 1000 
+        }}
+>
       <button onClick={() => navigate(-1)} className="btn position-fixed end-0 top-0 wd-close-details">
         <IoCloseSharp className="fs-1" />
       </button>
@@ -101,16 +106,16 @@ export default function PeopleDetails() {
         <FaUserCircle className="text-secondary me-2 fs-1" />
       </div>
       <hr />
-
+  
       <h4>{isNewUser ? "Create New User" : "User Details"}</h4>
-
+  
       {!isNewUser && !editing && (
         <FaPencil 
           onClick={() => setEditing(true)} 
           className="float-end fs-5 mt-2 wd-edit" 
         />
       )}
-
+  
       {(editing || isNewUser) ? (
         <div className="mb-3">
           <div className="form-group mb-2">
