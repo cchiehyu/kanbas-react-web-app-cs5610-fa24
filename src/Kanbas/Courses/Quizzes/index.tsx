@@ -7,6 +7,7 @@ import { FaSearch } from 'react-icons/fa';
 import { deleteQuiz, setQuizzes, togglePublishQuiz } from './reducer';
 import * as client from "./client";
 import { Quiz, RootState } from './types';
+import { FaCheck } from 'react-icons/fa';
 
 export default function QuizList() {
   const { cid } = useParams();
@@ -20,17 +21,10 @@ export default function QuizList() {
     quizTitle: ''
   });
 
-  // Filter quizzes based on user role and search term
   const quizzes = useSelector((state: RootState) => 
     state.quizzesReducer.quizzes.filter(quiz => {
       const baseFilter = quiz.course === cid &&
         quiz.title.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      // Students can only see published quizzes
-      if (currentUser.role === 'STUDENT') {
-        return baseFilter && quiz.published;
-      }
-      
       return baseFilter;
     })
   );
@@ -108,10 +102,10 @@ export default function QuizList() {
   };
 
   return (
-    <div className="container-fluid px-4">
+    <div className="container-fluid" style={{ width: '100%', margin: '0 auto' }}>
       {/* Header */}
       <div className="mb-4 d-flex justify-content-between align-items-center">
-        <div className="input-group" style={{ maxWidth: '300px' }}>
+        <div className="input-group" style={{ width: '250px' }}>
           <input 
             type="text"
             className="form-control"
@@ -119,7 +113,7 @@ export default function QuizList() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <span className="input-group-text bg-transparent">
+          <span className="input-group-text bg-white">
             <FaSearch />
           </span>
         </div>
@@ -148,7 +142,7 @@ export default function QuizList() {
           </div>
         )}
       </div>
-
+  
       {/* Quizzes Section */}
       <div className="border rounded bg-light w-100">
         <div className="p-3 border-bottom">
@@ -182,11 +176,15 @@ export default function QuizList() {
                       </Link>
                     )}
                     
-                    {currentUser.role !== 'STUDENT' && (
-                      <div className="d-flex align-items-center gap-2">
-                        {quiz.published && (
-                          <span className="text-success">✓</span>
-                        )}
+                    <div className="d-flex align-items-center" style={{ gap: '15px' }}>
+                      <span className="fs-5">
+                      {!quiz.published || 
+                        new Date(quiz.availableUntilDate) < new Date() ||
+                        new Date(quiz.availableFromDate) > new Date() 
+                          ? '🚫' 
+                          : '✅'}
+                      </span>
+                      {currentUser.role !== 'STUDENT' && (
                         <div className="dropdown">
                           <button 
                             className="btn btn-light btn-sm"
@@ -221,11 +219,11 @@ export default function QuizList() {
                             </li>
                           </ul>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                   
-                  <div className="d-flex gap-3 text-secondary flex-wrap">
+                  <div className="d-flex text-secondary flex-wrap" style={{ gap: '15px' }}>
                     <span>{getAvailabilityStatus(quiz)}</span>
                     <span>|</span>
                     <span>Due {formatDate(quiz.dueDate)}</span>
@@ -236,7 +234,7 @@ export default function QuizList() {
                     {currentUser.role === 'STUDENT' && (
                       <>
                         <span>|</span>
-                        <span>Score: {getStudentScore(quiz._id)} / {quiz.points}</span>
+                        <span>Score: {getStudentScore(quiz._id)}/{quiz.points}</span>
                       </>
                     )}
                   </div>
@@ -246,7 +244,7 @@ export default function QuizList() {
           ))}
         </div>
       </div>
-
+  
       {/* Delete Confirmation Modal */}
       {deleteDialog.isOpen && currentUser.role !== 'STUDENT' && (
         <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>

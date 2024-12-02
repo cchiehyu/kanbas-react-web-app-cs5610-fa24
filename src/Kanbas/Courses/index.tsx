@@ -29,7 +29,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
           <CoursesNavigation />
         </div>
         {/* Main Content Area */}
-        <div className="flex-grow-1 overflow-hidden">
+        <div className="flex-grow-1">
           <Routes>
             <Route path="/" element={<Navigate to="Home" />} />
             <Route path="Home" element={<Home />} />
