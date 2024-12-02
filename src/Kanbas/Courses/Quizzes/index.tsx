@@ -108,10 +108,10 @@ export default function QuizList() {
   };
 
   return (
-    <div className="p-4">
+    <div className="container-fluid px-4">
       {/* Header */}
-      <div className="mb-3 d-flex justify-content-between align-items-center">
-        <div className="input-group" style={{ width: '250px' }}>
+      <div className="mb-4 d-flex justify-content-between align-items-center">
+        <div className="input-group" style={{ maxWidth: '300px' }}>
           <input 
             type="text"
             className="form-control"
@@ -124,7 +124,6 @@ export default function QuizList() {
           </span>
         </div>
         
-        {/* Only show Add Quiz and options for non-students */}
         {currentUser.role !== 'STUDENT' && (
           <div className="d-flex gap-2">
             <Link 
@@ -151,7 +150,7 @@ export default function QuizList() {
       </div>
 
       {/* Quizzes Section */}
-      <div className="border rounded bg-light">
+      <div className="border rounded bg-light w-100">
         <div className="p-3 border-bottom">
           <h5 className="m-0">▾ Assignment Quizzes</h5>
         </div>
@@ -160,85 +159,87 @@ export default function QuizList() {
           {quizzes.map((quiz) => (
             <div 
               key={quiz._id} 
-              className="list-group-item d-flex align-items-center"
+              className="list-group-item py-3"
+              style={{ borderLeft: '4px solid #00af32' }}
             >
-              <RiQuestionAnswerLine className="text-success fs-4 me-3" />
-              
-              <div className="flex-grow-1">
-                <div className="d-flex justify-content-between align-items-center">
-                  {currentUser.role === 'STUDENT' ? (
-                    // Students just see the title as text if it's not available
-                    <span className={`fw-bold ${getAvailabilityStatus(quiz) !== "Available" ? 'text-muted' : 'text-dark'}`}>
-                      {quiz.title}
-                    </span>
-                  ) : (
-                    // Non-students see the edit link
-                    <Link 
-                      to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
-                      className="text-decoration-none text-dark fw-bold"
-                    >
-                      {quiz.title}
-                    </Link>
-                  )}
-                  
-                  {/* Only show actions for non-students */}
-                  {currentUser.role !== 'STUDENT' && (
-                    <div className="d-flex align-items-center gap-2">
-                      {quiz.published && (
-                        <span className="text-success">✓</span>
-                      )}
-                      <div className="dropdown">
-                        <button 
-                          className="btn btn-light btn-sm"
-                          data-bs-toggle="dropdown"
-                        >
-                          <BsThreeDotsVertical />
-                        </button>
-                        <ul className="dropdown-menu dropdown-menu-end">
-                          <li>
-                            <Link 
-                              to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
-                              className="dropdown-item"
-                            >
-                              Edit
-                            </Link>
-                          </li>
-                          <li>
-                            <button 
-                              className="dropdown-item"
-                              onClick={() => handleDeleteClick(quiz._id, quiz.title)}
-                            >
-                              Delete
-                            </button>
-                          </li>
-                          <li>
-                            <button 
-                              className="dropdown-item"
-                              onClick={() => handlePublishToggle(quiz._id)}
-                            >
-                              {quiz.published ? 'Unpublish' : 'Publish'}
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  )}
+              <div className="d-flex gap-3">
+                <div className="p-1">
+                  <RiQuestionAnswerLine className="text-success fs-4" />
                 </div>
                 
-                <div className="text-secondary small mt-1">
-                  <span>{getAvailabilityStatus(quiz)}</span>
-                  <span className="mx-2">|</span>
-                  <span>Due {formatDate(quiz.dueDate)}</span>
-                  <span className="mx-2">|</span>
-                  <span>{quiz.points} pts</span>
-                  <span className="mx-2">|</span>
-                  <span>{quiz.numberOfQuestions} Questions</span>
-                  {currentUser.role === 'STUDENT' && (
-                    <>
-                      <span className="mx-2">|</span>
-                      <span>Score: {getStudentScore(quiz._id)} / {quiz.points}</span>
-                    </>
-                  )}
+                <div className="flex-grow-1">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    {currentUser.role === 'STUDENT' ? (
+                      <span className="fs-5 fw-semibold">
+                        {quiz.title}
+                      </span>
+                    ) : (
+                      <Link 
+                        to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
+                        className="text-decoration-none text-dark fs-5 fw-semibold"
+                      >
+                        {quiz.title}
+                      </Link>
+                    )}
+                    
+                    {currentUser.role !== 'STUDENT' && (
+                      <div className="d-flex align-items-center gap-2">
+                        {quiz.published && (
+                          <span className="text-success">✓</span>
+                        )}
+                        <div className="dropdown">
+                          <button 
+                            className="btn btn-light btn-sm"
+                            data-bs-toggle="dropdown"
+                          >
+                            <BsThreeDotsVertical />
+                          </button>
+                          <ul className="dropdown-menu dropdown-menu-end">
+                            <li>
+                              <Link 
+                                to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
+                                className="dropdown-item"
+                              >
+                                Edit
+                              </Link>
+                            </li>
+                            <li>
+                              <button 
+                                className="dropdown-item"
+                                onClick={() => handleDeleteClick(quiz._id, quiz.title)}
+                              >
+                                Delete
+                              </button>
+                            </li>
+                            <li>
+                              <button 
+                                className="dropdown-item"
+                                onClick={() => handlePublishToggle(quiz._id)}
+                              >
+                                {quiz.published ? 'Unpublish' : 'Publish'}
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="d-flex gap-3 text-secondary flex-wrap">
+                    <span>{getAvailabilityStatus(quiz)}</span>
+                    <span>|</span>
+                    <span>Due {formatDate(quiz.dueDate)}</span>
+                    <span>|</span>
+                    <span>{quiz.points} pts</span>
+                    <span>|</span>
+                    <span>{quiz.numberOfQuestions} Questions</span>
+                    {currentUser.role === 'STUDENT' && (
+                      <>
+                        <span>|</span>
+                        <span>Score: {getStudentScore(quiz._id)} / {quiz.points}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -246,7 +247,7 @@ export default function QuizList() {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal - only shown for non-students */}
+      {/* Delete Confirmation Modal */}
       {deleteDialog.isOpen && currentUser.role !== 'STUDENT' && (
         <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog">
