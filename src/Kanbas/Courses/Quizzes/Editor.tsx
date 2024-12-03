@@ -23,6 +23,7 @@ export default function QuizEditor() {
     dueDate: new Date(),
     availableFromDate: new Date(),
     availableUntilDate: new Date(),
+    published: false,
     numberOfQuestions: 0,
     quizType: 'GRADED_QUIZ',
     assignmentGroup: 'ASSIGNMENTS',
@@ -46,6 +47,7 @@ export default function QuizEditor() {
         dueDate: quiz.dueDate ? new Date(quiz.dueDate) : new Date(),
         availableFromDate: quiz.availableFromDate ? new Date(quiz.availableFromDate) : new Date(),
         availableUntilDate: quiz.availableUntilDate ? new Date(quiz.availableUntilDate) : new Date(),
+        published: quiz.published || false,
         numberOfQuestions: quiz.numberOfQuestions || 0,
         quizType: quiz.quizType || 'GRADED_QUIZ',
         assignmentGroup: quiz.assignmentGroup || 'ASSIGNMENTS',
@@ -61,6 +63,21 @@ export default function QuizEditor() {
       });
     }
   }, [quiz]);
+
+  const [showMenu, setShowMenu] = useState(false);
+
+  const handlePublishToggle = async () => {
+    try {
+      if (quiz) {
+        await client.updateQuiz(quiz._id, {
+          ...quiz,
+          published: !quiz.published
+        });
+      }
+    } catch (error) {
+      console.error("Error toggling publish status:", error);
+    }
+  };
 
   const formatDateForInput = (date: Date | null): string => {
     if (!date) return '';
@@ -110,18 +127,51 @@ export default function QuizEditor() {
     <div className="wd-kanbas-quiz-editor p-4">
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <div>Points {formData.points || 0}</div>
-        <div className="d-flex align-items-center gap-2">
-          <div className="form-check d-flex align-items-center gap-1">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              checked={!quiz?.published}
-              readOnly
-            />
-            <label className="form-check-label">Not Published</label>
-          </div>
-          <button className="btn btn-light border p-1">⋮</button>
+      <div className="d-flex align-items-center gap-2">
+        <span style={{ fontSize: '1.1rem' }}>Points {formData.points || 0}</span>
+        <div className="d-flex align-items-center" style={{ color: '#666' }}>
+          {quiz?.published ? (
+            <>
+              <i className="fas fa-check me-1"></i>
+              <span>Published</span>
+            </>
+          ) : (
+            <>
+              <i className="fas fa-ban me-1"></i>
+              <span>Not Published</span>
+            </>
+          )}
+        </div>
+      </div>
+        
+        <div className="position-relative">
+          <button 
+            className="btn btn-light border"
+            style={{ padding: '2px 8px' }}
+            onClick={() => setShowMenu(!showMenu)}
+          >
+            ⋮
+          </button>
+          
+          {showMenu && (
+            <div 
+              className="position-absolute end-0 mt-1 bg-white border rounded shadow"
+              style={{ 
+                zIndex: 1000,
+                minWidth: '150px'
+              }}
+            >
+              <button 
+                className="btn btn-link text-start w-100 px-3 py-2 text-decoration-none text-dark"
+                onClick={() => {
+                  handlePublishToggle();
+                  setShowMenu(false);
+                }}
+              >
+                {quiz?.published ? 'Unpublish' : 'Publish'}
+              </button>
+            </div>
+          )}
         </div>
       </div>
   

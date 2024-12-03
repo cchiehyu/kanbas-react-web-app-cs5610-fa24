@@ -44,14 +44,6 @@ export default function QuizDetails() {
               e.currentTarget.style.backgroundColor = '#f5f5f5';
               e.currentTarget.style.borderColor = '#ccc';
             }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.backgroundColor = '#d4d4d4';
-              e.currentTarget.style.borderColor = '#8c8c8c';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.backgroundColor = '#e6e6e6';
-              e.currentTarget.style.borderColor = '#adadad';
-            }}
           >
             Preview
           </button>
@@ -65,6 +57,7 @@ export default function QuizDetails() {
                 padding: '6px 12px',
                 color: '#333'
               }}
+              onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
               onMouseOver={(e) => {
                 e.currentTarget.style.backgroundColor = '#e6e6e6';
                 e.currentTarget.style.borderColor = '#adadad';
@@ -72,14 +65,6 @@ export default function QuizDetails() {
               onMouseOut={(e) => {
                 e.currentTarget.style.backgroundColor = '#f5f5f5';
                 e.currentTarget.style.borderColor = '#ccc';
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.backgroundColor = '#d4d4d4';
-                e.currentTarget.style.borderColor = '#8c8c8c';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.backgroundColor = '#e6e6e6';
-                e.currentTarget.style.borderColor = '#adadad';
               }}
             >
               <i className="fas fa-edit me-1"></i>Edit

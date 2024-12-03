@@ -22,7 +22,7 @@ export interface Quiz {
   lockQuestionsAfterAnswering: boolean;
 }
 
-export interface QuizForm extends Omit<Quiz, '_id' | 'course' | 'published'> {}
+export interface QuizForm extends Omit<Quiz, '_id' | 'course'> {}
 
 export interface RootState {
   quizzesReducer: {
