@@ -20,9 +20,9 @@ export default function QuizEditor() {
     title: '',
     description: '',
     points: 0,
-    dueDate: '',
-    availableFromDate: '',
-    availableUntilDate: '',
+    dueDate: new Date(),
+    availableFromDate: new Date(),
+    availableUntilDate: new Date(),
     numberOfQuestions: 0,
     quizType: 'GRADED_QUIZ',
     assignmentGroup: 'ASSIGNMENTS',
@@ -43,9 +43,9 @@ export default function QuizEditor() {
         title: quiz.title || '',
         description: quiz.description || '',
         points: quiz.points || 0,
-        dueDate: quiz.dueDate || '',
-        availableFromDate: quiz.availableFromDate || '',
-        availableUntilDate: quiz.availableUntilDate || '',
+        dueDate: quiz.dueDate ? new Date(quiz.dueDate) : new Date(),
+        availableFromDate: quiz.availableFromDate ? new Date(quiz.availableFromDate) : new Date(),
+        availableUntilDate: quiz.availableUntilDate ? new Date(quiz.availableUntilDate) : new Date(),
         numberOfQuestions: quiz.numberOfQuestions || 0,
         quizType: quiz.quizType || 'GRADED_QUIZ',
         assignmentGroup: quiz.assignmentGroup || 'ASSIGNMENTS',
@@ -59,18 +59,30 @@ export default function QuizEditor() {
         webcamRequired: quiz.webcamRequired || false,
         lockQuestionsAfterAnswering: quiz.lockQuestionsAfterAnswering || false
       });
-
-      setShowTimeLimit(quiz.timeLimit > 0); 
     }
   }, [quiz]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const formatDateForInput = (date: Date | null): string => {
+    if (!date) return '';
+    return new Date(date).toISOString().slice(0, 16);
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    if (name === 'dueDate' || name === 'availableFromDate' || name === 'availableUntilDate') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value ? new Date(value) : null
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       if (qid && qid !== 'new') {
@@ -402,11 +414,11 @@ export default function QuizEditor() {
               type="datetime-local"
               className="form-control"
               name="dueDate"
-              value={formData.dueDate}
+              value={formatDateForInput(formData.dueDate)}
               onChange={handleInputChange}
             />
           </div>
-  
+
           <div className="row g-3">
             <div className="col-md-6">
               <label className="d-block mb-1">Available from</label>
@@ -414,7 +426,7 @@ export default function QuizEditor() {
                 type="datetime-local"
                 className="form-control"
                 name="availableFromDate"
-                value={formData.availableFromDate}
+                value={formatDateForInput(formData.availableFromDate)}
                 onChange={handleInputChange}
               />
             </div>
@@ -424,7 +436,7 @@ export default function QuizEditor() {
                 type="datetime-local"
                 className="form-control"
                 name="availableUntilDate"
-                value={formData.availableUntilDate}
+                value={formatDateForInput(formData.availableUntilDate)}
                 onChange={handleInputChange}
               />
             </div>

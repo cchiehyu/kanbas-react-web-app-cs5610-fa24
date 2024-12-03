@@ -72,7 +72,8 @@ export default function QuizList() {
     }
   };
 
-  const formatDate = (date: string) => {
+  const formatDate = (date: Date | string) => {
+    if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -81,12 +82,15 @@ export default function QuizList() {
       hour12: true
     });
   };
+  
 
   const getAvailabilityStatus = (quiz: Quiz): string => {
-    const now = new Date().getTime();
-    const availableFrom = new Date(quiz.availableFromDate).getTime();
-    const availableUntil = new Date(quiz.availableUntilDate).getTime();
-
+    const now = new Date();
+    const availableFrom = new Date(quiz.availableFromDate);
+    const availableUntil = new Date(quiz.availableUntilDate);
+  
+    if (!quiz.availableFromDate || !quiz.availableUntilDate) return 'No dates set';
+  
     if (now > availableUntil) {
       return "Closed";
     } else if (now >= availableFrom && now <= availableUntil) {

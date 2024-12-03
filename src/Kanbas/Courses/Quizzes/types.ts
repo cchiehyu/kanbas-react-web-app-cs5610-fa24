@@ -4,9 +4,9 @@ export interface Quiz {
   course: string;
   description?: string;
   points: number;
-  dueDate: string;
-  availableFromDate: string;
-  availableUntilDate: string;
+  dueDate: Date;
+  availableFromDate: Date;
+  availableUntilDate: Date;
   published: boolean;
   numberOfQuestions: number;
   quizType: 'GRADED_QUIZ' | 'PRACTICE_QUIZ' | 'GRADED_SURVEY' | 'UNGRADED_SURVEY';
