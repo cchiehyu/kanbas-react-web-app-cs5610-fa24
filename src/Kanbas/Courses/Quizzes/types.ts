@@ -9,17 +9,20 @@ export interface Quiz {
   availableUntilDate: string;
   published: boolean;
   numberOfQuestions: number;
+  quizType: 'GRADED_QUIZ' | 'PRACTICE_QUIZ' | 'GRADED_SURVEY' | 'UNGRADED_SURVEY';
+  assignmentGroup: 'QUIZZES' | 'EXAMS' | 'ASSIGNMENTS' | 'PROJECT';
+  shuffleAnswers: boolean;
+  timeLimit: number;
+  multipleAttempts: boolean;
+  numberOfAttempts: number;
+  showCorrectAnswers: boolean;
+  accessCode: string;
+  oneQuestionAtTime: boolean;
+  webcamRequired: boolean;
+  lockQuestionsAfterAnswering: boolean;
 }
 
-export interface QuizForm {
-  title: string;
-  description: string;
-  points: number;
-  dueDate: string;
-  availableFromDate: string;
-  availableUntilDate: string;
-  numberOfQuestions: number;
-}
+export interface QuizForm extends Omit<Quiz, '_id' | 'course' | 'published'> {}
 
 export interface RootState {
   quizzesReducer: {
