@@ -172,12 +172,12 @@ export default function QuizList() {
                         {quiz.title}
                       </span>
                     ) : (
-                      <Link 
-                        to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
-                        className="text-decoration-none text-dark fs-5 fw-semibold"
-                      >
-                        {quiz.title}
-                      </Link>
+                    <Link 
+                      to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/details`}
+                      className="text-decoration-none text-dark fs-5 fw-semibold"
+                    >
+                      {quiz.title}
+                    </Link>
                     )}
                     
                     <div className="d-flex align-items-center" style={{ gap: '15px' }}>
