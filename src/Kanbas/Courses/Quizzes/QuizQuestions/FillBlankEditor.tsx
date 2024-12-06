@@ -1,11 +1,66 @@
-// FillBlankEditor.tsx
-import React, { useState } from 'react';
-import { QuizQuestionForm } from './questionTypes';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { QuizQuestionForm, QuizQuestionRootState } from './questionTypes';
+import { createQuestion, fetchQuestions, updateQuestionThunk } from './reducer';
+import { useParams } from 'react-router-dom';
 
 export default function FillBlankEditor({ questionId, onClose }: { questionId?: string; onClose: () => void }) {
-  const [answers, setAnswers] = useState([
-    { text: '', caseSensitive: false }
-  ]);
+  const dispatch = useDispatch();
+  const { qid } = useParams();
+
+  const question = useSelector((state: QuizQuestionRootState) =>
+    questionId ? state.questionsReducer.questions.find(q => q._id === questionId) : undefined
+  );
+
+  const [questionText, setQuestionText] = useState(question?.question || '');
+  const [answers, setAnswers] = useState(
+    question?.correctAnswers || [{ text: '', caseSensitive: false }]
+  );
+
+  useEffect(() => {
+    if (question) {
+      setQuestionText(question.question);
+      setAnswers(question.correctAnswers || [{ text: '', caseSensitive: false }]);
+    }
+  }, [question]);
+
+  const handleSubmit = async () => {
+    const questionData = {
+      questionType: 'FILL_BLANK' as const,
+      question: questionText,
+      points: 4,
+      correctAnswers: answers.filter(answer => answer.text.trim() !== '') 
+    };
+
+    try {
+      if (questionId) {
+        // Update the question first
+        const resultAction = await dispatch(updateQuestionThunk({
+          questionId,
+          question: questionData
+        }) as any);
+        
+        // After successful update, fetch all questions to refresh the list
+        if (updateQuestionThunk.fulfilled.match(resultAction)) {
+          await dispatch(fetchQuestions(qid!) as any);
+        }
+      } else {
+        // Create new question
+        const resultAction = await dispatch(createQuestion({
+          quizId: qid!,
+          question: questionData
+        }) as any);
+        
+        // After successful creation, fetch all questions to refresh the list
+        if (createQuestion.fulfilled.match(resultAction)) {
+          await dispatch(fetchQuestions(qid!) as any);
+        }
+      }
+      onClose();
+    } catch (error) {
+      console.error('Error saving question:', error);
+    }
+  };
 
   return (
     <div>
@@ -37,6 +92,8 @@ export default function FillBlankEditor({ questionId, onClose }: { questionId?: 
               className="form-control border-0"
               placeholder="Question"
               rows={3}
+              value={questionText}
+              onChange={(e) => setQuestionText(e.target.value)}
             />
           </div>
         </div>
@@ -61,6 +118,7 @@ export default function FillBlankEditor({ questionId, onClose }: { questionId?: 
               <button 
                 className="btn btn-link text-danger"
                 onClick={() => setAnswers(answers.filter((_, i) => i !== index))}
+                disabled={answers.length === 1} 
               >
                 ×
               </button>
@@ -78,7 +136,12 @@ export default function FillBlankEditor({ questionId, onClose }: { questionId?: 
 
       <div className="d-flex justify-content-start gap-2">
         <button className="btn btn-light" onClick={onClose}>Cancel</button>
-        <button className="btn btn-danger">Update Question</button>
+        <button 
+          className="btn btn-danger"
+          onClick={handleSubmit}
+        >
+          {questionId ? 'Update Question' : 'Create Question'}
+        </button>
       </div>
     </div>
   );

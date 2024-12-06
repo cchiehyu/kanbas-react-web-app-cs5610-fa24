@@ -1,13 +1,81 @@
-import React, { useState } from 'react';
-import { QuizQuestionForm } from './questionTypes';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { QuizQuestionForm, QuizQuestionRootState } from './questionTypes';
+import { createQuestion, fetchQuestions, updateQuestionThunk } from './reducer';
+import { useParams } from 'react-router-dom';
 
 export default function MultipleChoiceEditor({ questionId, onClose }: { questionId?: string; onClose: () => void }) {
-  const [answers, setAnswers] = useState([
-    { text: '', isCorrect: false },
-    { text: '', isCorrect: false },
-    { text: '', isCorrect: false },
-    { text: '', isCorrect: true }
-  ]);
+  const dispatch = useDispatch();
+  const { qid } = useParams();
+
+  const question = useSelector((state: QuizQuestionRootState) =>
+    questionId ? state.questionsReducer.questions.find(q => q._id === questionId) : undefined
+  );
+
+  const [questionText, setQuestionText] = useState(question?.question || '');
+  const [answers, setAnswers] = useState(
+    question?.choices || [
+      { text: '', isCorrect: false },
+      { text: '', isCorrect: false },
+      { text: '', isCorrect: false },
+      { text: '', isCorrect: true }
+    ]
+  );
+
+  useEffect(() => {
+    if (question) {
+      setQuestionText(question.question);
+      setAnswers(question.choices || []);
+    }
+  }, [question]);
+
+  const handleSubmit = async () => {
+    if (!answers.some(answer => answer.isCorrect)) {
+      alert('Please select a correct answer');
+      return;
+    }
+
+    if (answers.some(answer => answer.text.trim() === '')) {
+      alert('Please fill in all answer choices');
+      return;
+    }
+
+    const questionData = {
+      questionType: 'MULTIPLE_CHOICE' as const,
+      question: questionText,
+      points: 4,
+      choices: answers.filter(answer => answer.text.trim() !== '')
+    };
+
+    try {
+      if (questionId) {
+        // Update the question first
+        const resultAction = await dispatch(updateQuestionThunk({
+          questionId,
+          question: questionData
+        }) as any);
+        
+        // After successful update, fetch all questions to refresh the list
+        if (updateQuestionThunk.fulfilled.match(resultAction)) {
+          await dispatch(fetchQuestions(qid!) as any);
+        }
+      } else {
+        // Create new question
+        const resultAction = await dispatch(createQuestion({
+          quizId: qid!,
+          question: questionData
+        }) as any);
+        
+        // After successful creation, fetch all questions to refresh the list
+        if (createQuestion.fulfilled.match(resultAction)) {
+          await dispatch(fetchQuestions(qid!) as any);
+        }
+      }
+      onClose();
+    } catch (error) {
+      console.error('Error saving question:', error);
+    }
+  };
 
   return (
     <div>
@@ -36,6 +104,8 @@ export default function MultipleChoiceEditor({ questionId, onClose }: { question
               className="form-control border-0"
               placeholder="Question"
               rows={3}
+              value={questionText}
+              onChange={(e) => setQuestionText(e.target.value)}
             />
           </div>
         </div>
@@ -90,7 +160,12 @@ export default function MultipleChoiceEditor({ questionId, onClose }: { question
 
       <div className="d-flex justify-content-start gap-2">
         <button className="btn btn-light" onClick={onClose}>Cancel</button>
-        <button className="btn btn-danger">Update Question</button>
+        <button 
+          className="btn btn-danger"
+          onClick={handleSubmit}
+        >
+          {questionId ? 'Update Question' : 'Create Question'}
+        </button>
       </div>
     </div>
   );
