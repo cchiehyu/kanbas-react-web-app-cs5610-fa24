@@ -152,7 +152,6 @@ export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
                 position: 'relative'
               }}
             >
-              {/* Question Header */}
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div style={{ 
                   fontSize: '14px',
@@ -169,10 +168,15 @@ export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
                     setEditingQuestionId(question._id);
                     setShowEditor(true);
                   }}
-                  className="btn btn-link p-0"
-                  style={{ color: '#008EE2', fontSize: '14px' }}
+                  style={{ 
+                    border: '1px solid #C7CDD1',
+                    padding: '4px 10px',
+                    background: 'white',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
                 >
-                  <i className="bi bi-gear"></i>
+                  Edit
                 </button>
               </div>
 
