@@ -29,12 +29,6 @@ export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
     }
   }, [qid, dispatch]);
 
-  
-  const handleSave = () => {
-    // Add your save logic here
-    console.log('Saving questions...');
-  };
-
   const renderQuestionContent = (question: QuizQuestion) => {
     switch (question.questionType) {
       case 'MULTIPLE_CHOICE':
@@ -131,12 +125,18 @@ export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
         <div className="text-center py-5">
           <p style={{ color: '#2D3B45' }}>No questions added yet</p>
           <button
-            onClick={() => setShowEditor(true)}
-            className="btn"
-            style={{ backgroundColor: '#008EE2', color: '#FFFFFF' }}
+            onClick={() => {
+              setEditingQuestionId(undefined);
+              setShowEditor(true);
+            }}
+            style={{ 
+              border: '1px solid #C7CDD1',
+              padding: '8px',
+              background: 'white',
+              cursor: 'pointer'
+            }}
           >
-            <i className="bi bi-plus me-2"></i>
-            New Question
+            + New Question
           </button>
         </div>
       ) : (
@@ -193,40 +193,21 @@ export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
             </div>
           ))}
 
-          {/* Action Buttons */}
-          <div className="mt-4 pt-3" style={{ borderTop: '1px solid #C7CDD1' }}>
-            <div className="d-flex gap-2 justify-content-start">
-              <button
-                onClick={() => {/* Add your cancel logic */}}
-                className="btn"
-                style={{ 
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #C7CDD1',
-                  color: '#2D3B45',
-                  padding: '7px 15px',
-                  fontSize: '14px',
-                  fontWeight: 'normal',
-                  borderRadius: '3px'
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="btn"
-                style={{ 
-                  backgroundColor: '#BE0000',
-                  border: 'none',
-                  color: '#FFFFFF',
-                  padding: '7px 15px',
-                  fontSize: '14px',
-                  fontWeight: 'normal',
-                  borderRadius: '3px'
-                }}
-              >
-                Save
-              </button>
-            </div>
+          <div className="text-center py-5">
+            <button
+              onClick={() => {
+                setEditingQuestionId(undefined);
+                setShowEditor(true);
+              }}
+              style={{ 
+                border: '1px solid #C7CDD1',
+                padding: '8px',
+                background: 'white',
+                cursor: 'pointer'
+              }}
+            >
+              + New Question
+            </button>
           </div>
         </div>
       )}
