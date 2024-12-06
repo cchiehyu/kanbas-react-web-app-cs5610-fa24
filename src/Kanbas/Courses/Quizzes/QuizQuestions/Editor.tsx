@@ -1,12 +1,23 @@
-// editor.tsx
-import React, { useState } from 'react';
-import { QuizQuestionForm } from './questionTypes';
+import React, { useState, useEffect  } from 'react';
+import { useSelector } from 'react-redux';
+import { QuizQuestion, QuizQuestionRootState } from './questionTypes';
 import MultipleChoiceEditor from './MultipleChoiceEditor';
 import TrueFalseEditor from './TrueFalseEditor';
 import FillBlankEditor from './FillBlankEditor';
 
 export default function QuestionEditor({ questionId, onClose }: { questionId?: string; onClose: () => void }) {
-  const [questionType, setQuestionType] = useState('MULTIPLE_CHOICE');
+
+  const question = useSelector((state: QuizQuestionRootState) =>
+    questionId ? state.questionsReducer.questions.find(q => q._id === questionId) : undefined
+  );
+
+  const [questionType, setQuestionType] = useState(question?.questionType || 'MULTIPLE_CHOICE');
+
+  useEffect(() => {
+    if (question?.questionType) {
+      setQuestionType(question.questionType);
+    }
+  }, [question]);
 
   const renderQuestionEditor = () => {
     switch (questionType) {
@@ -25,10 +36,10 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
     <div className="p-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="d-flex align-items-center gap-3">
-          <select 
+          <select
             className="form-select"
             value={questionType}
-            onChange={(e) => setQuestionType(e.target.value)}
+            onChange={(e) => setQuestionType(e.target.value as QuizQuestion['questionType'])}
             style={{ width: 'auto' }}
           >
             <option value="MULTIPLE_CHOICE">Multiple Choice</option>
@@ -37,7 +48,12 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
           </select>
           <div className="d-flex align-items-center">
             <span className="me-2">pts:</span>
-            <input type="number" className="form-control" style={{ width: '60px' }} defaultValue="4" />
+            <input 
+              type="number" 
+              className="form-control" 
+              style={{ width: '60px' }} 
+              defaultValue={question?.points?.toString() || "4"} 
+            />
           </div>
         </div>
       </div>

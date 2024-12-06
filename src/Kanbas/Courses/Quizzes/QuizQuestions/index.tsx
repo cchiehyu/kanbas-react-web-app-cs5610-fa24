@@ -265,7 +265,7 @@ export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
               </div>
               <div className="modal-body">
                 <QuestionEditor
-                  questionId={editingQuestionId}
+                  questionId={editingQuestionId} // This will be passed down to the specific editors
                   onClose={() => {
                     setShowEditor(false);
                     setEditingQuestionId(undefined);
