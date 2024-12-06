@@ -22,8 +22,6 @@ export const findQuestionsForQuiz = async (quizId: string) => {
     const response = await request.get(
       `${BASE_API}/quizzes/${quizId}/questions`
     );
-    console.log("API Response:", response);
-    console.log("Questions data:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching questions:", error);
