@@ -4,8 +4,10 @@ import accountReducer from "./Account/reducer";
 import assignmentsReducer from "./Courses/Assignments/reducer";
 import enrollmentReducer from "./Courses/Enrollment/enrollmentSlice";
 import quizzesReducer from "./Courses/Quizzes/reducer";
+import questionsReducer from "./Courses/Quizzes/QuizQuestions/reducer";
 import { EnrollmentState } from "./Courses/Enrollment/types";
 import { Quiz } from "./Courses/Quizzes/types";
+import { QuizQuestion } from "./Courses/Quizzes/QuizQuestions/questionTypes";  
 
 export interface RootState {
   modulesReducer: any;
@@ -15,6 +17,11 @@ export interface RootState {
   quizzesReducer: {
     quizzes: Quiz[];
   };
+  questionsReducer: {  
+    questions: QuizQuestion[];
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: string | null;
+  };
 }
 
 const store = configureStore({
@@ -23,7 +30,8 @@ const store = configureStore({
     accountReducer,
     assignmentsReducer,
     enrollmentReducer,
-    quizzesReducer
+    quizzesReducer,
+    questionsReducer  // Add the questions reducer
   }
 });
 

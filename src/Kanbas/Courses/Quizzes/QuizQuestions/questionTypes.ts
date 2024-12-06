@@ -31,6 +31,8 @@ export interface QuizQuestionRootState {
   };
   questionsReducer: {
     questions: QuizQuestion[];
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: string | null;
   };
   accountReducer: {
     currentUser: {

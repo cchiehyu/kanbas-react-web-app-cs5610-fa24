@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setQuestions } from './reducer';
-import * as client from './client';
+import { fetchQuestions } from './reducer';
 import { QuizQuestionRootState } from './questionTypes';
 import QuestionEditor from './Editor';
 
-export default function QuizQuestions() {
+const SomeParentComponent = () => {
+  const { qid } = useParams();  // Move this to parent
+
+  return qid ? <QuizQuestions quizId={qid} /> : null;
+};
+
+// QuizQuestions component
+interface QuizQuestionsProps {
+  quizId: string;
+}
+
+export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
   const { qid } = useParams();
   const dispatch = useDispatch();
   const [showEditor, setShowEditor] = useState(false);
@@ -15,23 +25,41 @@ export default function QuizQuestions() {
   const questions = useSelector((state: QuizQuestionRootState) => 
     state.questionsReducer.questions.filter(q => q.quizId === qid)
   );
+  
+  const status = useSelector((state: QuizQuestionRootState) => 
+    state.questionsReducer.status
+  );
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const fetchedQuestions = await client.findQuestionsForQuiz(qid as string);
-        dispatch(setQuestions(fetchedQuestions));
-      } catch (error) {
-        console.error("Error fetching questions:", error);
-      }
-    };
     if (qid) {
-      fetchQuestions();
+      dispatch(fetchQuestions(qid) as any);
     }
   }, [qid, dispatch]);
 
+  console.log("Filtered questions:", questions); 
+
+  if (status === 'loading') {
+    return (
+      <div className="p-4 text-center">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4">
+      {/* Quiz Info Header */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h4>Quiz Questions</h4>
+          <p className="text-secondary mb-0">
+            Total Points: {questions.reduce((sum, q) => sum + (q.points || 0), 0)} • {questions.length} Questions
+          </p>
+        </div>
+      </div>
+
       {questions.length === 0 ? (
         <div className="text-center p-4">
           <p className="mb-4">No questions added yet</p>
@@ -52,21 +80,26 @@ export default function QuizQuestions() {
                   <p className="card-text text-secondary mb-2">{question.question}</p>
                   <div className="d-flex justify-content-between align-items-center">
                     <span className="badge bg-secondary">{question.points} pts</span>
-                    <button
-                      className="btn btn-outline-primary btn-sm"
-                      onClick={() => {
-                        setEditingQuestionId(question._id);
-                        setShowEditor(true);
-                      }}
-                    >
-                      Edit
-                    </button>
+                    <div>
+                      <span className="badge bg-primary me-2">
+                        {question.questionType.replace('_', ' ')}
+                      </span>
+                      <button
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => {
+                          setEditingQuestionId(question._id);
+                          setShowEditor(true);
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          
+
           <button
             className="btn btn-outline-secondary"
             onClick={() => {
@@ -94,9 +127,7 @@ export default function QuizQuestions() {
                     setShowEditor(false);
                     setEditingQuestionId(undefined);
                   }}
-                  >
-
-                </button>
+                />
               </div>
               <div className="modal-body">
                 <QuestionEditor

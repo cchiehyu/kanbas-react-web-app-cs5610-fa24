@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addQuiz, updateQuiz } from './reducer';
 import * as client from "./client";
 import { QuizForm, Quiz, RootState } from './types';
-import  QuestionEditor  from './QuizQuestions/Editor';
+import  QuizQuestions  from './QuizQuestions//index';
 
 export default function QuizEditor() {
   const { cid, qid } = useParams();
@@ -543,10 +543,7 @@ export default function QuizEditor() {
       </div>
       </>
       ) : (
-        <QuestionEditor 
-          questionId={undefined}
-          onClose={() => setActiveTab('details')}
-        />
+        <QuizQuestions quizId={qid!} />
       )}
     </div>
   );

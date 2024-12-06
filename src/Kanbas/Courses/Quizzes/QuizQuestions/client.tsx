@@ -17,10 +17,18 @@ export const createQuestion = async (quizId: string, question: Partial<QuizQuest
 };
 
 export const findQuestionsForQuiz = async (quizId: string) => {
-  const response = await request.get(
-    `${BASE_API}/quizzes/${quizId}/questions`
-  );
-  return response.data;
+  console.log("Fetching questions for quiz ID:", quizId);
+  try {
+    const response = await request.get(
+      `${BASE_API}/quizzes/${quizId}/questions`
+    );
+    console.log("API Response:", response);
+    console.log("Questions data:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    throw error;
+  }
 };
 
 export const findQuestionById = async (questionId: string) => {
