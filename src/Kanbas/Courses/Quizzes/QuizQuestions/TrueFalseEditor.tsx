@@ -26,7 +26,7 @@ export default function TrueFalseEditor({ questionId, onClose }: { questionId?: 
     const questionData = {
       questionType: 'TRUE_FALSE' as const,
       question: questionText,
-      points: 4, // You might want to make this dynamic
+      points: 4, //make this dynamic
       correctAnswer: correctAnswer
     };
 
