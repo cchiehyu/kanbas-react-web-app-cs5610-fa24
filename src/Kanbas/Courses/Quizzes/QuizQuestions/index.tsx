@@ -212,6 +212,35 @@ export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
         </div>
       )}
 
+      <div style={{ borderTop: '1px solid #C7CDD1', paddingTop: '16px' }}>
+        <button
+          onClick={() => {/* handle cancel */}}
+          style={{ 
+            border: '1px solid #C7CDD1',
+            padding: '6px 14px',
+            background: 'white',
+            cursor: 'pointer',
+            fontSize: '14px',
+            marginRight: '8px'
+          }}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={() => {/* handle save */}}
+          style={{ 
+            border: 'none',
+            padding: '6px 20px',
+            background: '#DC332F',
+            color: 'white',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          Save
+        </button>
+      </div>
+
       {/* Question Editor Modal */}
       {showEditor && (
         <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
