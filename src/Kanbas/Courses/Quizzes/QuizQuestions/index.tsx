@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchQuestions } from './reducer';
 import { QuizQuestionRootState, QuizQuestion } from './questionTypes';
@@ -7,11 +7,13 @@ import QuestionEditor from './Editor';
 
 interface QuizQuestionsProps {
   quizId: string;
+  courseId: string;
 }
 
-export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
+export default function QuizQuestions({ quizId , courseId}: QuizQuestionsProps) {
   const { qid } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showEditor, setShowEditor] = useState(false);
   const [editingQuestionId, setEditingQuestionId] = useState<string | undefined>();
 
@@ -218,7 +220,7 @@ export default function QuizQuestions({ quizId }: QuizQuestionsProps) {
 
       <div style={{ borderTop: '1px solid #C7CDD1', paddingTop: '16px' }}>
         <button
-          onClick={() => {/* handle cancel */}}
+          onClick={() => navigate(`/Kanbas/Courses/${courseId}/Quizzes`)}
           style={{ 
             border: '1px solid #C7CDD1',
             padding: '6px 14px',

@@ -125,6 +125,7 @@ export default function QuizEditor() {
     }
   };
 
+
   return (
     <div className="wd-kanbas-quiz-editor p-4">
       {/* Header */}
@@ -543,7 +544,11 @@ export default function QuizEditor() {
       </div>
       </>
       ) : (
-        <QuizQuestions quizId={qid!} />
+        cid && qid ? (
+          <QuizQuestions quizId={qid} courseId={cid} />
+        ) : (
+          <div>Missing required parameters</div>
+        )
       )}
     </div>
   );
