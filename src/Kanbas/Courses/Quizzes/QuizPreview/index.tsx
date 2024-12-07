@@ -7,7 +7,7 @@ import { fetchQuestions } from '../QuizQuestions/reducer';
 export default function QuizPreview() {
   const { qid, cid } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Add dispatch
+  const dispatch = useDispatch();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [showQuestions, setShowQuestions] = useState(true);
   const [startTime] = useState(new Date());
@@ -22,6 +22,8 @@ export default function QuizPreview() {
   const questions = useSelector((state: QuizQuestionRootState) => 
     state.questionsReducer.questions.filter(q => q.quizId === qid)
   );
+
+  
 
   const quiz = useSelector((state: any) => 
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
@@ -111,113 +113,126 @@ export default function QuizPreview() {
     }
   };
 
-  if (showQuestions) {
+  const currentQuestion = questions[currentQuestionIndex];
+  if (!currentQuestion) {
     return (
-      <div className="p-4" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <div className="alert alert-warning">
-          <i className="fas fa-exclamation-circle me-2"></i>
-          This is a preview of the published version of the quiz
-        </div>
-        
-        <div className="mb-3">
-          <strong>Started:</strong> {startTime.toLocaleString()}
-        </div>
-
-        <h5 className="mb-4">Quiz Instructions</h5>
-
-        {questions.map((question, index) => (
-          <div 
-            key={question._id}
-            className="d-flex align-items-center gap-2 mb-2"
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-              setCurrentQuestionIndex(index);
-              setShowQuestions(false);
-            }}
-          >
-            <i className="far fa-square"></i>
-            <span>Question {index + 1}</span>
-          </div>
-        ))}
-        
-        <div className="mt-4 d-flex align-items-center justify-content-between">
-          <span>Quiz saved at {new Date().toLocaleTimeString()}</span>
-          <button 
-            className="btn btn-primary"
-            onClick={() => setShowQuestions(false)}
-          >
-            Submit Quiz
-          </button>
-        </div>
+      <div className="p-4 text-center">
+        <p>Question not found.</p>
       </div>
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
-
   return (
-    <div className="p-4" style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <div 
-        style={{ 
-          backgroundColor: '#FFFFFF',
-          border: '1px solid #C7CDD1',
-          borderRadius: '3px',
-          padding: '20px',
-          marginBottom: '20px'
-        }}
-      >
-        <div className="d-flex justify-content-between align-items-start mb-3">
-          <div style={{ 
-            fontSize: '14px',
-            color: '#2D3B45',
-            fontWeight: '500'
-          }}>
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <h3>{quiz?.title}</h3>
+      
+      <div className="alert alert-warning mt-3">
+        <i className="bi bi-exclamation-circle me-2"></i>
+        This is a preview of the published version of the quiz
+      </div>
+
+      <div style={{ color: '#333', marginBottom: '20px' }}>
+        <div>Started: {startTime.toLocaleString()}</div>
+      </div>
+
+      <div style={{ fontSize: '16px', fontWeight: 500, marginBottom: '20px' }}>
+        Quiz Instructions
+      </div>
+
+      <div style={{ 
+        backgroundColor: '#FFFFFF',
+        border: '1px solid #DEE2E6',
+        borderRadius: '4px',
+        marginBottom: '20px'
+      }}>
+        <div style={{
+          borderBottom: '1px solid #DEE2E6',
+          padding: '12px 15px',
+          backgroundColor: '#F8F9FA'
+        }}>
+          <div style={{ fontSize: '14px' }}>
             Question {currentQuestionIndex + 1}
-            <span className="ms-2" style={{ color: '#73818C' }}>
+            <span style={{ color: '#6C757D', marginLeft: '8px' }}>
               {currentQuestion.points} pts
             </span>
           </div>
         </div>
 
-        <div 
-          style={{ 
-            color: '#2D3B45',
-            fontSize: '14px',
-            lineHeight: '1.4',
-            marginBottom: '16px'
-          }}
-        >
-          {currentQuestion.question}
+        <div style={{ padding: '20px' }}>
+          <div style={{ fontSize: '14px', lineHeight: '1.5' }}>
+            {currentQuestion.question}
+          </div>
+          {renderQuestionContent(currentQuestion)}
         </div>
-
-        {renderQuestionContent(currentQuestion)}
       </div>
 
-      <div className="d-flex justify-content-end gap-2">
-        {currentQuestionIndex > 0 && (
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-          >
-            Previous
-          </button>
-        )}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderTop: '1px solid #DEE2E6',
+        paddingTop: '20px'
+      }}>
+        <div style={{ color: '#666', fontSize: '14px' }}>
+          Quiz saved at {new Date().toLocaleTimeString()}
+        </div>
         
-        {currentQuestionIndex < questions.length - 1 ? (
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {currentQuestionIndex > 0 && (
+            <button
+              onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
+              style={{
+                backgroundColor: '#F8F9FA',
+                border: '1px solid #DEE2E6',
+                padding: '6px 12px',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            >
+              Previous
+            </button>
+          )}
+
           <button
-            className="btn btn-primary"
-            onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+            onClick={() => {
+              if (currentQuestionIndex < questions.length - 1) {
+                setCurrentQuestionIndex(prev => prev + 1);
+              } else {
+                setShowQuestions(true);
+              }
+            }}
+            style={{
+              backgroundColor: '#F8F9FA',
+              border: '1px solid #DEE2E6',
+              padding: '6px 12px',
+              borderRadius: '4px',
+              fontSize: '14px'
+            }}
           >
-            Next
+            {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Submit Quiz'}
           </button>
-        ) : (
-          <button
-            className="btn btn-success"
-            onClick={() => setShowQuestions(true)}
-          >
-            Submit Quiz
-          </button>
-        )}
+        </div>
+      </div>
+
+      <div style={{ 
+        marginTop: '20px',
+        borderTop: '1px solid #DEE2E6',
+        paddingTop: '20px'
+      }}>
+        <button
+          onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/questions`)}
+          style={{
+            border: 'none',
+            background: 'none',
+            color: '#666',
+            padding: '0',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          <i className="fas fa-pencil-alt" style={{ marginRight: '8px' }}></i>
+          Keep Editing This Quiz
+        </button>
       </div>
     </div>
   );
