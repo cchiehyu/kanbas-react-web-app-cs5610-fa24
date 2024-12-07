@@ -28,10 +28,11 @@ export default function QuizSubmission() {
     let totalPoints = 0;
   
     questions.forEach(question => {
+      // Add points to total regardless of answer
+      totalPoints += question.points;
+      
       const userAnswer = userAnswers.find((a: UserAnswer) => a.questionId === question._id);
       if (!userAnswer) return;
-  
-      totalPoints += question.points;
   
       switch (question.questionType) {
         case 'MULTIPLE_CHOICE':
@@ -48,13 +49,16 @@ export default function QuizSubmission() {
           break;
         
         case 'FILL_BLANK':
-          const correct = question.correctAnswers?.some(ans => 
-            ans.caseSensitive 
-              ? ans.text === userAnswer.answer
-              : ans.text.toLowerCase() === (userAnswer.answer as string).toLowerCase()
-          );
-          if (correct) {
-            correctAnswers += question.points;
+          if (question.correctAnswers && question.correctAnswers.length > 0) {
+            const correct = question.correctAnswers.some(ans => {
+              const userAns = userAnswer.answer as string;
+              return ans.caseSensitive 
+                ? ans.text === userAns
+                : ans.text.toLowerCase() === userAns.toLowerCase();
+            });
+            if (correct) {
+              correctAnswers += question.points;
+            }
           }
           break;
       }

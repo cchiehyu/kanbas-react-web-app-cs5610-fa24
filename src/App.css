@@ -46,7 +46,7 @@
 /* The main container for the Kanbas component */
 #wd-kanbas {
   display: flex;
-  min-height: 100vh;
+  min-height: 150vh;
 }
 
 /* Sidebar navigation */

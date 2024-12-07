@@ -29,22 +29,35 @@ export default function QuizStartScreen() {
           
           <hr />
           
-          <div className="mb-3">
+          <div className="quiz-info-container mb-4" style={{ padding: '16px' }}>
             <div className="row">
-              <div className="col-md-4">
-                <strong>Time Limit</strong>
-                <div>{quiz?.timeLimit ? `${quiz.timeLimit} Minutes` : 'No time limit'}</div>
+              <div className="col-6 col-md-3">
+                <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '8px' }}>Time Limit</div>
+                <div style={{ fontSize: '0.9rem', color: '#555' }}>
+                  {quiz?.timeLimit ? `${quiz.timeLimit} Minutes` : 'No time limit'}
+                </div>
               </div>
-              <div className="col-md-4">
-                <strong>Multiple Attempts</strong>
-                <div>{quiz?.multipleAttempts ? 'Yes' : 'No'}</div>
+              <div className="col-6 col-md-3">
+                <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '8px' }}>Multiple Attempts</div>
+                <div style={{ fontSize: '0.9rem', color: quiz?.multipleAttempts ? '#28a745' : '#dc3545' }}>
+                  {quiz?.multipleAttempts ? 'Yes' : 'No'}
+                </div>
               </div>
-              <div className="col-md-4">
-                <strong>Points</strong>
-                <div>{quiz?.points} pts</div>
+              <div className="col-6 col-md-3">
+                <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '8px' }}>Attempts Left</div>
+                <div style={{ fontSize: '0.9rem', color: '#555' }}>
+                  {quiz?.multipleAttempts ? quiz?.Attempts || 'Unlimited' : '1'}
+                </div>
+              </div>
+              <div className="col-6 col-md-3">
+                <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '8px' }}>Points</div>
+                <div style={{ fontSize: '0.9rem', color: '#555' }}>
+                  {quiz?.points || '0'} pts
+                </div>
               </div>
             </div>
           </div>
+
 
           <div className="d-flex justify-content-between align-items-center mt-4">
             <button

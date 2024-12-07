@@ -22,19 +22,19 @@ export default function Courses({ courses }: { courses: any[]; }) {
   const { pathname } = useLocation();
   
   return (
-    <div id="wd-courses">
+    <div id="wd-courses" style={{ width: '100%' }}>
       <h2 className="text-danger">
         <FaAlignJustify className="me-3 fs-4 mb-1" />
         {course && course.number} {course && course.name} &gt; {pathname.split("/")[4]}
       </h2>
       <hr />
 
-      <div className="d-flex">
+      <div className="d-flex" style={{ width: '100%' }}>
         <div className="d-none d-md-block">
           <CoursesNavigation />
         </div>
         {/* Main Content Area */}
-        <div className="flex-grow-1">
+        <div className="flex-grow-1" style={{ width: '100%' }}>
           <Routes>
             <Route path="/" element={<Navigate to="Home" />} />
             <Route path="Home" element={<Home />} />
