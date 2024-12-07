@@ -78,6 +78,136 @@ export default function QuizPreview() {
     state.questionsReducer.status
   );
 
+
+  const calculateSubmissionScore = (userAnswers: UserAnswer[], questions: QuizQuestion[]) => {
+    let correctAnswers = 0;
+    let totalPoints = 0;
+  
+    questions.forEach(question => {
+      totalPoints += question.points;
+      const userAnswer = userAnswers.find(a => a.questionId === question._id);
+      if (!userAnswer) return;
+  
+      switch (question.questionType) {
+        case 'MULTIPLE_CHOICE':
+          const correctChoice = question.choices?.find(c => c.isCorrect);
+          if (correctChoice && userAnswer.answer === correctChoice.text) {
+            correctAnswers += question.points;
+          }
+          break;
+        
+        case 'TRUE_FALSE':
+          if (userAnswer.answer === question.correctAnswer) {
+            correctAnswers += question.points;
+          }
+          break;
+        
+        case 'FILL_BLANK':
+          if (question.correctAnswers && question.correctAnswers.length > 0) {
+            const correct = question.correctAnswers.some(ans => {
+              const userAns = userAnswer.answer as string;
+              return ans.caseSensitive 
+                ? ans.text === userAns
+                : ans.text.toLowerCase() === userAns.toLowerCase();
+            });
+            if (correct) {
+              correctAnswers += question.points;
+            }
+          }
+          break;
+      }
+    });
+
+    return {
+      score: correctAnswers,
+      total: totalPoints,
+      percentage: totalPoints > 0 ? Math.round((correctAnswers / totalPoints) * 100) : 0
+    };
+  };
+
+  const handleQuizSubmit = async () => {
+    if (!qid || !cid) return; 
+  
+    try {
+      const scoreResult = calculateSubmissionScore(userAnswers, questions);
+      
+      // Transform userAnswers to match the expected type
+      const processedAnswers = userAnswers.map(userAnswer => {
+        const question = questions.find(q => q._id === userAnswer.questionId);
+        if (!question) return null;
+  
+        let correctAnswer: string | boolean = '';
+        let isCorrect = false;
+  
+        switch (question.questionType) {
+          case 'MULTIPLE_CHOICE':
+            const correctChoice = question.choices?.find(c => c.isCorrect);
+            correctAnswer = correctChoice?.text || '';
+            isCorrect = correctChoice?.text === userAnswer.answer;
+            break;
+  
+          case 'TRUE_FALSE':
+            correctAnswer = question.correctAnswer || false;
+            isCorrect = userAnswer.answer === question.correctAnswer;
+            break;
+  
+          case 'FILL_BLANK':
+            correctAnswer = question.correctAnswers?.[0]?.text || '';
+            isCorrect = question.correctAnswers?.some(ans => {
+              const userAns = userAnswer.answer as string;
+              return ans.caseSensitive 
+                ? ans.text === userAns
+                : ans.text.toLowerCase() === userAns.toLowerCase();
+            }) || false;
+            break;
+        }
+  
+        return {
+          questionId: userAnswer.questionId,
+          questionType: question.questionType,
+          userAnswer: userAnswer.answer,
+          correctAnswer,
+          points: isCorrect ? question.points : 0,
+          maxPoints: question.points,
+          isCorrect,
+          question: question.question,
+          choices: question.choices
+        };
+      }).filter((answer): answer is NonNullable<typeof answer> => answer !== null);
+  
+      const submissionData = {
+        quizId: qid,
+        courseId: cid,
+        studentId: currentUser._id,
+        answers: processedAnswers,
+        startTime: startTime,
+        endTime: new Date(),
+        timeSpent: Math.round((new Date().getTime() - startTime.getTime()) / (1000 * 60)),
+        score: scoreResult.score,
+        maxScore: scoreResult.total,
+        percentage: scoreResult.percentage,
+        status: 'completed' as const
+      };
+  
+      await dispatch(submitQuiz({ 
+        quizId: qid,
+        submission: submissionData 
+      }) as any);
+  
+      navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/submitted`, {
+        state: { 
+          userAnswers,
+          startTime: startTime.getTime(),
+          score: scoreResult.score,
+          totalPoints: scoreResult.total,
+          percentage: scoreResult.percentage
+        }
+      });
+    } catch (error) {
+      console.error('Error submitting quiz:', error);
+    }
+  };
+
   
 
   if (status === 'loading') {
@@ -264,12 +394,7 @@ export default function QuizPreview() {
                 if (currentQuestionIndex < questions.length - 1) {
                   setCurrentQuestionIndex(prev => prev + 1);
                 } else {
-                  navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/submitted`, {
-                    state: { 
-                      userAnswers,
-                      startTime: startTime.getTime()
-                    }
-                  });
+                  handleQuizSubmit();
                 }
               }}
               style={{
