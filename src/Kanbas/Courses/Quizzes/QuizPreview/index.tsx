@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QuizQuestionRootState, QuizQuestion } from '../QuizQuestions/questionTypes';
+import { fetchQuestions } from '../QuizQuestions/reducer'; 
 
 export default function QuizPreview() {
   const { qid, cid } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Add dispatch
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [showQuestions, setShowQuestions] = useState(true);
   const [startTime] = useState(new Date());
+
+  // Add useEffect to fetch questions
+  useEffect(() => {
+    if (qid) {
+      dispatch(fetchQuestions(qid) as any);
+    }
+  }, [qid, dispatch]);
 
   const questions = useSelector((state: QuizQuestionRootState) => 
     state.questionsReducer.questions.filter(q => q.quizId === qid)
@@ -16,6 +25,11 @@ export default function QuizPreview() {
 
   const quiz = useSelector((state: any) => 
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
+  );
+
+  // Add loading state check
+  const status = useSelector((state: QuizQuestionRootState) => 
+    state.questionsReducer.status
   );
 
   const renderQuestionContent = (question: QuizQuestion) => {
