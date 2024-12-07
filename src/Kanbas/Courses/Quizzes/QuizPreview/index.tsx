@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QuizQuestionRootState, QuizQuestion } from '../QuizQuestions/questionTypes';
-import { fetchQuestions } from '../QuizQuestions/reducer'; 
+import { fetchQuestions } from '../QuizQuestions/reducer';
 
 export default function QuizPreview() {
   const { qid, cid } = useParams();
@@ -12,7 +12,10 @@ export default function QuizPreview() {
   const [showQuestions, setShowQuestions] = useState(true);
   const [startTime] = useState(new Date());
 
-  // Add useEffect to fetch questions
+  // Add timer state
+  const [timeRemaining, setTimeRemaining] = useState<number>(0);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     if (qid) {
       dispatch(fetchQuestions(qid) as any);
@@ -23,13 +26,35 @@ export default function QuizPreview() {
     state.questionsReducer.questions.filter(q => q.quizId === qid)
   );
 
-  
-
   const quiz = useSelector((state: any) => 
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
   );
 
-  // Add loading state check
+  // Timer effect
+  useEffect(() => {
+    if (quiz?.timeLimit) {
+      setTimeRemaining(quiz.timeLimit * 60);
+      const interval = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 0) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      setIntervalId(interval);
+
+      return () => clearInterval(interval);
+    }
+  }, [quiz]);
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
   const status = useSelector((state: QuizQuestionRootState) => 
     state.questionsReducer.status
   );
@@ -126,21 +151,36 @@ export default function QuizPreview() {
     <div className="d-flex" style={{ padding: '20px' }}>
       {/* Main Content - Left Side */}
       <div style={{ flex: '1', marginRight: '20px', maxWidth: '800px' }}>
-        <h3>{quiz?.title}</h3>
+        {/* Title and Timer */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '20px'
+        }}>
+          <h3>{quiz?.title}</h3>
+          {timeRemaining > 0 && (
+            <div style={{ 
+              backgroundColor: '#f5f5f5',
+              padding: '8px 15px',
+              borderRadius: '4px',
+              border: '1px solid #ddd',
+              fontSize: '14px'
+            }}>
+              Time Remaining: {formatTime(timeRemaining)}
+            </div>
+          )}
+        </div>
         
         <div className="alert alert-warning mt-3">
           <i className="bi bi-exclamation-circle me-2"></i>
           This is a preview of the published version of the quiz
         </div>
-  
+
         <div style={{ color: '#333', marginBottom: '20px' }}>
           <div>Started: {startTime.toLocaleString()}</div>
         </div>
-  
-        <div style={{ fontSize: '16px', fontWeight: 500, marginBottom: '20px' }}>
-          Quiz Instructions
-        </div>
-  
+
         <div style={{ 
           backgroundColor: '#FFFFFF',
           border: '1px solid #DEE2E6',
@@ -159,7 +199,7 @@ export default function QuizPreview() {
               </span>
             </div>
           </div>
-  
+
           <div style={{ padding: '20px' }}>
             <div style={{ fontSize: '14px', lineHeight: '1.5' }}>
               {currentQuestion.question}
@@ -167,7 +207,7 @@ export default function QuizPreview() {
             {renderQuestionContent(currentQuestion)}
           </div>
         </div>
-  
+
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -194,7 +234,7 @@ export default function QuizPreview() {
                 Previous
               </button>
             )}
-  
+
             <button
               onClick={() => {
                 if (currentQuestionIndex < questions.length - 1) {
@@ -215,10 +255,10 @@ export default function QuizPreview() {
             </button>
           </div>
         </div>
-  
+
         <div style={{ 
-          marginTop: '20px',
           borderTop: '1px solid #DEE2E6',
+          marginTop: '20px',
           paddingTop: '20px'
         }}>
           <button
@@ -237,14 +277,16 @@ export default function QuizPreview() {
           </button>
         </div>
       </div>
-  
+
       {/* Questions Navigation - Right Side */}
       <div style={{ width: '250px' }}>
         <div style={{ 
           backgroundColor: '#f5f5f5',
           border: '1px solid #ddd',
           borderRadius: '4px',
-          padding: '15px'
+          padding: '15px',
+          position: 'sticky',
+          top: '20px'
         }}>
           <h6 style={{ marginBottom: '15px', color: '#333' }}>Questions</h6>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -278,25 +320,8 @@ export default function QuizPreview() {
               </div>
             ))}
           </div>
-  
-          <button
-            onClick={() => setShowQuestions(true)}
-            style={{
-              width: '100%',
-              marginTop: '15px',
-              backgroundColor: '#D12B1F',
-              color: 'white',
-              border: 'none',
-              padding: '8px 12px',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Submit Quiz
-          </button>
         </div>
       </div>
     </div>
   );
 }
-
