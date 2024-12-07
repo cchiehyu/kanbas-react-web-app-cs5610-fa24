@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QuizQuestionRootState, QuizQuestion } from '../QuizQuestions/questionTypes';
 import { fetchQuestions } from '../QuizQuestions/reducer';
+import { UserAnswer } from './QuizPreviewType';
 
 export default function QuizPreview() {
   const { qid, cid } = useParams();
@@ -11,6 +12,7 @@ export default function QuizPreview() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [showQuestions, setShowQuestions] = useState(true);
   const [startTime] = useState(new Date());
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
 
   // Add timer state
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
@@ -29,6 +31,16 @@ export default function QuizPreview() {
   const quiz = useSelector((state: any) => 
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
   );
+
+  const handleAnswerChange = (questionId: string, answer: string | boolean) => {
+    setUserAnswers(prev => {
+      const existing = prev.find((a: UserAnswer) => a.questionId === questionId);
+      if (existing) {
+        return prev.map((a: UserAnswer) => a.questionId === questionId ? { ...a, answer } : a);
+      }
+      return [...prev, { questionId, answer }];
+    });
+  };
 
   // Timer effect
   useEffect(() => {
@@ -79,6 +91,8 @@ export default function QuizPreview() {
                 <input
                   type="radio"
                   name={`question_${question._id}`}
+                  checked={userAnswers.find(a => a.questionId === question._id)?.answer === choice.text}
+                  onChange={() => handleAnswerChange(question._id, choice.text)}
                   className="mt-1 me-2"
                   style={{ 
                     width: '16px',
@@ -99,6 +113,8 @@ export default function QuizPreview() {
               <input
                 type="radio"
                 name={`question_${question._id}`}
+                checked={userAnswers.find(a => a.questionId === question._id)?.answer === true}
+                onChange={() => handleAnswerChange(question._id, true)}
                 className="mt-1 me-2"
                 style={{ 
                   width: '16px',
@@ -112,6 +128,8 @@ export default function QuizPreview() {
               <input
                 type="radio"
                 name={`question_${question._id}`}
+                checked={userAnswers.find(a => a.questionId === question._id)?.answer === false}
+                onChange={() => handleAnswerChange(question._id, false)}
                 className="mt-1 me-2"
                 style={{ 
                   width: '16px',
@@ -131,6 +149,8 @@ export default function QuizPreview() {
               type="text"
               className="form-control"
               placeholder="Enter your answer"
+              value={userAnswers.find(a => a.questionId === question._id)?.answer as string || ''}
+              onChange={(e) => handleAnswerChange(question._id, e.target.value)}
               style={{ maxWidth: '300px' }}
             />
           </div>
@@ -240,7 +260,9 @@ export default function QuizPreview() {
                 if (currentQuestionIndex < questions.length - 1) {
                   setCurrentQuestionIndex(prev => prev + 1);
                 } else {
-                  setShowQuestions(true);
+                  navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/submitted`, {
+                    state: { userAnswers }
+                  });
                 }
               }}
               style={{
