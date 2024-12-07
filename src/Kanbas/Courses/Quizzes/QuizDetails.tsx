@@ -11,6 +11,9 @@ export default function QuizDetails() {
     state.quizzesReducer.quizzes.find(q => q._id === qid)
   );
 
+  const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
+  const isStudent = currentUser.role === 'Student';
+
   const formatDate = (date: Date | string) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
@@ -48,7 +51,7 @@ export default function QuizDetails() {
         >
           Preview
         </button>
-          {currentUser.role !== 'STUDENT' && (
+          {!isStudent && (
             <button 
               className="btn"
               style={{

@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { QuizQuestionRootState } from '../QuizQuestions/questionTypes';
+import { RootState } from '../../../store';
 
 export default function QuizStartScreen() {
   const { cid, qid } = useParams();
@@ -10,6 +11,11 @@ export default function QuizStartScreen() {
   const quiz = useSelector((state: any) => 
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
   );
+
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+
+  const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
+  const isStudent = currentUser.role === 'Student';
 
   return (
     <div className="p-4" style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -76,7 +82,9 @@ export default function QuizStartScreen() {
         </div>
       </div>
 
+
       {/* Keep editing link */}
+      {!isStudent && (
       <div className="mt-4 text-center">
         <button 
           className="btn btn-link"
@@ -85,6 +93,7 @@ export default function QuizStartScreen() {
           Keep Editing This Quiz
         </button>
       </div>
+      )}
     </div>
   );
 }

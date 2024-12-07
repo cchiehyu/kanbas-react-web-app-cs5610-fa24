@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { QuizQuestionRootState, QuizQuestion } from '../QuizQuestions/questionTypes';
 import { fetchQuestions } from '../QuizQuestions/reducer';
 import { UserAnswer } from './QuizPreviewType';
+import { RootState } from '../../../store';
+import { submitQuiz } from './QuizReview/reducer'; 
 
 export default function QuizPreview() {
   const { qid, cid } = useParams();
@@ -17,6 +19,11 @@ export default function QuizPreview() {
   // Add timer state
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+
+  const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
+  const isStudent = currentUser.role === 'Student';
 
   useEffect(() => {
     if (qid) {
@@ -70,6 +77,8 @@ export default function QuizPreview() {
   const status = useSelector((state: QuizQuestionRootState) => 
     state.questionsReducer.status
   );
+
+  
 
   if (status === 'loading') {
     return (
@@ -191,11 +200,6 @@ export default function QuizPreview() {
             </div>
           )}
         </div>
-        
-        <div className="alert alert-warning mt-3">
-          <i className="bi bi-exclamation-circle me-2"></i>
-          This is a preview of the published version of the quiz
-        </div>
 
         <div style={{ color: '#333', marginBottom: '20px' }}>
           <div>Started: {startTime.toLocaleString()}</div>
@@ -281,11 +285,12 @@ export default function QuizPreview() {
           </div>
         </div>
 
+        {isFacultyOrAdmin && (
         <div style={{ 
           borderTop: '1px solid #DEE2E6',
           marginTop: '20px',
           paddingTop: '20px'
-        }}>
+          }}>
           <button
             onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/questions`)}
             style={{
@@ -301,6 +306,7 @@ export default function QuizPreview() {
             Keep Editing This Quiz
           </button>
         </div>
+        )}
       </div>
 
       {/* Questions Navigation - Right Side */}

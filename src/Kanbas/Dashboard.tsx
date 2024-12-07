@@ -1,7 +1,6 @@
 import React, { useEffect, Dispatch, SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
-//import { enrollInCourse, unenrollFromCourse, fetchEnrollments } from './Courses/Enrollment/client';
 import { fetchEnrollments } from './Courses/Enrollment/client';
 import { RootState } from './store';
 import { AppDispatch } from './store';

@@ -15,6 +15,7 @@ import QuizQuestions from './Quizzes/index';
 import QuizStartScreen from './Quizzes/QuizPreview/QuizStart';
 import QuizSubmission from './Quizzes/QuizPreview/QuizSubmission';
 import QuizPreview from './Quizzes/QuizPreview/index';
+import QuizReview from './Quizzes/QuizPreview/QuizReview/index';
 
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid: courseId } = useParams<{ cid: string }>();
@@ -22,19 +23,19 @@ export default function Courses({ courses }: { courses: any[]; }) {
   const { pathname } = useLocation();
   
   return (
-    <div id="wd-courses" style={{ width: '100%' }}>
+    <div id="wd-courses">
       <h2 className="text-danger">
         <FaAlignJustify className="me-3 fs-4 mb-1" />
         {course && course.number} {course && course.name} &gt; {pathname.split("/")[4]}
       </h2>
       <hr />
 
-      <div className="d-flex" style={{ width: '100%' }}>
+      <div className="d-flex">
         <div className="d-none d-md-block">
           <CoursesNavigation />
         </div>
         {/* Main Content Area */}
-        <div className="flex-grow-1" style={{ width: '100%' }}>
+        <div className="flex-grow-1">
           <Routes>
             <Route path="/" element={<Navigate to="Home" />} />
             <Route path="Home" element={<Home />} />
@@ -53,6 +54,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
               <Route path=":qid/preview" element={<QuizStartScreen />} /> 
               <Route path=":qid/preview/take" element={<QuizPreview />} />
               <Route path=":qid/preview/submitted" element={<QuizSubmission />} />
+              <Route path=":qid/preview/review" element={<QuizReview />} />
             </Route>
             <Route path="People" element={<PeopleTable />} />
             <Route path="Grades" element={<h1>Grades</h1>} />
