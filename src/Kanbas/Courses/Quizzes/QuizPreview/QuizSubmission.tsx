@@ -10,6 +10,10 @@ export default function QuizSubmission() {
   const location = useLocation();
   
   const userAnswers = location.state?.userAnswers || [];
+  const startTime = location.state?.startTime ? new Date(location.state.startTime) : new Date();
+  const endTime = new Date();
+
+  const timeSpent = Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60));
 
   const quiz = useSelector((state: any) => 
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
@@ -99,7 +103,7 @@ export default function QuizSubmission() {
             Time Spent:
           </div>
           <div>
-            {quiz?.timeLimit ? `${quiz.timeLimit} minutes` : 'No time limit'}
+            {timeSpent} minutes
           </div>
         </div>
 

@@ -261,7 +261,10 @@ export default function QuizPreview() {
                   setCurrentQuestionIndex(prev => prev + 1);
                 } else {
                   navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/submitted`, {
-                    state: { userAnswers }
+                    state: { 
+                      userAnswers,
+                      startTime: startTime.getTime()
+                    }
                   });
                 }
               }}
