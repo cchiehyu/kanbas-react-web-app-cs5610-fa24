@@ -32,6 +32,16 @@ export default function QuizPreview() {
     state.questionsReducer.status
   );
 
+  if (status === 'loading') {
+    return (
+      <div className="d-flex justify-content-center p-4">
+        <div className="spinner-border" style={{ color: '#2D3B45' }} role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   const renderQuestionContent = (question: QuizQuestion) => {
     switch (question.questionType) {
       case 'MULTIPLE_CHOICE':
