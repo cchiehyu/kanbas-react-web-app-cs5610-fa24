@@ -7,7 +7,9 @@ import { UserAnswer } from './QuizPreviewType';
 export default function QuizSubmission() {
   const { qid, cid } = useParams();
   const navigate = useNavigate();
-  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
+  const location = useLocation();
+  
+  const userAnswers = location.state?.userAnswers || [];
 
   const quiz = useSelector((state: any) => 
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
@@ -17,17 +19,16 @@ export default function QuizSubmission() {
     state.questionsReducer.questions.filter(q => q.quizId === qid)
   );
 
-  // Calculate score
   const calculateScore = () => {
     let correctAnswers = 0;
     let totalPoints = 0;
-
+  
     questions.forEach(question => {
-      const userAnswer = userAnswers.find(a => a.questionId === question._id);
+      const userAnswer = userAnswers.find((a: UserAnswer) => a.questionId === question._id);
       if (!userAnswer) return;
-
+  
       totalPoints += question.points;
-
+  
       switch (question.questionType) {
         case 'MULTIPLE_CHOICE':
           const correctChoice = question.choices?.find(c => c.isCorrect);
@@ -35,11 +36,13 @@ export default function QuizSubmission() {
             correctAnswers += question.points;
           }
           break;
+        
         case 'TRUE_FALSE':
           if (userAnswer.answer === question.correctAnswer) {
             correctAnswers += question.points;
           }
           break;
+        
         case 'FILL_BLANK':
           const correct = question.correctAnswers?.some(ans => 
             ans.caseSensitive 
@@ -52,11 +55,11 @@ export default function QuizSubmission() {
           break;
       }
     });
-
+  
     return {
       score: correctAnswers,
       total: totalPoints,
-      percentage: Math.round((correctAnswers / totalPoints) * 100)
+      percentage: totalPoints > 0 ? Math.round((correctAnswers / totalPoints) * 100) : 0
     };
   };
 
