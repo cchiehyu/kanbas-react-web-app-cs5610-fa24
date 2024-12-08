@@ -107,34 +107,44 @@ export default function QuizEditor() {
     try {
       const dataToSave = {
         ...formData,
-        published: shouldPublish ? true : (quiz?.published || false),
+        published: shouldPublish || quiz?.published || false,
         course: cid
       };
   
+      let savedQuiz;
       if (qid && qid !== 'new') {
-        const updatedQuiz = await client.updateQuiz(qid, {
+        // Update existing quiz
+        savedQuiz = await client.updateQuiz(qid, {
           ...dataToSave,
           _id: qid,
         });
-
-        dispatch(updateQuiz(updatedQuiz));
-        if(shouldPublish)
-        {
-          await client.publishQuiz(updatedQuiz._id);
-          dispatch(togglePublishQuiz(updatedQuiz._id as string));
+        dispatch(updateQuiz(savedQuiz));
+  
+        // If this is an update and we want to publish
+        if (shouldPublish && savedQuiz?._id) {
+          try {
+            await client.publishQuiz(savedQuiz._id);
+            dispatch(togglePublishQuiz(savedQuiz._id));
+          } catch (publishError) {
+            console.error("Error publishing quiz:", publishError);
+          }
         }
-
       } else {
-        const newQuiz = await client.createQuiz(cid as string, dataToSave);
-        dispatch(addQuiz(newQuiz));
-
-        if(shouldPublish)
-        {
-          await client.publishQuiz(newQuiz._id);
-          dispatch(togglePublishQuiz(newQuiz._id as string));
+        // Create new quiz
+        savedQuiz = await client.createQuiz(cid as string, dataToSave);
+        dispatch(addQuiz(savedQuiz));
+  
+        // If this is a new quiz and we want to publish
+        if (shouldPublish && savedQuiz?._id) {
+          try {
+            await client.publishQuiz(savedQuiz._id);
+            dispatch(togglePublishQuiz(savedQuiz._id));
+          } catch (publishError) {
+            console.error("Error publishing quiz:", publishError);
+          }
         }
       }
-
+  
       navigate(`/Kanbas/Courses/${cid}/Quizzes`);
     } catch (error) {
       console.error("Error saving quiz:", error);

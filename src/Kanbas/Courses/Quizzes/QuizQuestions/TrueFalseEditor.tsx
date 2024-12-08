@@ -35,7 +35,7 @@ export default function TrueFalseEditor({   questionId,
     const questionData = {
       questionType: 'TRUE_FALSE' as const,
       question: questionText,
-      points: 4, //make this dynamic
+      points: points, 
       correctAnswer: correctAnswer
     };
 
