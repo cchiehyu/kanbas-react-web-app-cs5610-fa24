@@ -99,7 +99,7 @@ export default function QuizDetails() {
         <div>{quiz.shuffleAnswers ? 'Yes' : 'No'}</div>
 
         <div className="text-end text-secondary">Time Limit</div>
-        <div>{quiz.timeLimit} Minutes</div>
+        <div>{quiz.timeLimit === 0 ? "Unlimited" : `${quiz.timeLimit} Minutes`}</div>
 
         <div className="text-end text-secondary">Multiple Attempts</div>
         <div>{quiz.multipleAttempts ? 'Yes' : 'No'}</div>
