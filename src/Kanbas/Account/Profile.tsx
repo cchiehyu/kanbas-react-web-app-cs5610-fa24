@@ -126,7 +126,7 @@ export default function Profile() {
                     />
                     
                     <select
-                      defaultValue={profile.role}
+                      defaultValue={currentUser.role}
                       id="wd-role"
                       className="form-select mb-4"
                       onChange={(e) => setProfile({ ...profile, role: e.target.value })}
