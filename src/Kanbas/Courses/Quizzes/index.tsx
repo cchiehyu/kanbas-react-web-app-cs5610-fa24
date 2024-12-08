@@ -167,19 +167,12 @@ export default function QuizList() {
                 
                 <div className="flex-grow-1">
                   <div className="d-flex justify-content-between align-items-center mb-2">
-                    {currentUser.role === 'STUDENT' ? (
-                      <span className="fs-5 fw-semibold">
-                        {quiz.title}
-                      </span>
-                    ) : (
                     <Link 
                       to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/details`}
                       className="text-decoration-none text-dark fs-5 fw-semibold"
                     >
                       {quiz.title}
                     </Link>
-                    )}
-                    
                     <div className="d-flex align-items-center" style={{ gap: '15px' }}>
                       <span className="fs-5">
                       {!quiz.published || 

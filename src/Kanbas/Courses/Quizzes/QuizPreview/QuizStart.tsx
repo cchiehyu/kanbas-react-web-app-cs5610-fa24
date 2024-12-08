@@ -18,7 +18,8 @@ export default function QuizStartScreen() {
   const AttempLeft =  quiz?.multipleAttempts ? quiz?.Attempts - CountOfAttempt : 1 - CountOfAttempt;
 
   const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
-  const isStudent = currentUser.role === 'Student';
+  const isStudent = currentUser.role === 'STUDENT';
+  const canBeginQuiz = (AttempLeft > 0 && isStudent) || isFacultyOrAdmin;
 
   return (
     <div className="p-4" style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -76,24 +77,20 @@ export default function QuizStartScreen() {
               Cancel
             </button>
 
-            {((AttempLeft > 0 && isStudent) || isFacultyOrAdmin) &&
-            (
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/take`)}
-            >
-              Begin Quiz
-            </button>
-            )}
-
-            {AttempLeft <= 0 && isStudent &&
-            (
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/review`)}
-            >
-              View Correct Answers
-            </button>
+            {canBeginQuiz ? (
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/take`)}
+              >
+                Begin Quiz
+              </button>
+            ) : (
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/review`)}
+              >
+                View Correct Answers
+              </button>
             )}
 
             
