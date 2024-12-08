@@ -44,28 +44,49 @@
 /* New styling for the Kanbas layout */
 
 /* The main container for the Kanbas component */
+/* Main Kanbas container */
 #wd-kanbas {
   display: flex;
-  min-height: 150vh;
+  min-height: 100vh; /* Ensure it takes up the full viewport height */
 }
 
 /* Sidebar navigation */
 #wd-kanbas-navigation {
-  width: 120px; /* Set the fixed width for the sidebar */
+  width: 120px; /* Fixed width for the sidebar */
   background-color: black;
   color: white;
-  position: fixed; /* Keeps it always on the left side */
+  position: fixed; /* Keeps it on the left side */
   top: 0;
   bottom: 0;
-  min-height: 100vh; /* Ensure it spans the full height */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Use flex-start for better compatibility */
+  z-index: 1000; /* Ensure it's above other elements */
 }
 
-/* The content section next to the sidebar */
-#wd-kanbas .content {
-  flex-grow: 1; /* This allows the content to take up the remaining space */
-  margin-left: 120px; /* Same as the sidebar width to avoid overlap */
-  padding: 20px; /* Padding for better readability */
+/* Main content area */
+.wd-main-content-offset {
+  flex-grow: 1; /* Takes the remaining width dynamically */
+  margin-left: 120px; /* Matches sidebar width */
+  padding: 20px;
+  min-width: 0; /* Prevent overflow issues on narrow screens */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #wd-kanbas-navigation {
+    position: fixed;
+    width: 100%; /* Sidebar becomes a top bar */
+    height: 60px;
+    bottom: unset;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .wd-main-content-offset {
+    margin-left: 0; /* No margin on smaller screens */
+    margin-top: 60px; /* Add space below the top navigation bar */
+  }
 }
