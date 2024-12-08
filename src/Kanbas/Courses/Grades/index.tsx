@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Quiz } from '../Quizzes/types';
 import { RootState } from '../../store';
@@ -61,7 +61,11 @@ export default function Grades() {
 
               return (
                 <tr key={quiz._id}>
-                  <td className="fw-bold text-primary">{quiz.title}</td>
+                  <td className="fw-bold text-primary">
+                    <Link to={`/Kanbas/Courses/${cid}/quizzes/${quiz._id}/preview`} className="text-decoration-none">
+                      {quiz.title}
+                    </Link>
+                  </td>
                   <td>{submission ? submission.score : '-'}</td>
                   <td>{quiz.points}</td>
                   <td>{availableDate}</td>
