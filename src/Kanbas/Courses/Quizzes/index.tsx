@@ -130,19 +130,6 @@ export default function QuizList() {
             >
               + Quiz
             </Link>
-            <div className="dropdown">
-              <button 
-                className="btn btn-light" 
-                type="button" 
-                data-bs-toggle="dropdown"
-              >
-                <BsThreeDotsVertical />
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end">
-                <li><a className="dropdown-item" href="#">Sort by Due Date</a></li>
-                <li><a className="dropdown-item" href="#">Sort by Title</a></li>
-              </ul>
-            </div>
           </div>
         )}
       </div>
