@@ -77,8 +77,17 @@ const handleUpdateCourse = async () => {
 
 
  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-
+ const isAdmin = currentUser.role === 'ADMIN';
+ const isFaculty = currentUser.role === 'FACULTY';
  const isAdminOrFaculty = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
+ const isStudentOrFaulty = currentUser.role === 'STUDENT' || currentUser.role === 'FAULTY';
+ const hasFacultyPermission = (courseId: string) => {
+  if (isAdmin) return true;
+  if (isFaculty) {
+    return enrolledCourses.some(c => c._id === courseId);
+  }
+  return false;
+};
 
  useEffect(() => {
   if (Array.isArray(allCourses)) {
@@ -91,7 +100,7 @@ const handleUpdateCourse = async () => {
 
 
 const handleCourseClick = (courseId: string, event: React.MouseEvent) => {
-  if (currentUser.role === 'STUDENT' && !enrolledCourses.some(c => c._id === courseId)) {
+  if (isStudentOrFaulty && !enrolledCourses.some(c => c._id === courseId)) {
     event.preventDefault();
     return;
   }
@@ -118,7 +127,7 @@ const displayedCourses = isAdminOrFaculty
             {/* Header Section */}
             <div className="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm mb-4">
               <h1 className="h3 mb-0 text-dark">Dashboard</h1>
-              {currentUser.role === 'STUDENT' && (
+              {isStudentOrFaulty && (
                 <button
                   className="btn btn-outline-dark"
                   onClick={() => setEnrolling(!enrolling)}
@@ -222,7 +231,7 @@ const displayedCourses = isAdminOrFaculty
             {/* Courses Section */}
             <div className="bg-white p-4 rounded shadow-sm">
               <h2 className="h4 mb-4 text-dark">
-                {isAdminOrFaculty
+                {isAdmin
                   ? `Available Courses (${allCoursesCount})`
                   : (enrolling
                       ? `Available Courses (${availableCoursesCount})` 
@@ -283,38 +292,42 @@ const displayedCourses = isAdminOrFaculty
                             >
                               View Course
                             </Link>
-                            <button
-                              onClick={(event) => {
-                                event.preventDefault();
-                                setCourse(course);
-                              }}
-                              className="btn btn-sm"
-                              style={{ 
-                                backgroundColor: '#ffc107',
-                                color: 'black',
-                                transition: 'all 0.2s ease'
-                              }}
-                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#ffcd39'}
-                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ffc107'}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={(event) => {
-                                event.preventDefault();
-                                deleteCourse(course._id);
-                              }}
-                              className="btn btn-sm"
-                              style={{ 
-                                backgroundColor: '#dc3545',
-                                color: 'white',
-                                transition: 'all 0.2s ease'
-                              }}
-                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e35d6a'}
-                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#dc3545'}
-                            >
-                              Delete
-                            </button>
+                            {(isAdmin || hasFacultyPermission(course._id)) && (
+                              <>
+                                <button
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                    setCourse(course);
+                                  }}
+                                  className="btn btn-sm"
+                                  style={{ 
+                                    backgroundColor: '#ffc107',
+                                    color: 'black',
+                                    transition: 'all 0.2s ease'
+                                  }}
+                                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#ffcd39'}
+                                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ffc107'}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                    deleteCourse(course._id);
+                                  }}
+                                  className="btn btn-sm"
+                                  style={{ 
+                                    backgroundColor: '#dc3545',
+                                    color: 'white',
+                                    transition: 'all 0.2s ease'
+                                  }}
+                                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e35d6a'}
+                                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#dc3545'}
+                                >
+                                  Delete
+                                </button>
+                              </>
+                            )}
                           </div>
                         </div>
                       )}
