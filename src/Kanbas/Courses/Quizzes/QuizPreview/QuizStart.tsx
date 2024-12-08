@@ -25,13 +25,62 @@ export default function QuizStartScreen() {
     }
   }, [qid, currentUser._id, dispatch]);
 
-  const CountOfAttempt = submissions.length;
+  const currentDate = new Date();
+  const availableFromDate = quiz?.availableFromDate ? new Date(quiz.availableFromDate) : null;
+  const availableUntilDate = quiz?.availableUntilDate ? new Date(quiz.availableUntilDate) : null;
 
-  const AttempLeft =  quiz?.multipleAttempts ? quiz?.Attempts - CountOfAttempt : 1 - CountOfAttempt;
+  const CountOfAttempt = submissions.length;
+  const AttempLeft = quiz?.multipleAttempts ? quiz?.numberOfAttempts - CountOfAttempt : 1 - CountOfAttempt;
 
   const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
   const isStudent = currentUser.role === 'STUDENT';
-  const canBeginQuiz = (AttempLeft > 0 && isStudent) || isFacultyOrAdmin;
+  const isQuizPublished = quiz?.published;
+  const isAvailable =
+    (!availableFromDate || currentDate >= availableFromDate) &&
+    (!availableUntilDate || currentDate <= availableUntilDate);
+
+  const canBeginQuiz = isQuizPublished && isAvailable && (AttempLeft > 0 || isFacultyOrAdmin);
+
+  const renderActionButton = () => {
+    if (!isQuizPublished && isStudent) {
+      return <p className="text-muted">This quiz is not yet published.</p>;
+    }
+
+    if (isFacultyOrAdmin) {
+      return (
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/take`)}
+        >
+          {CountOfAttempt === 0 ? 'Begin Quiz' : 'Retake Quiz'}
+        </button>
+      );
+    }
+
+    if (isStudent && isAvailable) {
+      if (canBeginQuiz) {
+        return (
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/take`)}
+          >
+            {CountOfAttempt === 0 ? 'Begin Quiz' : 'Retake Quiz'}
+          </button>
+        );
+      }
+
+      return (
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/review`)}
+        >
+          View Correct Answers
+        </button>
+      );
+    }
+
+    return <p className="text-muted">Quiz is not available at this time.</p>;
+  };
 
   return (
     <div className="p-4" style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -89,29 +138,9 @@ export default function QuizStartScreen() {
               Cancel
             </button>
 
-            {canBeginQuiz ? (
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  console.log("Navigating to begin or retake quiz...");
-                  navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/take`);
-                }}
-              >
-                {CountOfAttempt === 0 ? "Begin Quiz" : "Retake Quiz"}
-              </button>
-            ) : (
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  console.log("Navigating to view correct answers...");
-                  navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/review`);
-                }}
-              >
-                View Correct Answers
-              </button>
-            )}
-  
+            {renderActionButton()}
           </div>
+
         </div>
       </div>
 

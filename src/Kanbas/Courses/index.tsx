@@ -21,6 +21,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
   const { cid: courseId } = useParams<{ cid: string }>();
   const course = courses.find((course) => course._id === courseId);
   const { pathname } = useLocation();
+
+  const isQuizPreview = pathname.includes("/Quizzes/") && pathname.includes("/preview");
   
   return (
     <div id="wd-courses">
@@ -31,9 +33,11 @@ export default function Courses({ courses }: { courses: any[]; }) {
       <hr />
 
       <div className="d-flex">
-        <div className="d-none d-md-block">
-          <CoursesNavigation />
-        </div>
+        {!isQuizPreview && (
+          <div className="d-none d-md-block">
+            <CoursesNavigation />
+          </div>
+        )}
         {/* Main Content Area */}
         <div className="flex-grow-1">
           <Routes>
