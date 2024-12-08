@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchQuestions } from './reducer';
+import { fetchQuestions, deleteQuestionThunk  } from './reducer';
 import { QuizQuestionRootState, QuizQuestion } from './questionTypes';
 import QuestionEditor from './Editor';
 
@@ -24,6 +24,10 @@ export default function QuizQuestions({ quizId , courseId}: QuizQuestionsProps) 
   const status = useSelector((state: QuizQuestionRootState) => 
     state.questionsReducer.status
   );
+
+  const handleDelete = (questionId: string) => {
+    dispatch(deleteQuestionThunk(questionId) as any);
+  };
 
   useEffect(() => {
     if (qid) {
@@ -165,21 +169,57 @@ export default function QuizQuestions({ quizId , courseId}: QuizQuestionsProps) 
                     {question.points} pts
                   </span>
                 </div>
-                <button
-                  onClick={() => {
-                    setEditingQuestionId(question._id);
-                    setShowEditor(true);
-                  }}
-                  style={{ 
-                    border: '1px solid #C7CDD1',
-                    padding: '4px 10px',
-                    background: 'white',
-                    cursor: 'pointer',
-                    fontSize: '14px'
-                  }}
-                >
-                  Edit
-                </button>
+                <div className="d-flex gap-2">
+                  <button
+                    onClick={() => {
+                      setEditingQuestionId(question._id);
+                      setShowEditor(true);
+                    }}
+                    className="btn btn-sm"
+                    style={{
+                      backgroundColor: 'white',
+                      border: '1px solid #dee2e6',
+                      borderRadius: '4px',
+                      padding: '4px 12px',
+                      fontSize: '14px',
+                      color: '#495057',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor = '#f8f9fa';
+                      e.currentTarget.style.borderColor = '#ced4da';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor = 'white';
+                      e.currentTarget.style.borderColor = '#dee2e6';
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(question._id)}
+                    className="btn btn-sm"
+                    style={{
+                      backgroundColor: 'white',
+                      border: '1px solid #dee2e6',
+                      borderRadius: '4px',
+                      padding: '4px 12px',
+                      fontSize: '14px',
+                      color: '#dc3545',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor = '#fee2e2';
+                      e.currentTarget.style.borderColor = '#dc3545';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor = 'white';
+                      e.currentTarget.style.borderColor = '#dee2e6';
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
 
               {/* Question Text */}
