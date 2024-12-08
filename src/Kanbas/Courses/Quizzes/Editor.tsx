@@ -338,7 +338,7 @@ export default function QuizEditor() {
                   if (!e.target.checked) {
                     setFormData(prev => ({
                       ...prev,
-                      timeLimit: 0
+                      timeLimit: e.target.checked ? 20 : 0
                     }));
                   }
                 }}
