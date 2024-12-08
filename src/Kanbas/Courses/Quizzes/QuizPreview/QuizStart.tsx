@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { QuizQuestionRootState } from '../QuizQuestions/questionTypes';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store';
+import { fetchSubmissions} from './QuizReview/reducer';
 
 export default function QuizStartScreen() {
   const { cid, qid } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   
   const quiz = useSelector((state: any) => 
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
@@ -14,6 +15,16 @@ export default function QuizStartScreen() {
 
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const { submissions, status } = useSelector((state: RootState) => state.submissionsReducer);
+
+  useEffect(() => {
+    if (qid && currentUser._id) {
+      dispatch(fetchSubmissions({ 
+        quizId: qid, 
+        studentId: currentUser._id 
+      }) as any);
+    }
+  }, [qid, currentUser._id, dispatch]);
+
   const CountOfAttempt = submissions.length;
 
   const AttempLeft =  quiz?.multipleAttempts ? quiz?.Attempts - CountOfAttempt : 1 - CountOfAttempt;
