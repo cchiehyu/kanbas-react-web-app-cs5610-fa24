@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchQuestions, deleteQuestionThunk  } from './reducer';
+import { fetchQuestions, deleteQuestionThunk, setQuestions } from './reducer';
 import { QuizQuestionRootState, QuizQuestion } from './questionTypes';
 import QuestionEditor from './Editor';
 
@@ -29,11 +29,31 @@ export default function QuizQuestions({ quizId , courseId}: QuizQuestionsProps) 
     dispatch(deleteQuestionThunk(questionId) as any);
   };
 
+  const [initialQuestions, setInitialQuestions] = useState<QuizQuestion[]>([]);
+
+  // In the useEffect where we fetch questions, store the initial state
   useEffect(() => {
     if (qid) {
-      dispatch(fetchQuestions(qid) as any);
+      dispatch(fetchQuestions(qid) as any).then((response: any) => {
+        // Store initial state when questions are first fetched
+        setInitialQuestions(response.payload);
+      });
     }
   }, [qid, dispatch]);
+
+  const handleCancel = () => {
+    if (window.confirm('Are you sure you want to cancel? All changes will be lost.')) {
+      if (initialQuestions.length > 0) {
+        dispatch(setQuestions(initialQuestions));
+      }
+      navigate(`/Kanbas/Courses/${courseId}/Quizzes/${qid}/details`);
+    }
+  };
+  
+  const handleSave = () => {
+    navigate(`/Kanbas/Courses/${courseId}/Quizzes/${qid}/details`);
+  };
+  
 
   const renderQuestionContent = (question: QuizQuestion) => {
     switch (question.questionType) {
@@ -260,7 +280,7 @@ export default function QuizQuestions({ quizId , courseId}: QuizQuestionsProps) 
 
       <div style={{ borderTop: '1px solid #C7CDD1', paddingTop: '16px' }}>
         <button
-          onClick={() => navigate(`/Kanbas/Courses/${courseId}/Quizzes`)}
+          onClick={handleCancel}
           style={{ 
             border: '1px solid #C7CDD1',
             padding: '6px 14px',
@@ -273,7 +293,7 @@ export default function QuizQuestions({ quizId , courseId}: QuizQuestionsProps) 
           Cancel
         </button>
         <button
-          onClick={() => {/* handle save */}}
+          onClick={handleSave}
           style={{ 
             border: 'none',
             padding: '6px 20px',

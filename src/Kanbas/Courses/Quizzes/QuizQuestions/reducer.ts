@@ -50,7 +50,13 @@ const initialState: QuestionsState = {
 const questionsSlice = createSlice({
   name: 'questions',
   initialState,
-  reducers: {},
+  reducers: {
+    setQuestions: (state, action: PayloadAction<QuizQuestion[]>) => {
+      state.questions = action.payload;
+      state.status = 'succeeded';
+      state.error = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       // Fetch questions
@@ -83,4 +89,5 @@ const questionsSlice = createSlice({
   }
 });
 
+export const { setQuestions } = questionsSlice.actions;
 export default questionsSlice.reducer;
