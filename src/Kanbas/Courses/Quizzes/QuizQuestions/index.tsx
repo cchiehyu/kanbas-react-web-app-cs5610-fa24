@@ -29,31 +29,13 @@ export default function QuizQuestions({ quizId , courseId}: QuizQuestionsProps) 
     dispatch(deleteQuestionThunk(questionId) as any);
   };
 
-  const [initialQuestions, setInitialQuestions] = useState<QuizQuestion[]>([]);
-
-  // In the useEffect where we fetch questions, store the initial state
   useEffect(() => {
     if (qid) {
       dispatch(fetchQuestions(qid) as any).then((response: any) => {
-        // Store initial state when questions are first fetched
-        setInitialQuestions(response.payload);
       });
     }
   }, [qid, dispatch]);
 
-  const handleCancel = () => {
-    if (window.confirm('Are you sure you want to cancel? All changes will be lost.')) {
-      if (initialQuestions.length > 0) {
-        dispatch(setQuestions(initialQuestions));
-      }
-      navigate(`/Kanbas/Courses/${courseId}/Quizzes/${qid}/details`);
-    }
-  };
-  
-  const handleSave = () => {
-    navigate(`/Kanbas/Courses/${courseId}/Quizzes/${qid}/details`);
-  };
-  
 
   const renderQuestionContent = (question: QuizQuestion) => {
     switch (question.questionType) {
