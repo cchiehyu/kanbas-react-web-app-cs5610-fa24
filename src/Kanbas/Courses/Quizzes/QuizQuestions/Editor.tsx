@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { QuizQuestion, QuizQuestionRootState } from './questionTypes';
 import MultipleChoiceEditor from './MultipleChoiceEditor';
 import TrueFalseEditor from './TrueFalseEditor';
 import FillBlankEditor from './FillBlankEditor';
+import {updateQuiz} from '../reducer';
+import * as quizClient from "../client";
+import { Quiz, QuizRootState } from '../types';
 
 export default function QuestionEditor({ questionId, onClose }: { questionId?: string; onClose: () => void }) {
   const question = useSelector((state: QuizQuestionRootState) =>
     questionId ? state.questionsReducer.questions.find(q => q._id === questionId) : undefined
   );
-
+  const dispatch = useDispatch();
   // Get all questions for the current quiz
   const quizQuestions = useSelector((state: QuizQuestionRootState) =>
     state.questionsReducer.questions.filter(q => q.quizId === question?.quizId)
@@ -17,6 +20,41 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
 
   const [questionType, setQuestionType] = useState(question?.questionType || 'MULTIPLE_CHOICE');
   const [points, setPoints] = useState(question?.points || 4);
+
+  const quiz = useSelector((state: QuizRootState) => 
+    state.quizzesReducer.quizzes.find((q: Quiz) => q._id === question?.quizId)
+  );
+
+    // Calculate quiz total points excluding current question if editing
+    const totalPoints = quizQuestions
+    .filter(q => q._id !== questionId)
+    .reduce((sum, q) => sum + (q.points || 0), 0) + points;
+
+  const handlePointsChange = async (newPoints: number) => {
+    setPoints(newPoints);
+
+    if (!quiz || !quiz._id) {
+      console.error("Quiz not found");
+      return;
+    }
+  
+  
+    dispatch(updateQuiz({
+      ...quiz,
+      points: totalPoints
+    }));
+
+    // Update in database
+    try {
+      await quizClient.updateQuiz(quiz._id, {
+        ...quiz,
+        points: totalPoints
+      });
+    } catch (error) {
+      console.error("Error updating quiz points:", error);
+    }
+  };
+  
 
   useEffect(() => {
     if (question?.questionType) {
@@ -44,10 +82,6 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
     }
   };
 
-  // Calculate quiz total points excluding current question if editing
-  const totalPoints = quizQuestions
-    .filter(q => q._id !== questionId)
-    .reduce((sum, q) => sum + (q.points || 0), 0) + points;
 
   return (
     <div className="p-4">
@@ -70,7 +104,8 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
               className="form-control"
               style={{ width: '60px' }}
               value={points}
-              onChange={(e) => setPoints(parseInt(e.target.value) || 0)}
+              onChange={(e) => handlePointsChange(parseInt(e.target.value) || 0)}
+              
             />
             <span className="ms-3">
               Quiz Total: {totalPoints} pts
