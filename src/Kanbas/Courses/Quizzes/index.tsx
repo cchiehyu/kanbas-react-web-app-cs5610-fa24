@@ -75,14 +75,14 @@ export default function QuizList() {
   const formatDate = (date: Date | string) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',  // Added year
       month: 'short',
-      day: 'numeric',
+      day: 'numeric', 
       hour: 'numeric',
       minute: 'numeric',
       hour12: true
     });
-  };
-  
+   };
 
   const getAvailabilityStatus = (quiz: Quiz): string => {
     const now = new Date();
