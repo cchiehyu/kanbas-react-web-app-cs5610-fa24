@@ -6,76 +6,101 @@ import { RootState } from '../../store';
 
 export default function Grades() {
   const { cid } = useParams();
-  
-  const { currentUser } = useSelector((state: RootState) => 
+
+  const { currentUser } = useSelector((state: RootState) =>
     state.accountReducer
   );
 
   // Get all quizzes for this course
-  const quizzes = useSelector((state: RootState) => 
-    state.quizzesReducer.quizzes.filter(q => q.course === cid)
+  const quizzes = useSelector((state: RootState) =>
+    state.quizzesReducer.quizzes.filter((q) => q.course === cid)
   );
 
   // Get submissions from state
-  const { submissions } = useSelector((state: RootState) => 
+  const { submissions } = useSelector((state: RootState) =>
     state.submissionsReducer
   );
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-      <h3>Course Grades</h3>
+    <div className="container-fluid mt-5">
+      <div className="d-flex justify-content-between align-items-center">
+        <div>
+          <h3 className="text-primary">Course Grades</h3>
+          <p className="text-muted mb-0">
+            {currentUser?.name ? `Grades for ${currentUser.name}` : "Your Grades"}
+          </p>
+        </div>
+        <div>
+          <span className="badge bg-secondary text-light">{cid}</span>
+        </div>
+      </div>
 
-      <div className="mt-4">
-        <table className="table">
-          <thead>
+      <div className="table-responsive mt-4">
+        <table className="table table-hover border">
+          <thead className="bg-dark text-light">
             <tr>
               <th>Quiz</th>
               <th>Score</th>
               <th>Out Of</th>
+              <th>Available Date</th>
+              <th>Due Date</th>
               <th>Percentage</th>
             </tr>
           </thead>
           <tbody>
-            {quizzes.map(quiz => {
-              const submission = submissions.find(s => s.quizId === quiz._id);
+            {quizzes.map((quiz) => {
+              const submission = submissions.find((s) => s.quizId === quiz._id);
+
+              // Ensure dates are valid and convert to readable strings
+              const availableDate = quiz.availableFromDate
+                ? new Date(quiz.availableFromDate).toDateString()
+                : '-';
+              const dueDate = quiz.dueDate
+                ? new Date(quiz.dueDate).toDateString()
+                : '-';
+
               return (
                 <tr key={quiz._id}>
-                  <td>{quiz.title}</td>
+                  <td className="fw-bold text-primary">{quiz.title}</td>
                   <td>{submission ? submission.score : '-'}</td>
                   <td>{quiz.points}</td>
+                  <td>{availableDate}</td>
+                  <td>{dueDate}</td>
                   <td>
                     {submission ? (
-                      <span style={{ 
-                        color: submission.percentage >= 70 ? '#2D8C3C' : '#D12B1F'
-                      }}>
+                      <span
+                        className={`fw-bold ${
+                          submission.percentage >= 70 ? "text-success" : "text-danger"
+                        }`}
+                      >
                         {submission.percentage}%
                       </span>
-                    ) : '-'}
+                    ) : (
+                      '-'
+                    )}
                   </td>
                 </tr>
               );
             })}
           </tbody>
           <tfoot>
-            <tr>
-              <td><strong>Total</strong></td>
+            <tr className="fw-bold">
+              <td>Total</td>
               <td>
                 {submissions.reduce((sum: number, sub) => sum + sub.score, 0)}
               </td>
               <td>
                 {quizzes.reduce((sum: number, quiz: Quiz) => sum + quiz.points, 0)}
               </td>
-              <td>
-                {submissions.length > 0 ? 
-                  Math.round(
-                    (submissions.reduce((sum: number, sub) => sum + sub.score, 0) / 
-                    quizzes.reduce((sum: number, quiz: Quiz) => sum + quiz.points, 0)
-                    ) * 100
-                  ) + '%' 
-                  : '-'
-                }
+              <td colSpan={3}>
+                {submissions.length > 0
+                  ? Math.round(
+                      (submissions.reduce((sum: number, sub) => sum + sub.score, 0) /
+                        quizzes.reduce((sum: number, quiz: Quiz) => sum + quiz.points, 0)) *
+                        100
+                    ) + '%'
+                  : '-'}
               </td>
-              <td></td>
             </tr>
           </tfoot>
         </table>
