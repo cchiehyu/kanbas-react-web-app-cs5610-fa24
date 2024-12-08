@@ -60,7 +60,7 @@ export default function PeopleTable({ users = [] }: { users?: any[] }) {
     <div id="wd-people-table" className="container-fluid px-0">
       <PeopleDetails />
       <h3>People: </h3>
-      {users.length === 0 ? (
+      {displayUsers.length === 0 ? (
         <p>No users found.</p>
       ) : (
         <div className="table-responsive-xl">
@@ -105,7 +105,7 @@ export default function PeopleTable({ users = [] }: { users?: any[] }) {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {courseUsers.map((user) => (
                 <tr key={user._id}>
                   <td className="d-none d-md-table-cell text-nowrap">
                     <small className="text-muted">ID: {user._id}</small>
