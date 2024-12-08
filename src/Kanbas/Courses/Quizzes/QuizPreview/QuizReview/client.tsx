@@ -12,7 +12,7 @@ export const createSubmission = async (quizId: string, submission: Partial<QuizS
 };
 
 export const fetchSubmissions = async (quizId: string, studentId: string) => {
-  const response = await fetch(`${API_BASE}/quizzes/api/${quizId}/submissions/${studentId}`);
+  const response = await fetch(`${API_BASE}/quizzes/${quizId}/submissions/${studentId}`);
   return response.json();
 };
 
