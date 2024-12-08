@@ -136,9 +136,16 @@ export default function FillBlankEditor({ questionId, onClose }: { questionId?: 
 
       <div className="d-flex justify-content-start gap-2">
         <button className="btn btn-light" onClick={onClose}>Cancel</button>
-        <button 
-          className="btn btn-danger"
+        <button
           onClick={handleSubmit}
+          style={{ 
+            border: 'none',
+            padding: '6px 20px',
+            background: '#DC332F',
+            color: 'white',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
         >
           {questionId ? 'Update Question' : 'Create Question'}
         </button>

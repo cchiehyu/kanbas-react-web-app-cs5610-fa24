@@ -13,19 +13,22 @@ export default function MultipleChoiceEditor({ questionId, onClose }: { question
   );
 
   const [questionText, setQuestionText] = useState(question?.question || '');
-  const [answers, setAnswers] = useState(
-    question?.choices || [
-      { text: '', isCorrect: false },
-      { text: '', isCorrect: false },
-      { text: '', isCorrect: false },
-      { text: '', isCorrect: true }
-    ]
+  const [answers, setAnswers] = useState(() => 
+    question?.choices 
+      ? [...question.choices.map(choice => ({ ...choice }))]
+      : [
+          { text: '', isCorrect: false },
+          { text: '', isCorrect: false },
+          { text: '', isCorrect: false },
+          { text: '', isCorrect: true }
+        ]
   );
+  
 
   useEffect(() => {
     if (question) {
       setQuestionText(question.question);
-      setAnswers(question.choices || []);
+      setAnswers([...(question.choices || []).map(choice => ({ ...choice }))]);
     }
   }, [question]);
 
