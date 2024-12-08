@@ -327,26 +327,24 @@ export default function QuizEditor() {
           </div>
   
           <div className="mb-3">
-            <div className="form-check mb-2">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="timeLimit"
-                checked={showTimeLimit}
-                onChange={(e) => {
-                  setShowTimeLimit(e.target.checked);
-                  if (!e.target.checked) {
-                    setFormData(prev => ({
-                      ...prev,
-                      timeLimit: e.target.checked ? 20 : 0
-                    }));
-                  }
-                }}
-              />
-              <label className="form-check-label" htmlFor="timeLimit">
-                Time Limit
-              </label>
-            </div>
+          <div className="form-check mb-2">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="timeLimit"
+              checked={showTimeLimit}
+              onChange={(e) => {
+                setShowTimeLimit(e.target.checked);
+                setFormData(prev => ({
+                  ...prev,
+                  timeLimit: e.target.checked ? 20 : 0
+                }));
+              }}
+            />
+            <label className="form-check-label" htmlFor="timeLimit">
+              Time Limit
+            </label>
+          </div>
             {showTimeLimit && (
               <div className="ps-4 d-flex align-items-center gap-2">
                 <input

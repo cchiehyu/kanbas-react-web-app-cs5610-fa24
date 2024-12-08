@@ -80,7 +80,7 @@ const handleUpdateCourse = async () => {
  const isAdmin = currentUser.role === 'ADMIN';
  const isFaculty = currentUser.role === 'FACULTY';
  const isAdminOrFaculty = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
- const isStudentOrFaulty = currentUser.role === 'STUDENT' || currentUser.role === 'FAULTY';
+ const isStudentOrFaulty = currentUser.role === 'STUDENT' || currentUser.role === 'FACULTY';
  const hasFacultyPermission = (courseId: string) => {
   if (isAdmin) return true;
   if (isFaculty) {
@@ -256,7 +256,7 @@ const displayedCourses = isAdminOrFaculty
                             alt={course.name}
                           />
                           <div className="position-absolute top-0 end-0 p-2">
-                            {currentUser.role === 'STUDENT' && (
+                            {isStudentOrFaulty && (
                               <button
                                 className={`btn ${enrolledCourses.some(c => c._id === course._id) ? 'btn-danger' : 'btn-success'} btn-sm`}
                                 onClick={(e) => {
