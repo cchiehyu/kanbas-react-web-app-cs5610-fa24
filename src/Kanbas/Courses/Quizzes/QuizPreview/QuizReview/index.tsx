@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QuizSubmission, QuizSubmissionAnswer } from './QuizSubmissionType';
 import { RootState } from '../../../../store';
+import { fetchSubmissions, updateScores } from './reducer';
 
 const QuizReview = () => {
   const { qid, cid } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   
-  const [submission, setSubmission] = useState<QuizSubmission | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [editingScores, setEditingScores] = useState(false);
   const [editedPoints, setEditedPoints] = useState<{[key: string]: number}>({});
   
@@ -17,160 +19,193 @@ const QuizReview = () => {
   );
 
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const { submissions, status } = useSelector((state: RootState) => state.submissionsReducer);
+  const currentSubmission = submissions[0];
+
   const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
 
   useEffect(() => {
-    const fetchSubmission = async () => {
-      const response = await fetch(`/api/quizzes/${qid}/submissions/${currentUser._id}`);
-      const submissions = await response.json();
-      if (submissions.length > 0) {
-        setSubmission(submissions[0]);
-        // Initialize edited points with current points
-        const points: {[key: string]: number} = {};
-        submissions[0].answers.forEach((answer: QuizSubmissionAnswer) => {
-          points[answer.questionId] = answer.points;
-        });
-        setEditedPoints(points);
-      }
-    };
-    
-    fetchSubmission();
-  }, [qid, currentUser._id]);
+    if (qid && currentUser._id) {
+      dispatch(fetchSubmissions({ 
+        quizId: qid, 
+        studentId: currentUser._id 
+      }) as any);
+    }
+  }, [qid, currentUser._id, dispatch]);
+
+  useEffect(() => {
+    if (currentSubmission) {
+      const points: {[key: string]: number} = {};
+      currentSubmission.answers.forEach((answer: QuizSubmissionAnswer) => {
+        points[answer.questionId] = answer.points;
+      });
+      setEditedPoints(points);
+    }
+  }, [currentSubmission]);
 
   const handlePointsChange = (questionId: string, points: number) => {
     setEditedPoints(prev => ({
       ...prev,
-      [questionId]: points
+      [questionId]: Math.max(0, Math.min(points, 
+        currentSubmission.answers.find(a => a.questionId === questionId)?.maxPoints || 0))
     }));
   };
 
   const saveScores = async () => {
-    if (!submission) return;
-
-    const updates = {
-      answers: submission.answers.map(answer => ({
-        questionId: answer.questionId,
-        points: editedPoints[answer.questionId]
-      }))
-    };
+    if (!currentSubmission) return;
 
     try {
-      const response = await fetch(`/api/submissions/${submission._id}/scores`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          updates,
-          role: currentUser.role
-        }),
-      });
+      const updates = {
+        answers: currentSubmission.answers.map(answer => ({
+          questionId: answer.questionId,
+          points: editedPoints[answer.questionId]
+        })),
+        role: currentUser.role
+      };
 
-      if (response.ok) {
-        const updatedSubmission = await response.json();
-        setSubmission(updatedSubmission);
-        setEditingScores(false);
-      }
+      await dispatch(updateScores({
+        submissionId: currentSubmission._id,
+        updates: updates
+      }) as any);
+      setEditingScores(false);
     } catch (error) {
       console.error('Error updating scores:', error);
     }
   };
 
-  const renderAnswer = (answer: QuizSubmissionAnswer) => {
-    const renderPoints = () => (
-      <div className="mt-2 text-sm">
-        <span className="font-semibold">Points: </span>
-        {editingScores && isFacultyOrAdmin ? (
-          <input
-            type="number"
-            value={editedPoints[answer.questionId]}
-            onChange={(e) => handlePointsChange(answer.questionId, Number(e.target.value))}
-            min="0"
-            max={answer.maxPoints}
-            className="w-16 px-2 py-1 border rounded"
-          />
-        ) : (
-          `${answer.points} / ${answer.maxPoints}`
-        )}
+  const renderAttemptHistory = () => {
+    if (!submissions?.length) return null;
+    
+    return (
+      <div className="mb-4">
+        <h3 className="mb-3">Attempt History</h3>
+        <div className="table-responsive">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Attempt</th>
+                <th>Time</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submissions.map((submission) => (
+                <tr key={submission._id}>
+                  <td>Attempt {submission.attemptNumber}</td>
+                  <td>{submission.timeSpent} minutes</td>
+                  <td>{submission.score} out of {submission.maxScore}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
+  };
 
-    switch (answer.questionType) {
-      case 'MULTIPLE_CHOICE':
-        return (
-          <div className="mb-6 p-4 border rounded">
-            <h4 className="font-bold mb-2">{answer.question}</h4>
+  const renderQuestion = (answer: QuizSubmissionAnswer) => (
+    <div className="card mb-4">
+      <div className="card-header d-flex justify-content-between align-items-center">
+        <span>Question {currentQuestionIndex + 1}</span>
+        <span>{answer.points} / {answer.maxPoints} pts</span>
+      </div>
+      <div className="card-body">
+        <div className="mb-3">{answer.question}</div>
+        
+        {answer.questionType === 'MULTIPLE_CHOICE' && (
+          <div>
             {answer.choices?.map((choice) => (
               <div 
                 key={choice.text}
-                className={`p-2 mb-2 rounded ${
-                  choice.isCorrect ? 'bg-green-100' :
-                  choice.text === answer.userAnswer ? 'bg-red-100' : 'bg-gray-50'
+                className={`p-2 mb-2 border rounded ${
+                  choice.isCorrect ? 'bg-success bg-opacity-10' :
+                  choice.text === answer.userAnswer ? 'bg-danger bg-opacity-10' : ''
                 }`}
               >
-                <span className="mr-2">
-                  {choice.isCorrect ? '✓' : 
-                   choice.text === answer.userAnswer ? '✗' : ''}
-                </span>
-                {choice.text}
+                <div className="d-flex align-items-start">
+                  <span className="me-2">
+                    {choice.isCorrect ? '✓' : 
+                     choice.text === answer.userAnswer ? '✗' : ''}
+                  </span>
+                  <span>{choice.text}</span>
+                </div>
               </div>
             ))}
-            {renderPoints()}
           </div>
-        );
+        )}
 
-      case 'TRUE_FALSE':
-        return (
-          <div className="mb-6 p-4 border rounded">
-            <h4 className="font-bold mb-2">{answer.question}</h4>
-            <div className={`p-2 mb-2 rounded ${answer.isCorrect ? 'bg-green-100' : 'bg-red-100'}`}>
-              <div>Your answer: {String(answer.userAnswer)}</div>
-              <div>Correct answer: {String(answer.correctAnswer)}</div>
+        {(answer.questionType === 'TRUE_FALSE' || answer.questionType === 'FILL_BLANK') && (
+          <div>
+            <div className={`p-2 mb-2 border rounded ${
+              answer.isCorrect ? 'bg-success bg-opacity-10' : 'bg-danger bg-opacity-10'
+            }`}>
+              <div className="small text-muted">Your answer:</div>
+              <div>{String(answer.userAnswer)}</div>
             </div>
-            {renderPoints()}
-          </div>
-        );
-
-      case 'FILL_BLANK':
-        return (
-          <div className="mb-6 p-4 border rounded">
-            <h4 className="font-bold mb-2">{answer.question}</h4>
-            <div className={`p-2 mb-2 rounded ${answer.isCorrect ? 'bg-green-100' : 'bg-red-100'}`}>
-              <div>Your answer: {String(answer.userAnswer)}</div>
-              <div>Correct answer: {String(answer.correctAnswer)}</div>
+            <div className="p-2 border rounded bg-success bg-opacity-10">
+              <div className="small text-muted">Correct answer:</div>
+              <div>{String(answer.correctAnswer)}</div>
             </div>
-            {renderPoints()}
           </div>
-        );
-    }
-  };
+        )}
 
-  if (!submission) {
-    return <div>Loading...</div>;
+        {editingScores && isFacultyOrAdmin && (
+          <div className="mt-3">
+            <label className="form-label">Points:</label>
+            <input
+              type="number"
+              className="form-control w-auto"
+              value={editedPoints[answer.questionId]}
+              onChange={(e) => handlePointsChange(answer.questionId, Number(e.target.value))}
+              min="0"
+              max={answer.maxPoints}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  if (status === 'loading') {
+    return (
+      <div className="d-flex justify-content-center p-4">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
   }
 
+  if (!currentSubmission) {
+    return <div className="p-4 text-center">No submission found.</div>;
+  }
+
+  const currentAnswer = currentSubmission.answers[currentQuestionIndex];
+
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">{quiz?.title} - Review</h2>
-        <div className="text-lg">
-          Score: {submission.percentage}% ({submission.score} / {submission.maxScore} points)
-        </div>
+    <div className="container py-4">
+      {isFacultyOrAdmin && renderAttemptHistory()}
+
+      <div className="mb-4">
+        <h2>{quiz?.title}</h2>
+        <div>Score for this quiz: {currentSubmission.score} out of {currentSubmission.maxScore}</div>
+        <div>Submitted {new Date(currentSubmission.endTime).toLocaleString()}</div>
+        <div>This attempt took {currentSubmission.timeSpent} minutes.</div>
       </div>
 
       {isFacultyOrAdmin && (
         <div className="mb-4">
           {editingScores ? (
-            <div className="space-x-2">
+            <div className="btn-group">
               <button
                 onClick={saveScores}
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                className="btn btn-success"
               >
                 Save Scores
               </button>
               <button
                 onClick={() => setEditingScores(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                className="btn btn-secondary"
               >
                 Cancel
               </button>
@@ -178,7 +213,7 @@ const QuizReview = () => {
           ) : (
             <button
               onClick={() => setEditingScores(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="btn btn-primary"
             >
               Edit Scores
             </button>
@@ -186,16 +221,47 @@ const QuizReview = () => {
         </div>
       )}
 
-      <div className="mb-6">
-        {submission.answers.map((answer) => renderAnswer(answer))}
+      {renderQuestion(currentAnswer)}
+
+      <div className="d-flex justify-content-between align-items-center">
+        <button
+          onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
+          disabled={currentQuestionIndex === 0}
+          className="btn btn-outline-secondary"
+        >
+          Previous
+        </button>
+
+        <div>
+          Question {currentQuestionIndex + 1} of {currentSubmission.answers.length}
+        </div>
+
+        <button
+          onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+          disabled={currentQuestionIndex === currentSubmission.answers.length - 1}
+          className="btn btn-outline-secondary"
+        >
+          Next
+        </button>
       </div>
 
-      <button
-        onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes`)}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Return to Quizzes
-      </button>
+      <div className="mt-4">
+        <button
+          onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes`)}
+          className="btn btn-outline-primary"
+        >
+          Return to Quizzes
+        </button>
+        
+        {quiz?.multipleAttempts && (
+          <button
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/take`)}
+            className="btn btn-primary ms-2"
+          >
+            Take Quiz Again
+          </button>
+        )}
+      </div>
     </div>
   );
 };

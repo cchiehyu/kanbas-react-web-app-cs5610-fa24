@@ -49,21 +49,21 @@ export default function QuizPreview() {
     });
   };
 
-  // Timer effect
   useEffect(() => {
     if (quiz?.timeLimit) {
       setTimeRemaining(quiz.timeLimit * 60);
       const interval = setInterval(() => {
         setTimeRemaining(prev => {
-          if (prev <= 0) {
+          if (prev <= 1) {
             clearInterval(interval);
+            handleQuizSubmit();
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
       setIntervalId(interval);
-
+  
       return () => clearInterval(interval);
     }
   }, [quiz]);
@@ -131,41 +131,58 @@ export default function QuizPreview() {
     try {
       const scoreResult = calculateSubmissionScore(userAnswers, questions);
       
-      // Transform userAnswers to match the expected type
-      const processedAnswers = userAnswers.map(userAnswer => {
-        const question = questions.find(q => q._id === userAnswer.questionId);
-        if (!question) return null;
-  
+      // Transform ALL questions to answers, including unanswered ones
+      const processedAnswers = questions.map(question => {
+        const userAnswer = userAnswers.find(a => a.questionId === question._id);
         let correctAnswer: string | boolean = '';
         let isCorrect = false;
+        let userAnswerValue: string | boolean = ''; // Default empty answer
   
-        switch (question.questionType) {
-          case 'MULTIPLE_CHOICE':
-            const correctChoice = question.choices?.find(c => c.isCorrect);
-            correctAnswer = correctChoice?.text || '';
-            isCorrect = correctChoice?.text === userAnswer.answer;
-            break;
+        if (userAnswer) {
+          switch (question.questionType) {
+            case 'MULTIPLE_CHOICE':
+              const correctChoice = question.choices?.find(c => c.isCorrect);
+              correctAnswer = correctChoice?.text || '';
+              isCorrect = correctChoice?.text === userAnswer.answer;
+              userAnswerValue = userAnswer.answer;
+              break;
   
-          case 'TRUE_FALSE':
-            correctAnswer = question.correctAnswer || false;
-            isCorrect = userAnswer.answer === question.correctAnswer;
-            break;
+            case 'TRUE_FALSE':
+              correctAnswer = question.correctAnswer || false;
+              isCorrect = userAnswer.answer === question.correctAnswer;
+              userAnswerValue = userAnswer.answer;
+              break;
   
-          case 'FILL_BLANK':
-            correctAnswer = question.correctAnswers?.[0]?.text || '';
-            isCorrect = question.correctAnswers?.some(ans => {
-              const userAns = userAnswer.answer as string;
-              return ans.caseSensitive 
-                ? ans.text === userAns
-                : ans.text.toLowerCase() === userAns.toLowerCase();
-            }) || false;
-            break;
+            case 'FILL_BLANK':
+              correctAnswer = question.correctAnswers?.[0]?.text || '';
+              isCorrect = question.correctAnswers?.some(ans => {
+                const userAns = userAnswer.answer as string;
+                return ans.caseSensitive 
+                  ? ans.text === userAns
+                  : ans.text.toLowerCase() === userAns.toLowerCase();
+              }) || false;
+              userAnswerValue = userAnswer.answer;
+              break;
+          }
+        } else {
+          // Set default values for unanswered questions
+          switch (question.questionType) {
+            case 'MULTIPLE_CHOICE':
+              correctAnswer = question.choices?.find(c => c.isCorrect)?.text || '';
+              break;
+            case 'TRUE_FALSE':
+              correctAnswer = question.correctAnswer || false;
+              break;
+            case 'FILL_BLANK':
+              correctAnswer = question.correctAnswers?.[0]?.text || '';
+              break;
+          }
         }
   
         return {
-          questionId: userAnswer.questionId,
+          questionId: question._id,
           questionType: question.questionType,
-          userAnswer: userAnswer.answer,
+          userAnswer: userAnswerValue,
           correctAnswer,
           points: isCorrect ? question.points : 0,
           maxPoints: question.points,
@@ -173,7 +190,7 @@ export default function QuizPreview() {
           question: question.question,
           choices: question.choices
         };
-      }).filter((answer): answer is NonNullable<typeof answer> => answer !== null);
+      });
   
       const submissionData = {
         quizId: qid,
@@ -207,7 +224,6 @@ export default function QuizPreview() {
       console.error('Error submitting quiz:', error);
     }
   };
-
   
 
   if (status === 'loading') {
