@@ -15,6 +15,7 @@ export default function QuizStartScreen() {
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const { submissions, status } = useSelector((state: RootState) => state.submissionsReducer);
   const CountOfAttempt = submissions.length;
+
   const AttempLeft =  quiz?.multipleAttempts ? quiz?.Attempts - CountOfAttempt : 1 - CountOfAttempt;
 
   const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
@@ -56,7 +57,7 @@ export default function QuizStartScreen() {
               <div className="col-6 col-md-3">
                 <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '8px' }}>Attempts Left</div>
                 <div style={{ fontSize: '0.9rem', color: '#555' }}>
-                  {quiz?.multipleAttempts ? AttempLeft || 'Unlimited' : '1'}
+                  {AttempLeft}
                 </div>
               </div>
               <div className="col-6 col-md-3">
@@ -80,20 +81,25 @@ export default function QuizStartScreen() {
             {canBeginQuiz ? (
               <button
                 className="btn btn-primary"
-                onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/take`)}
+                onClick={() => {
+                  console.log("Navigating to begin or retake quiz...");
+                  navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/take`);
+                }}
               >
-                Begin Quiz
+                {CountOfAttempt === 0 ? "Begin Quiz" : "Retake Quiz"}
               </button>
             ) : (
               <button
                 className="btn btn-primary"
-                onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/review`)}
+                onClick={() => {
+                  console.log("Navigating to view correct answers...");
+                  navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview/review`);
+                }}
               >
                 View Correct Answers
               </button>
             )}
-
-            
+  
           </div>
         </div>
       </div>
