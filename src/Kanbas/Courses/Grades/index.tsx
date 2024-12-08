@@ -50,8 +50,12 @@ export default function Grades() {
           <tbody>
             {quizzes.map((quiz) => {
               const submission = submissions.find((s) => s.quizId === quiz._id);
+              
+              // Display earned/total points
+              const earnedPoints = submission ? submission.score : '-';
+              const maxPoints = quiz.points;
+              const pointsDisplay = submission ? `${earnedPoints}/${maxPoints}` : `-/${maxPoints}`;
 
-              // Ensure dates are valid and convert to readable strings
               const availableDate = quiz.availableFromDate
                 ? new Date(quiz.availableFromDate).toDateString()
                 : '-';
@@ -66,22 +70,18 @@ export default function Grades() {
                       {quiz.title}
                     </Link>
                   </td>
-                  <td>{submission ? submission.score : '-'}</td>
-                  <td>{quiz.points}</td>
+                  <td>{pointsDisplay}</td>
+                  <td>{maxPoints}</td>
                   <td>{availableDate}</td>
                   <td>{dueDate}</td>
                   <td>
                     {submission ? (
-                      <span
-                        className={`fw-bold ${
-                          submission.percentage >= 70 ? "text-success" : "text-danger"
-                        }`}
-                      >
+                      <span className={`fw-bold ${
+                        submission.percentage >= 70 ? "text-success" : "text-danger"
+                      }`}>
                         {submission.percentage}%
                       </span>
-                    ) : (
-                      '-'
-                    )}
+                    ) : '-'}
                   </td>
                 </tr>
               );

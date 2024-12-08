@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { QuizQuestion, QuizQuestionRootState } from './questionTypes';
 import MultipleChoiceEditor from './MultipleChoiceEditor';
@@ -6,14 +6,18 @@ import TrueFalseEditor from './TrueFalseEditor';
 import FillBlankEditor from './FillBlankEditor';
 
 export default function QuestionEditor({ questionId, onClose }: { questionId?: string; onClose: () => void }) {
-
   const question = useSelector((state: QuizQuestionRootState) =>
     questionId ? state.questionsReducer.questions.find(q => q._id === questionId) : undefined
   );
 
+  // Get all questions for the current quiz
+  const quizQuestions = useSelector((state: QuizQuestionRootState) =>
+    state.questionsReducer.questions.filter(q => q.quizId === question?.quizId)
+  );
+
   const [questionType, setQuestionType] = useState(question?.questionType || 'MULTIPLE_CHOICE');
   const [points, setPoints] = useState(question?.points || 4);
-  
+
   useEffect(() => {
     if (question?.questionType) {
       setQuestionType(question.questionType);
@@ -27,7 +31,7 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
       points,
       setPoints
     };
-  
+
     switch (questionType) {
       case 'MULTIPLE_CHOICE':
         return <MultipleChoiceEditor {...editorProps} />;
@@ -39,6 +43,11 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
         return <MultipleChoiceEditor {...editorProps} />;
     }
   };
+
+  // Calculate quiz total points excluding current question if editing
+  const totalPoints = quizQuestions
+    .filter(q => q._id !== questionId)
+    .reduce((sum, q) => sum + (q.points || 0), 0) + points;
 
   return (
     <div className="p-4">
@@ -55,14 +64,17 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
             <option value="FILL_BLANK">Fill in the Blank</option>
           </select>
           <div className="d-flex align-items-center">
-            <span className="me-2">pts:</span>
+            <span className="me-2">Question Points:</span>
             <input
               type="number"
               className="form-control"
               style={{ width: '60px' }}
               value={points}
               onChange={(e) => setPoints(parseInt(e.target.value) || 0)}
-              />
+            />
+            <span className="ms-3">
+              Quiz Total: {totalPoints} pts
+            </span>
           </div>
         </div>
       </div>

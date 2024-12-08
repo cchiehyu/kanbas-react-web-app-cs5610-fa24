@@ -4,8 +4,8 @@ import  QuizQuestions  from './QuizQuestions//index';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addQuiz, updateQuiz, togglePublishQuiz } from './reducer';;
-
+import { QuizQuestionRootState } from './QuizQuestions/questionTypes';
+import { addQuiz, updateQuiz, togglePublishQuiz } from './reducer';
 
 export default function QuizEditor() {
   const { cid, qid } = useParams();
@@ -16,6 +16,16 @@ export default function QuizEditor() {
   const quiz = useSelector((state: QuizRootState) => 
     state.quizzesReducer.quizzes.find((q : Quiz) => q._id === qid)
   );
+
+  // Get all questions for the current quiz
+  const quizQuestions = useSelector((state: QuizQuestionRootState) =>
+    state.questionsReducer.questions.filter(q => q.quizId === qid)
+  );
+
+  const totalPoints = quizQuestions
+  .filter(q => q._id !== qid)
+  .reduce((sum, q) => sum + (q.points || 0), 0);
+  
 
   const [activeTab, setActiveTab] = useState<'details' | 'questions'>('details');
 
@@ -46,7 +56,7 @@ export default function QuizEditor() {
       setFormData({
         title: quiz.title || '',
         description: quiz.description || '',
-        points: quiz.points || 0,
+        points: totalPoints || 0,
         dueDate: quiz.dueDate ? new Date(quiz.dueDate) : new Date(),
         availableFromDate: quiz.availableFromDate ? new Date(quiz.availableFromDate) : new Date(),
         availableUntilDate: quiz.availableUntilDate ? new Date(quiz.availableUntilDate) : new Date(),
@@ -74,7 +84,8 @@ export default function QuizEditor() {
       if (quiz) {
         await client.updateQuiz(quiz._id, {
           ...quiz,
-          published: !quiz.published
+          published: !quiz.published,
+          points: totalPoints
         });
       }
     } catch (error) {
