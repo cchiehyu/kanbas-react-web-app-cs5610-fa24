@@ -218,15 +218,17 @@ export default function QuizList() {
                     <span>|</span>
                     <span>Due {formatDate(quiz.dueDate)}</span>
                     <span>|</span>
-                    {currentUser.role === 'STUDENT' ? (
-                      <span>
-                        Score: {getStudentScore(quiz._id) !== undefined 
-                          ? `${getStudentScore(quiz._id)}/${quiz.points}` 
-                          : 'Not submitted'}
-                      </span>
-                    ) : (
-                      <span>{quiz.points} pts</span>
-                    )}
+                    <span>Points {quiz.points}</span>
+                    {currentUser.role === 'STUDENT' && (
+                      <>
+                        <span>|</span>
+                        <span>
+                          Score: {getStudentScore(quiz._id) !== undefined 
+                            ? `${getStudentScore(quiz._id)}/${(quiz.points)}` 
+                            : 'Not submitted'}
+                        </span>
+                      </>
+                      )}
                     <span>|</span>
                     <span>{quiz.numberOfQuestions} Questions</span>
                   </div>
