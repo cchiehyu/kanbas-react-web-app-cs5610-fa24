@@ -4,7 +4,18 @@ import { QuizQuestionForm, QuizQuestionRootState } from './questionTypes';
 import { createQuestion, fetchQuestions, updateQuestionThunk } from './reducer';
 import { useParams } from 'react-router-dom';
 
-export default function FillBlankEditor({ questionId, onClose }: { questionId?: string; onClose: () => void }) {
+
+export default function FillBlankEditor({ 
+  questionId, 
+  onClose,
+  points,
+  setPoints 
+}: { 
+  questionId?: string; 
+  onClose: () => void;
+  points: number;
+  setPoints: (points: number) => void;
+}) {
   const dispatch = useDispatch();
   const { qid } = useParams();
 
@@ -28,7 +39,7 @@ export default function FillBlankEditor({ questionId, onClose }: { questionId?: 
     const questionData = {
       questionType: 'FILL_BLANK' as const,
       question: questionText,
-      points: 4,
+      points: points,
       correctAnswers: answers.filter(answer => answer.text.trim() !== '') 
     };
 

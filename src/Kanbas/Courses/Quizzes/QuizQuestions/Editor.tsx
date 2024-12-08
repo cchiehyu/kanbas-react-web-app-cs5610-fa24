@@ -12,7 +12,8 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
   );
 
   const [questionType, setQuestionType] = useState(question?.questionType || 'MULTIPLE_CHOICE');
-
+  const [points, setPoints] = useState(question?.points || 4);
+  
   useEffect(() => {
     if (question?.questionType) {
       setQuestionType(question.questionType);
@@ -20,15 +21,22 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
   }, [question]);
 
   const renderQuestionEditor = () => {
+    const editorProps = {
+      questionId,
+      onClose,
+      points,
+      setPoints
+    };
+  
     switch (questionType) {
       case 'MULTIPLE_CHOICE':
-        return <MultipleChoiceEditor questionId={questionId} onClose={onClose} />;
+        return <MultipleChoiceEditor {...editorProps} />;
       case 'TRUE_FALSE':
-        return <TrueFalseEditor questionId={questionId} onClose={onClose} />;
+        return <TrueFalseEditor {...editorProps} />;
       case 'FILL_BLANK':
-        return <FillBlankEditor questionId={questionId} onClose={onClose} />;
+        return <FillBlankEditor {...editorProps} />;
       default:
-        return <MultipleChoiceEditor questionId={questionId} onClose={onClose} />;
+        return <MultipleChoiceEditor {...editorProps} />;
     }
   };
 
@@ -48,12 +56,13 @@ export default function QuestionEditor({ questionId, onClose }: { questionId?: s
           </select>
           <div className="d-flex align-items-center">
             <span className="me-2">pts:</span>
-            <input 
-              type="number" 
-              className="form-control" 
-              style={{ width: '60px' }} 
-              defaultValue={question?.points?.toString() || "4"} 
-            />
+            <input
+              type="number"
+              className="form-control"
+              style={{ width: '60px' }}
+              value={points}
+              onChange={(e) => setPoints(parseInt(e.target.value) || 0)}
+              />
           </div>
         </div>
       </div>
