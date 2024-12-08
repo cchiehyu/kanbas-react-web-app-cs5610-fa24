@@ -8,7 +8,6 @@ import { deleteQuiz, setQuizzes, togglePublishQuiz } from './reducer';
 import { RootState } from '../../store';
 import * as client from "./client";
 import { Quiz, QuizRootState } from './types';
-import { FaCheck } from 'react-icons/fa';
 
 export default function QuizList() {
   const { cid } = useParams();
@@ -106,8 +105,10 @@ export default function QuizList() {
   };
 
   const getStudentScore = (quizId: string) => {
-    // This will be replaced with actual grade lookup logic later
-    return currentUser.role === 'STUDENT' ? Math.floor(Math.random() * 100) : undefined;
+    if (currentUser.role !== 'STUDENT') return undefined;
+    
+    const submission = submissions.find(s => s.quizId === quizId);
+    return submission ? submission.score : undefined;
   };
 
   return (
