@@ -1,6 +1,6 @@
 import { QuizSubmission } from "./QuizSubmissionType";
 
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:4000/api";
+const API_BASE = process.env.REACT_APP_REMOTE_SERVER;
 
 export const createSubmission = async (quizId: string, submission: Partial<QuizSubmission>) => {
   const response = await fetch(`${API_BASE}/quizzes/${quizId}/submit`, {
