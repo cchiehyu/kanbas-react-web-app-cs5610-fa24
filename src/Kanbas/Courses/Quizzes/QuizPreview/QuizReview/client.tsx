@@ -24,7 +24,7 @@ export const fetchSubmissionById = async (submissionId: string) => {
 export const updateSubmissionScores = async (submissionId: string, updates: any) => {
   const response = await fetch(`${API_BASE}/submissions/${submissionId}/scores`, {
     method: "PUT",
-    body: JSON.stringify(updates),
+    body: JSON.stringify({ updates, role: updates.role }),
     headers: { "Content-Type": "application/json" },
   });
   return response.json();
