@@ -1,14 +1,14 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Quiz, RootState } from './types';
+import { Quiz, QuizRootState } from './types';
 
 export default function QuizDetails() {
   const { cid, qid } = useParams();
   const navigate = useNavigate();
-  const currentUser = useSelector((state: RootState) => state.accountReducer.currentUser);
-  const quiz = useSelector((state: RootState) => 
-    state.quizzesReducer.quizzes.find(q => q._id === qid)
+  const currentUser = useSelector((state: QuizRootState) => state.accountReducer.currentUser);
+  const quiz = useSelector((state: QuizRootState) => 
+    state.quizzesReducer.quizzes.find((q : Quiz) => q._id === qid)
   );
 
   const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';

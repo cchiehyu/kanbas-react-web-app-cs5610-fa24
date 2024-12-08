@@ -5,15 +5,16 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { RiQuestionAnswerLine } from 'react-icons/ri';
 import { FaSearch } from 'react-icons/fa';
 import { deleteQuiz, setQuizzes, togglePublishQuiz } from './reducer';
+import { RootState } from '../../store';
 import * as client from "./client";
-import { Quiz, RootState } from './types';
+import { Quiz, QuizRootState } from './types';
 import { FaCheck } from 'react-icons/fa';
 
 export default function QuizList() {
   const { cid } = useParams();
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
-  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const { currentUser } = useSelector((state: QuizRootState) => state.accountReducer);
   
   const [deleteDialog, setDeleteDialog] = useState({
     isOpen: false,
@@ -21,7 +22,11 @@ export default function QuizList() {
     quizTitle: ''
   });
 
-  const quizzes = useSelector((state: RootState) => 
+  const { submissions } = useSelector((state: RootState) => 
+    state.submissionsReducer
+  );
+
+  const quizzes = useSelector((state: QuizRootState) => 
     state.quizzesReducer.quizzes.filter(quiz => {
       const baseFilter = quiz.course === cid &&
         quiz.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -218,7 +223,11 @@ export default function QuizList() {
                     {currentUser.role === 'STUDENT' && (
                       <>
                         <span>|</span>
-                        <span>Score: {getStudentScore(quiz._id)}/{quiz.points}</span>
+                        <span>
+                          Score: {getStudentScore(quiz._id) !== undefined 
+                            ? `${getStudentScore(quiz._id)}/${quiz.points}` 
+                            : 'Not submitted'}
+                        </span>
                       </>
                     )}
                   </div>

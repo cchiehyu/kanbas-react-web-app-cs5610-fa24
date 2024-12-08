@@ -1,5 +1,5 @@
 import * as client from "./client";
-import { QuizForm, Quiz, RootState } from './types';
+import { QuizForm, Quiz, QuizRootState } from './types';
 import  QuizQuestions  from './QuizQuestions//index';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,8 +13,8 @@ export default function QuizEditor() {
   const dispatch = useDispatch();
   const [showTimeLimit, setShowTimeLimit] = useState(false);
 
-  const quiz = useSelector((state: RootState) => 
-    state.quizzesReducer.quizzes.find(q => q._id === qid)
+  const quiz = useSelector((state: QuizRootState) => 
+    state.quizzesReducer.quizzes.find((q : Quiz) => q._id === qid)
   );
 
   const [activeTab, setActiveTab] = useState<'details' | 'questions'>('details');

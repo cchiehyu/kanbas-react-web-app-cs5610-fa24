@@ -24,7 +24,7 @@ export interface Quiz {
 
 export interface QuizForm extends Omit<Quiz, '_id' | 'course'> {}
 
-export interface RootState {
+export interface QuizRootState {
   quizzesReducer: {
     quizzes: Quiz[];
   };
