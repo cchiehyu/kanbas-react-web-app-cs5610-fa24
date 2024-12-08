@@ -187,10 +187,16 @@ const QuizReview = () => {
       {isFacultyOrAdmin && renderAttemptHistory()}
 
       <div className="mb-4">
-        <h2>{quiz?.title}</h2>
-        <div>Score for this quiz: {currentSubmission.score} out of {currentSubmission.maxScore}</div>
-        <div>Submitted {new Date(currentSubmission.endTime).toLocaleString()}</div>
-        <div>This attempt took {currentSubmission.timeSpent} minutes.</div>
+        <div style={{ 
+          fontSize: '14px', 
+          color: '#2D3B45',
+          marginBottom: '20px'
+        }}>
+          Score for this quiz: <span className="fw-bold">{currentSubmission.score}</span> out of {currentSubmission.maxScore}</div>
+        <div style={{ fontSize: '14px', color: '#2D3B45' }}>
+          Submitted {new Date(currentSubmission.endTime).toLocaleString()}</div>
+        <div style={{ fontSize: '14px', color: '#2D3B45' }}>
+          This attempt took {currentSubmission.timeSpent} minutes.</div>
       </div>
 
       {isFacultyOrAdmin && (
