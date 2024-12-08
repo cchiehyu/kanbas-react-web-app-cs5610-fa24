@@ -21,6 +21,8 @@ export default function QuizPreview() {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+  const { submissions, status } = useSelector((state: RootState) => state.submissionsReducer);
+  const currentSubmission = submissions[0];
 
   const isFacultyOrAdmin = currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN';
   const isStudent = currentUser.role === 'Student';
@@ -74,7 +76,7 @@ export default function QuizPreview() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const status = useSelector((state: QuizQuestionRootState) => 
+  const quizStatus = useSelector((state: QuizQuestionRootState) => 
     state.questionsReducer.status
   );
 
