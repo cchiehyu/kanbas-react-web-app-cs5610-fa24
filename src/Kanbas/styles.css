@@ -40,7 +40,7 @@
 /* Main Content Styles */
 @media (min-width: 768px) {
   #wd-kanbas .wd-main-content-offset {
-    padding-left: 140px !important;
+    padding-left: 40px !important;
   }
 }
 
