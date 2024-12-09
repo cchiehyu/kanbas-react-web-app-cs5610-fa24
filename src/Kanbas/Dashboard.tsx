@@ -122,17 +122,6 @@ const availableCourses = (Array.isArray(allCourses) ? allCourses : [])
       ? availableCourses  // When "All Courses" clicked - show available courses
       : enrolledCourses); // When "My Courses" clicked - show enrolled courses
 
-  console.log('All Courses:', allCourses);
-  console.log('All Courses IDs:', allCourses?.map(course => course._id));
-  
-  console.log('Enrolled Courses:', enrolledCourses);
-  console.log('Enrolled Courses IDs:', enrolledCourses.map(course => course._id));
-  
-  console.log('Available Courses:', availableCourses);
-  console.log('Available Courses IDs:', availableCourses.map(course => course._id));
-  
-  console.log('Displayed Courses:', displayedCourses);
-  console.log('Displayed Courses IDs:', displayedCourses.map(course => course._id));
   
   const allCoursesCount = Array.isArray(allCourses) ? allCourses.length : 0;
      const availableCoursesCount = availableCourses.length;
