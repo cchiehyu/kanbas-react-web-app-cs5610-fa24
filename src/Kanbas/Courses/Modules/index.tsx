@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setModules, addModule, editModule, updateModule, deleteModule } from "./reducer";
 import * as coursesClient from "../client";
 import * as modulesClient from "../client";
-
+import { RootState } from '../../store';
 interface ModulesProps {
   courseCode?: string;
 }
@@ -53,7 +53,9 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
     await modulesClient.deleteModule(moduleId);
     dispatch(deleteModule(moduleId));
   };
-
+  const { currentUser } = useSelector((state: RootState) =>
+    state.accountReducer
+  );
 
 
   // const toggleModule = (moduleId: 'module1' | 'module2') => {
@@ -116,13 +118,15 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
                     defaultValue={module.name}
                   />
                 )}
+                {currentUser.role !== 'STUDENT' && (
+                   <>
                 <ModuleControlButtons
                   moduleId={module._id}
                   deleteModule={(moduleId) => removeModule(moduleId)}
                   editModule={(moduleId) => dispatch(editModule(moduleId))}
                 />
+              </>)}
               </div>
-
               {module.lessons && (
                 <ul className="wd-lessons list-group rounded-0">
                   {module.lessons.map((lesson: any) => (
