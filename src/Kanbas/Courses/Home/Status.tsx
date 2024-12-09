@@ -3,27 +3,38 @@ import { MdDoNotDisturbAlt } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
 import { BiImport } from "react-icons/bi";
 import { LiaFileImportSolid } from "react-icons/lia";
+import { useDispatch, useSelector } from 'react-redux';
 import { AiOutlineHome, AiOutlineCalendar, AiOutlineNotification, AiOutlineBarChart, AiOutlineComment } from "react-icons/ai";
+import { RootState } from '../../store';
 
 export default function CourseStatus() {
+
+  const { currentUser } = useSelector((state: RootState) =>
+    state.accountReducer
+  );
+
   return (
     <div id="wd-course-status" style={{ width: "300px" }}>
       <h2>Course Status</h2>
 
-      {/* Publish/Unpublish buttons */}
-      <div className="d-flex">
-        <div className="w-50 pe-1">
-          <button className="btn btn-lg btn-secondary w-100 text-nowrap">
-            <MdDoNotDisturbAlt className="me-2 fs-5" /> Unpublish
-          </button>
+      {currentUser.role !== 'STUDENT' && (
+      <>
+        {/* Publish/Unpublish buttons */}
+        <div className="d-flex">
+          <div className="w-50 pe-1">
+            <button className="btn btn-lg btn-secondary w-100 text-nowrap">
+              <MdDoNotDisturbAlt className="me-2 fs-5" /> Unpublish
+            </button>
+          </div>
+          <div className="w-50">
+            <button className="btn btn-lg btn-success w-100">
+              <FaCheckCircle className="me-2 fs-5" /> Publish
+            </button>
+          </div>
         </div>
-        <div className="w-50">
-          <button className="btn btn-lg btn-success w-100">
-            <FaCheckCircle className="me-2 fs-5" /> Publish
-          </button>
-        </div>
-      </div>
-      <br />
+        <br />
+      </>
+    )}
 
       {/* Additional action buttons */}
       <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
