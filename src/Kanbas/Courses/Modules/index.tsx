@@ -83,6 +83,8 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
     <div id="wd-modules">
       <h2>Course {course && course.number}</h2>
 
+      {currentUser.role !== 'STUDENT' && (
+      <>
       {/* Modules Controls */}
       <ModulesControls
         onCollapseAll={handleCollapseAll}
@@ -91,6 +93,7 @@ export default function Modules({ courseCode }: ModulesProps = {}) {
         moduleName={moduleName}
         addModule={createModuleForCourse}
       />
+      </>)}
       <br /><br /><br /><br />
 
       {/* Dynamic modules */}

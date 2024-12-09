@@ -6,6 +6,7 @@ import { FaSearch, FaTrash } from 'react-icons/fa';
 import { FaPen } from 'react-icons/fa';
 import { deleteAssignment, setAssignments } from './reducer';
 import * as assignmentsClient from "./client";
+import { RootState } from '../../store';
 
 interface Assignment {
   _id: string;
@@ -38,6 +39,11 @@ export default function Assignments() {
       assignment => assignment.course === cid
     )
   );
+
+  const { currentUser } = useSelector((state: RootState) =>
+    state.accountReducer
+  );
+
 
   useEffect(() => {
     const fetchAssignments = async () => {
@@ -111,12 +117,16 @@ export default function Assignments() {
         <div>
           <button className="btn btn-secondary me-2">SHOW BY DATE</button>
           <button className="btn btn-secondary">SHOW BY TYPE</button>
+
+          {currentUser.role !== 'STUDENT' && (
+          <>
           <button 
             className="btn btn-danger ms-3"
             onClick={handleAddAssignment}
           >
             <BsPlus className="me-1" /> Assignment
           </button>
+          </>)}
         </div>
       </div>
 
