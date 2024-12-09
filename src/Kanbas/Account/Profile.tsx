@@ -53,6 +53,10 @@ export default function Profile() {
     }
   }, [feedback]);
 
+  if (!currentUser) {
+    return null;  // Return null while redirecting
+  }
+
   return (
     <div className="container-fluid">
       <div className="row">
