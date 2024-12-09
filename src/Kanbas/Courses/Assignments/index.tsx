@@ -40,9 +40,11 @@ export default function Assignments() {
     )
   );
 
-  const { currentUser } = useSelector((state: RootState) =>
+  const { currentUser } = useSelector((state: RootState) => 
     state.accountReducer
   );
+  
+  console.log("Current User Role:", currentUser?.role);
 
 
   useEffect(() => {
@@ -102,7 +104,7 @@ export default function Assignments() {
   };
 
   return (
-    <div id="wd-assignments" className="container mt-4">
+    <div className="container-fluid" style={{ width: '100%', margin: '0 auto' }}>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="input-group" style={{ width: '250px' }}>
           <span className="input-group-text bg-white">
@@ -176,11 +178,15 @@ export default function Assignments() {
                       >
                         <FaPen className="text-primary" />
                       </Link>
+
+                      {currentUser.role !== 'STUDENT' && (
+                      <>
                       <FaTrash
                         className="text-danger"
                         onClick={() => handleDeleteClick(assignment._id, assignment.title)}
                         style={{ cursor: 'pointer' }}
                       />
+                      </>)}
                     </div>
                   </div>
                 </div>
