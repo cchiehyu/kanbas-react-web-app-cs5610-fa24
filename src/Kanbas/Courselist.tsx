@@ -15,8 +15,8 @@ interface Course {
 }
 
 interface CourseListProps {
-  courses: any[]; 
-  allCourses: any[]; 
+  courses: Course[] | null; 
+  allCourses: Course[] | null; 
 }
 
 export default function CourseList({ courses, allCourses }: CourseListProps) {
@@ -42,21 +42,25 @@ export default function CourseList({ courses, allCourses }: CourseListProps) {
   }, [dispatch, allCourses]);
 
   const isEnrolled = (courseId: string) => {
-    return courses.some(course => course._id === courseId);
+    return Array.isArray(courses) && courses.some(course => course && course._id === courseId);
   };
-
-  const enrolledCourses = courses;
-  const availableCourses = Array.isArray(allCourses) 
-    ? allCourses.filter(course => !isEnrolled(course._id)) 
+  
+  const enrolledCourses = Array.isArray(courses) 
+    ? courses.filter(course => course !== null) 
     : [];
-
-    const isAdminOrFaculty = currentUser.role === 'ADMIN';
-
-    const isStudentOrFaulty = currentUser.role === 'STUDENT' || currentUser.role === 'FAULTY';
-
-    const displayedCourses = currentUser.role === 'STUDENT' 
-    ? enrolledCourses 
-    : (showAllCourses ? availableCourses : enrolledCourses);
+  
+  const availableCourses = Array.isArray(allCourses) 
+    ? allCourses.filter(course => course && !isEnrolled(course._id)) 
+    : [];
+  
+  const displayedCourses = !currentUser ? [] : 
+    currentUser.role === 'STUDENT' 
+      ? enrolledCourses 
+      : (showAllCourses ? availableCourses : enrolledCourses);
+  
+  // Update role checks to handle null currentUser
+  const isAdminOrFaculty = currentUser?.role === 'ADMIN';
+  const isStudentOrFaulty = currentUser?.role === 'STUDENT' || currentUser?.role === 'FAULTY';
 
   return (
     <div id="wd-course-list" className="container-fluid px-4">
