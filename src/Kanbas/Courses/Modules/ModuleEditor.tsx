@@ -1,18 +1,55 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { addModule, updateModule } from './reducer';
+import { useParams } from 'react-router';
+import * as client from './client';
 
 interface ModuleEditorProps {
   dialogTitle: string;
   moduleName: string;
   setModuleName: (name: string) => void;
   addModule: () => void;
+  isEditing?: boolean;
+  moduleId?: string;
 }
 
 export default function ModuleEditor({ 
   dialogTitle, 
   moduleName, 
   setModuleName, 
-  addModule 
+  addModule: parentAddModule,
+  isEditing = false,
+  moduleId
 }: ModuleEditorProps) {
+  const dispatch = useDispatch();
+  const { cid } = useParams<{ cid: string }>();
+
+  const handleAction = async () => {
+    try {
+      if (!moduleName.trim()) {
+        alert("Module name cannot be empty");
+        return;
+      }
+
+      if (isEditing && moduleId) {
+        // Update existing module
+        const updatedModule = await client.updateModuleAPI(moduleId, moduleName);
+        dispatch(updateModule({ _id: moduleId, name: moduleName }));
+      } else {
+        // Create new module
+        const newModule = await client.createModuleAPI(cid!, moduleName);
+        dispatch(addModule({ name: moduleName, course: cid }));
+        parentAddModule();
+      }
+
+      // Reset input
+      setModuleName("");
+    } catch (error) {
+      console.error("Error with module:", error);
+      alert(isEditing ? "Failed to update module" : "Failed to add module");
+    }
+  };
+
   return (
     <div 
       id="wd-add-module-dialog" 
@@ -54,9 +91,9 @@ export default function ModuleEditor({
               type="button"
               className="btn btn-danger"
               data-bs-dismiss="modal"
-              onClick={addModule}
+              onClick={handleAction}
             >
-              Add Module
+              {isEditing ? 'Update Module' : 'Add Module'}
             </button>
           </div>
         </div>
