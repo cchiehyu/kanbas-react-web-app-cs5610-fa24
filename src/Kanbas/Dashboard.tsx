@@ -58,6 +58,14 @@ const showNotification = (message: string, type: 'success' | 'danger' | 'info') 
 
 const handleEnrollment = async (courseId: string, enrolled: boolean) => {
   await updateEnrollment(courseId, enrolled);
+  
+  // Toggle enrolling state to force re-render of the correct view
+  if (enrolled) {
+    setEnrolling(false); // Switch to "My Courses" view after enrolling
+  } else {
+    setEnrolling(true);  // Switch to "Available Courses" view after unenrolling
+  }
+
   showNotification(
     enrolled ? 'Successfully enrolled in course' : 'Successfully unenrolled from course',
     'success'
