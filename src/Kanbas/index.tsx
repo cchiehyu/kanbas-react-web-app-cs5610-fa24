@@ -122,12 +122,20 @@ export default function Kanbas() {
 
   const deleteCourse = async (courseId: string) => {
     try {
+      if (!courseId) {
+        console.error("No course ID provided for deletion");
+        alert("Failed to delete course - Invalid course ID");
+        return;
+      }
+  
       await courseClient.deleteCourse(courseId);
-      setUserCourses(userCourses.filter((course) => course._id !== courseId));
+      
+      // Fetch fresh data after successful deletion
+      await findCoursesForUser();
       await fetchAllCourses();
     } catch (error) {
+      console.error("Error deleting course:", error);
       alert("Failed to delete course");
-      console.error(error);
     }
   };
 
