@@ -195,12 +195,9 @@ export default function Kanbas() {
   useEffect(() => {
     const initializeCourses = async () => {
       if (currentUser?._id) {
-        if (currentUser.role === 'STUDENT') {
           await findCoursesForUser();
-          await fetchAllCourses(); // Still fetch all courses for reference
-        } else {
+          await fetchAllCourses(); 
           await fetchAllCourses();
-        }
       }
     };
   
