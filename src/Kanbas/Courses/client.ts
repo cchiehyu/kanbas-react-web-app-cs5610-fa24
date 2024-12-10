@@ -12,7 +12,7 @@ export const updateModule = async (module: any) => {
 export const deleteModule = async (moduleId: string) => {
   const response = await axiosWithCredentials.delete(`${MODULES_API}/${moduleId}`);
   return response.data;
- };
+};
  
 export const createModuleForCourse = async (courseId: string, module: any) => {
   const response = await axiosWithCredentials.post(
@@ -25,14 +25,14 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
 export const findUsersForCourse = async (courseId: string) => {
   const response = await axios.get(`${COURSES_API}/${courseId}/users`);
   return response.data;
- };
- 
+};
 
 export const findModulesForCourse = async (courseId: string) => {
   const response = await axios
     .get(`${COURSES_API}/${courseId}/modules`);
   return response.data;
 };
+
 export const fetchAllCourses = async () => {
   try {
     const response = await axiosWithCredentials.get(COURSES_API);
@@ -43,17 +43,17 @@ export const fetchAllCourses = async () => {
   }
 };
 
- export const deleteCourse = async (id: string) => {
+export const deleteCourse = async (id: string) => {
   const { data } = await axiosWithCredentials.delete(`${COURSES_API}/${id}`);
   return data;
- };
+};
 
 export const updateCourse = async (course: any) => {
   const { data } = await axiosWithCredentials.put(`${COURSES_API}/${course._id}`, course);
   return data;
 };
 
-export function createCourse(course: any) {
-  throw new Error('Function not implemented.');
-}
-
+export const createCourse = async (course: any) => {
+  const { data } = await axiosWithCredentials.post(COURSES_API, course);
+  return data;
+};
