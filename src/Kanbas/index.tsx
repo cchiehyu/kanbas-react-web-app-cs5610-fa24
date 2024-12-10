@@ -137,34 +137,30 @@ export default function Kanbas() {
         alert("Course name cannot be empty");
         return;
       }
-      
+  
       if (!courseForm.description.trim()) {
         alert("Course description cannot be empty");
         return;
       }
-
+  
       const isDuplicate = allCourses.some(
-        existingCourse => 
-          existingCourse.number.toLowerCase() === courseForm.number.toLowerCase() && 
+        existingCourse =>
+          existingCourse.number.toLowerCase() === courseForm.number.toLowerCase() &&
           existingCourse._id !== courseForm._id
       );
-
+  
       if (isDuplicate) {
         alert(`Course with number ${courseForm.number} already exists`);
         return;
       }
-
-      await courseClient.updateCourse(courseForm);
-      setUserCourses(
-        userCourses.map((c) => {
-          if (c._id === courseForm._id) {
-            return courseForm;
-          }
-          return c;
-        })
-      );
-      await fetchAllCourses();
-
+  
+      const updatedCourse = await courseClient.updateCourse(courseForm);
+      
+      // Refetch all courses to sync frontend state with backend
+      await findCoursesForUser();  // Refresh user's courses
+      await fetchAllCourses();     // Refresh all courses
+  
+      // Reset form
       setCourseForm({
         _id: "",
         name: "",

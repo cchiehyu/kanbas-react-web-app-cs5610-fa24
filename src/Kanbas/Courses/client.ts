@@ -49,11 +49,47 @@ export const deleteCourse = async (id: string) => {
 };
 
 export const updateCourse = async (course: any) => {
-  const { data } = await axiosWithCredentials.put(`${COURSES_API}/${course._id}`, course);
-  return data;
+  if (!course?._id) {
+    console.error('Update failed: No course ID provided');
+    throw new Error('Course ID is required for updates');
+  }
+
+  const courseId = course._id;
+  // Create a copy of course data without _id for updates
+  const { _id, ...courseUpdates } = course;
+
+  console.log('Updating course - Data being sent to server:', {
+    courseId,
+    courseUpdates,
+    endpoint: `${COURSES_API}/${courseId}`
+  });
+  
+  try {
+    const { data } = await axiosWithCredentials.put(
+      `${COURSES_API}/${courseId}`, 
+      courseUpdates  // Send only the updates, not the _id
+    );
+    
+    console.log('Server response for update:', data);
+    return data;
+  } catch (error) {
+    console.error('Failed to update course:', error);
+    throw error;
+  }
 };
 
+
 export const createCourse = async (course: any) => {
-  const { data } = await axiosWithCredentials.post(COURSES_API, course);
+  console.log('Creating new course - Data being sent to server:', {
+    courseData: course,
+    endpoint: COURSES_API
+  });
+  
+  const { data } = await axiosWithCredentials.post(
+    COURSES_API, 
+    course
+  );
+  
+  console.log('Server response for create:', data);
   return data;
 };
