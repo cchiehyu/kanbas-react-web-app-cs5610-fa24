@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:4000";
+const API_BASE = "https://kanbas-server-cs5610-final-cyc-04c94dc4fc38.herokuapp.com";
 
 export const createModuleAPI = async (courseId: string, moduleName: string) => {
   const response = await axios.post(`${API_BASE}/api/courses/${courseId}/modules`, {
